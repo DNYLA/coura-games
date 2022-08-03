@@ -10,7 +10,17 @@ const colors = {
     700: '#2a69ac',
   },
 };
-const theme = extendTheme({ config: { initialColorMode: 'dark' }, colors });
+const config = extendTheme({
+  config: { initialColorMode: 'dark', useSystemColorMode: false },
+  styles: {
+    global: (props) => ({
+      body: {
+        bg: '#2c2c2c',
+      },
+    }),
+  },
+  colors,
+});
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -19,7 +29,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>Welcome to next-couragames!</title>
       </Head>
       <main className="app">
-        <ChakraProvider theme={theme}>
+        <ChakraProvider theme={config}>
           <Navbar />
           <Component {...pageProps} />
         </ChakraProvider>

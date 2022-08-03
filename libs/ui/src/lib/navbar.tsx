@@ -44,14 +44,16 @@ export function Navbar() {
   return (
     <Box>
       <Flex
-        bg={useColorModeValue('white', 'gray.800')}
+        bg={'rgba(60,60,60,0.2)'}
+        backdropFilter={'auto'}
+        backdropBlur={'10px'}
         color={useColorModeValue('gray.600', 'white')}
-        minH={'60px'}
+        minH={'80px'}
         py={{ base: 2 }}
         px={{ base: 4 }}
-        borderBottom={1}
-        borderStyle={'solid'}
-        borderColor={useColorModeValue('gray.200', 'gray.900')}
+        // borderBottom={1}
+        // borderStyle={'solid'}
+        // borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}
       >
         <Flex
@@ -70,15 +72,31 @@ export function Navbar() {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Text
+            fontSize={'3xl'}
+            fontWeight={'bold'}
+            fontFamily={'Source Sans Prop, sans-serif'}
             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            fontFamily={'heading'}
-            color={useColorModeValue('gray.800', 'white')}
+            color={useColorModeValue('white', 'white')}
             // as={Link}
             // to={'/'}
           >
-            CouraGames
+            Coura
+          </Text>{' '}
+          <Text
+            fontSize={'3xl'}
+            fontWeight={'bold'}
+            fontStyle={'italic'}
+            fontFamily={'Source Sans Prop, sans-serif'}
+            textAlign={useBreakpointValue({
+              base: 'center',
+              md: 'left',
+            })}
+            color={'#222222'}
+            // as={Link}
+            // to={'/'}
+          >
+            Games
           </Text>
-
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
           </Flex>
