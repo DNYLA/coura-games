@@ -1,13 +1,16 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  ChakraProvider,
-} from '@chakra-ui/react';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Navbar } from '@couragames/ui';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import './styles.css';
+
+const colors = {
+  brand: {
+    900: '#1a365d',
+    800: '#153e75',
+    700: '#2a69ac',
+  },
+};
+const theme = extendTheme({ config: { initialColorMode: 'dark' }, colors });
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -16,7 +19,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>Welcome to next-couragames!</title>
       </Head>
       <main className="app">
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
+          <Navbar />
           <Component {...pageProps} />
         </ChakraProvider>
       </main>
