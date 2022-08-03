@@ -4,6 +4,7 @@
   "projects": {
     "api": "apps/api",
     "next-couragames": "apps/next-couragames",
-    "next-couragames-e2e": "apps/next-couragames-e2e"
+    "next-couragames-e2e": "apps/next-couragames-e2e",
+    "ui": "libs/ui"
   }
 }
