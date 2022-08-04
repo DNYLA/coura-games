@@ -1,4 +1,3 @@
-import { Navbar } from '@couragames/ui';
 import styled from '@emotion/styled';
 
 const StyledPage = styled.div`
