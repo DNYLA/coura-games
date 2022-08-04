@@ -1,7 +1,16 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import { Navbar } from '@couragames/ui';
+import AppProviders from 'apps/next-couragames/components/app-providers';
+import { Navbar } from 'apps/next-couragames/components/navbar';
+import UserContext, {
+  IUserContext,
+  User,
+} from 'apps/next-couragames/context/auth';
+import useAuth from 'apps/next-couragames/hooks/useAuth';
+import { GetServerSidePropsContext } from 'next';
+// import { Navbar } from '@couragames/ui';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useState } from 'react';
 
 const colors = {
   brand: {
@@ -23,18 +32,21 @@ const config = extendTheme({
 });
 
 function CustomApp({ Component, pageProps }: AppProps) {
+  // const { user, login, logout, signup, error, setError } = useAuth();
+  const [user, setUser] = useState<User>();
+  console.log(name);
   return (
-    <>
-      <Head>
-        <title>Welcome to next-couragames!</title>
-      </Head>
-      <main className="app">
-        <ChakraProvider theme={config}>
-          <Navbar />
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </main>
-    </>
+    <IUserContext.Provider
+      value={{
+        user,
+        setUser,
+      }}
+    >
+      <ChakraProvider theme={config}>
+        <Navbar />
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </IUserContext.Provider>
   );
 }
 
