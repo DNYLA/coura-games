@@ -8,6 +8,7 @@ import {
   Collapse,
   Icon,
   Link as NavLink,
+  LinkProps as NavLinkProps,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -30,16 +31,13 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons';
 import { useContext } from 'react';
+import Link from 'next/link';
+import UserContext from 'apps/next-couragames/context/auth';
 
 export function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
-  // const { user, logout } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const { colorMode, toggleColorMode } = useColorMode();
-
-  const user = {
-    username: 'Dan',
-    avatarUrl: null,
-  };
 
   return (
     <Box>
@@ -51,9 +49,6 @@ export function Navbar() {
         minH={'80px'}
         py={{ base: 2 }}
         px={{ base: 4 }}
-        // borderBottom={1}
-        // borderStyle={'solid'}
-        // borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}
       >
         <Flex
@@ -71,32 +66,36 @@ export function Navbar() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Text
-            fontSize={'3xl'}
-            fontWeight={'bold'}
-            fontFamily={'Source Sans Prop, sans-serif'}
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            color={useColorModeValue('white', 'white')}
-            // as={Link}
-            // to={'/'}
-          >
-            Coura
-          </Text>{' '}
-          <Text
-            fontSize={'3xl'}
-            fontWeight={'bold'}
-            fontStyle={'italic'}
-            fontFamily={'Source Sans Prop, sans-serif'}
-            textAlign={useBreakpointValue({
-              base: 'center',
-              md: 'left',
-            })}
-            color={'#222222'}
-            // as={Link}
-            // to={'/'}
-          >
-            Games
-          </Text>
+          <Link href={'/'}>
+            <Text
+              fontSize={'3xl'}
+              fontWeight={'bold'}
+              fontFamily={'Source Sans Prop, sans-serif'}
+              textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+              color={useColorModeValue('white', 'white')}
+              cursor={'pointer'}
+            >
+              <a>Coura</a>
+            </Text>
+          </Link>
+
+          <Link href={'/'}>
+            <Text
+              fontSize={'3xl'}
+              fontWeight={'bold'}
+              fontStyle={'italic'}
+              fontFamily={'Source Sans Prop, sans-serif'}
+              textAlign={useBreakpointValue({
+                base: 'center',
+                md: 'left',
+              })}
+              color={'#222222'}
+              cursor={'pointer'}
+            >
+              <a>Games</a>
+            </Text>
+          </Link>
+
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
           </Flex>
@@ -147,29 +146,28 @@ export function Navbar() {
             direction={'row'}
             spacing={6}
           >
-            <Button
-              // as={Link}
-              // to={'/login'}
-              fontSize={'sm'}
-              fontWeight={400}
-              variant={'link'}
-            >
-              Sign In
-            </Button>
-            <Button
-              // as={Link}
-              // to={'/signup'}
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              bg={'blue.400'}
-              _hover={{
-                bg: 'blue.300',
-              }}
-            >
-              Sign Up
-            </Button>
+            <Link href={'/login'}>
+              <Button fontSize={'sm'} fontWeight={400} variant={'link'}>
+                Sign In
+              </Button>
+            </Link>
+
+            <Link href={'/signup'}>
+              <Button
+                // as={Link}
+                // to={'/signup'}
+                display={{ base: 'none', md: 'inline-flex' }}
+                fontSize={'sm'}
+                fontWeight={600}
+                color={'white'}
+                bg={'blue.400'}
+                _hover={{
+                  bg: 'blue.300',
+                }}
+              >
+                Sign Up
+              </Button>
+            </Link>
           </Stack>
         )}
       </Flex>
@@ -190,82 +188,23 @@ const DesktopNav = () => {
     <Stack direction={'row'} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label}>
-          <Popover trigger={'hover'} placement={'bottom-start'}>
-            <PopoverTrigger>
-              <NavLink
-                p={2}
-                // as={Link}
-                // to={navItem.href}
-                fontSize={'sm'}
-                fontWeight={500}
-                color={linkColor}
-                _hover={{
-                  textDecoration: 'none',
-                  color: linkHoverColor,
-                }}
-              >
-                {navItem.label}
-              </NavLink>
-            </PopoverTrigger>
-
-            {navItem.children && (
-              <PopoverContent
-                border={0}
-                boxShadow={'xl'}
-                bg={popoverContentBgColor}
-                p={4}
-                rounded={'xl'}
-                minW={'sm'}
-              >
-                <Stack>
-                  {navItem.children.map((child) => (
-                    <DesktopSubNav key={child.label} {...child} />
-                  ))}
-                </Stack>
-              </PopoverContent>
-            )}
-          </Popover>
+          <NavLink
+            p={2}
+            as={Link}
+            href={navItem.href}
+            fontSize={'sm'}
+            fontWeight={500}
+            color={linkColor}
+            _hover={{
+              textDecoration: 'none',
+              color: linkHoverColor,
+            }}
+          >
+            <a>{navItem.label}</a>
+          </NavLink>
         </Box>
       ))}
     </Stack>
-  );
-};
-
-const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
-  return (
-    <NavLink
-      // as={Link}
-      // to={href}
-      role={'group'}
-      display={'block'}
-      p={2}
-      rounded={'md'}
-      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
-    >
-      <Stack direction={'row'} align={'center'}>
-        <Box>
-          <Text
-            transition={'all .3s ease'}
-            _groupHover={{ color: 'pink.400' }}
-            fontWeight={500}
-          >
-            {label}
-          </Text>
-          <Text fontSize={'sm'}>{subLabel}</Text>
-        </Box>
-        <Flex
-          transition={'all .3s ease'}
-          transform={'translateX(-10px)'}
-          opacity={0}
-          _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
-          justify={'flex-end'}
-          align={'center'}
-          flex={1}
-        >
-          <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
-        </Flex>
-      </Stack>
-    </NavLink>
   );
 };
 
@@ -326,13 +265,8 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         >
           {children &&
             children.map((child) => (
-              <NavLink
-                key={child.label}
-                py={2}
-                // as={Link}
-                // to={child.href}
-              >
-                {child.label}
+              <NavLink key={child.label} py={2} as={Link} href={child.href}>
+                <a>{child.label}</a>
               </NavLink>
             ))}
         </Stack>
