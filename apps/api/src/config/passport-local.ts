@@ -1,5 +1,5 @@
 import { PrismaClient, User } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import * as passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 
