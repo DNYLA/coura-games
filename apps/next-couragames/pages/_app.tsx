@@ -32,21 +32,13 @@ const config = extendTheme({
 });
 
 function CustomApp({ Component, pageProps }: AppProps) {
-  // const { user, login, logout, signup, error, setError } = useAuth();
-  const [user, setUser] = useState<User>();
-  console.log(name);
   return (
-    <IUserContext.Provider
-      value={{
-        user,
-        setUser,
-      }}
-    >
+    <AppProviders>
       <ChakraProvider theme={config}>
         <Navbar />
         <Component {...pageProps} />
       </ChakraProvider>
-    </IUserContext.Provider>
+    </AppProviders>
   );
 }
 

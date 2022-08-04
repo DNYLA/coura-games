@@ -3,8 +3,10 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "game-logic": "libs/game-logic",
     "next-couragames": "apps/next-couragames",
     "next-couragames-e2e": "apps/next-couragames-e2e",
+    "shared-types": "libs/shared-types",
     "ui": "libs/ui"
   }
 }
