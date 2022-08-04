@@ -49,14 +49,15 @@ const useAuth = () => {
     [router]
   );
 
-  // useEffect(() => {
-  //   // login();
-  //   getUser()
-  //     .then(({ data }) => {
-  //       setUser(data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, [login, signup]); //Login & Logout only change on mount so this is only called once.
+  useEffect(() => {
+    // if (user) return; //User already fetched so dont refetch
+    // console.log('fetching User');
+    getUser()
+      .then(({ data }) => {
+        setUser(data);
+      })
+      .catch((err) => console.log(err));
+  }, [login, signup]); //Login & Logout only change on mount so this is only called once.
 
   return { user, login, logout, signup, error, setError };
 };
