@@ -15,6 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@couragames/game-logic": ["libs/game-logic/src/index.ts"],
+      "@couragames/shared-types": ["libs/shared-types/src/index.ts"],
       "@couragames/ui": ["libs/ui/src/index.ts"]
     }
   },

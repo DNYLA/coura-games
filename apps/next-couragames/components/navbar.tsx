@@ -132,11 +132,7 @@ export function Navbar() {
               <MenuDivider />
               <MenuItem>Profile</MenuItem>
               <MenuItem>Account Settings</MenuItem>
-              <MenuItem
-              // onClick={logout}
-              >
-                Logout
-              </MenuItem>
+              <MenuItem onClick={logout}>Logout</MenuItem>
             </MenuList>
           </Menu>
         ) : (

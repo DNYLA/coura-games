@@ -1,17 +1,120 @@
-import styled from '@emotion/styled';
+import { Center, Container, Flex, HStack, Stack } from '@chakra-ui/layout';
+import {
+  Collapse,
+  Heading,
+  ScaleFade,
+  Slide,
+  SlideFade,
+} from '@chakra-ui/react';
+import UserContext from 'apps/next-couragames/context/auth';
+import { Game } from 'apps/next-couragames/utils/types';
+import { Router } from 'express';
+import { useRouter } from 'next/router';
+import React, { useContext, useEffect, useState } from 'react';
+import { GameCard } from '../components/Cards/GameCard';
 
-const StyledPage = styled.div`
-  .page {
-  }
-`;
+// import HomeSkeletonCards from './card-skeleton';
 
 export function Index() {
-  /*
-   * Replace the elements below with your own.
-   *
-   * Note: The corresponding styles are in the ./index.@emotion/styled file.
-   */
-  return <StyledPage>Index Page</StyledPage>;
+  const router = useRouter();
+  // const { user, login } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [games, setGames] = useState<Game[]>([
+    {
+      name: 'Rock, Paper, Scissors',
+      link: 'rock-paper-scissors',
+      thumbnail:
+        'https://projects-static.raspberrypi.org/projects/rock-paper-scissors/05a38c3b2fa6deb8fe4ccd505b5e7c65bda28e2f/en/images/rock-paper-scissors.png',
+      currentPlayers: 5,
+      new: false,
+    },
+  ]);
+
+  // useEffect(() => {
+  //   getClashes(true, true).then(({ data }) => {
+  //     console.log(data);
+  //     setLists(data);
+  //     setTimeout(() => setIsLoading(false), 1500);
+  //   });
+  // }, []);
+
+  return (
+    <Flex direction="column" mt={25}>
+      <Container
+        // direction="row"
+        // mx={50}
+        mb={5}
+        // d="flex"
+        // alignItems="center"
+        // alignContent="center"
+        // justifyContent="center"
+        minW={'90vw'}
+      >
+        <Heading mb={2}>Popular</Heading>
+        <Stack
+          direction="row"
+          // mx={50}
+          // mb={5}
+          // m={0}
+          // d="flex"
+          alignItems="center"
+          // justifyContent="center"
+          // justify="center"
+          overflowX="auto"
+        >
+          {!isLoading &&
+            games.map((game: Game, i) => (
+              <GameCard
+                key={i}
+                handleClick={() => router.push(`play/${game.link}`)}
+                game={game}
+              />
+            ))}
+          <Collapse in={isLoading} animateOpacity>
+            <div>Loading...</div>
+            {/* <HomeSkeletonCards isLoading={true} amount={6} /> */}
+          </Collapse>
+        </Stack>
+      </Container>
+      <Container
+        // direction="row"
+        // mx={50}
+        mt={10}
+        mb={5}
+        // d="flex"
+        // alignItems="center"
+        // alignContent="center"
+        // justifyContent="center"
+        minW={'90vw'}
+      >
+        <Heading mb={2}>Recently Created</Heading>
+        <Stack
+          direction="row"
+          // mx={50}
+          // mb={5}
+          // m={0}
+          // d="flex"
+          alignItems="center"
+          // // justifyContent="center"
+          // justify="center"
+          overflowX="auto"
+        >
+          {!isLoading &&
+            games.map((game, i) => (
+              <GameCard
+                key={i}
+                handleClick={() => router.push(`/${game.name}`)}
+                game={game}
+              />
+            ))}
+          {/* <Collapse in={isLoading} animateOpacity>
+            <HomeSkeletonCards isLoading={true} amount={6} />
+          </Collapse> */}
+        </Stack>
+      </Container>
+    </Flex>
+  );
 }
 
 export default Index;
