@@ -11,5 +11,12 @@ export enum LobbyEvents {
 export type LobbyEvent = {
   id?: string;
   game: Games;
-  event: LobbyEvents;
+  type: LobbyEvents;
+};
+
+export type Player = {
+  id: string;
+  username: string;
+  points: 0;
+  lastActivity: Date;
 };
