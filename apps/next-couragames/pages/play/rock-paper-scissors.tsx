@@ -12,7 +12,8 @@ import {
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
 import { RPSGame } from 'apps/next-couragames/pages/play/Game';
-import { Games, LobbyEvents } from 'libs/shared-types/src';
+import e from 'express';
+import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 
@@ -50,10 +51,10 @@ const MenuButton = styled.button`
 export function RPSLobby(props: HomeProps) {
   const router = useRouter();
   const { lobby } = router.query;
-  const [lobbyInfo, setLobbyInfo] = useState(null);
+  const [lobbyInfo, setLobbyInfo] = useState<ClientLobby>(null);
   const [showInput, setShowInput] = useState(false);
   const [code, setCode] = useState('');
-  const [invalid, setInvalid] = useState(false);
+  const [errorMessage, setErrMessage] = useState(null);
   // const {
   //   isOpen: isVisible,
   //   onClose,
@@ -63,36 +64,36 @@ export function RPSLobby(props: HomeProps) {
   const socket = useContext(SocketContext).socket;
 
   useEffect(() => {
+    //Called when someone hosts a game
     socket?.on('lobby_info', (data) => {
-      console.log(data);
-      router.push(`?lobby=${data.code}`);
+      router.push(`?lobby=${data.id}`);
       setLobbyInfo(data);
     });
 
+    //Called when client attempts to connect
     socket?.on('join_lobby', (data) => {
       console.log(data);
-      if (!data.valid) {
-        setInvalid(true);
-        setTimeout(() => setInvalid(false), 3500);
+      if (data.invalid) {
+        setErrMessage(data.reason);
+        setTimeout(() => setErrMessage(null), 5000);
+      } else {
+        setLobbyInfo(data);
+        router.push(`?lobby=${data.id}`);
       }
     });
 
     return () => {
       socket?.off('lobby_info');
+      socket?.off('join_lobby');
     };
   }, [socket, router]);
-
-  console.log(lobby);
-  if (lobby) {
-    return <RPSGame lobby={lobbyInfo} setLobby={setLobbyInfo} />;
-  }
 
   const handleCreate = () => {
     socket.emit('lobby', { game: Games.RPS, type: LobbyEvents.Create });
     // router.push('?lobby=5');
   };
 
-  const handleJoin = () => {
+  const handleJoin = (code: string) => {
     socket.emit('lobby', { game: Games.RPS, type: LobbyEvents.Join, id: code });
   };
 
@@ -102,14 +103,27 @@ export function RPSLobby(props: HomeProps) {
     setShowInput(!showInput);
   };
 
+  console.log(lobby);
+  if (lobby) {
+    if (typeof lobby !== 'string') {
+      router.push('/play/rock-paper-scissors/');
+    } else {
+      if (lobbyInfo) {
+        return <RPSGame lobby={lobbyInfo} setLobby={setLobbyInfo} />;
+      } else {
+        handleJoin(lobby);
+      }
+    }
+  }
+
   //If !Lobby Render Create || Join Game.
   return (
     <StyledHome>
       <Title>Rock, Paper, Scissors</Title>
-      {invalid && (
+      {errorMessage && (
         <Alert status="error" mb={5}>
           <AlertIcon />
-          Lobby does not exist.
+          {errorMessage}
         </Alert>
       )}
       <Flex display={'flex'} flexDir={'column'}>
@@ -126,7 +140,7 @@ export function RPSLobby(props: HomeProps) {
               onChange={(e) => setCode(e.target.value)}
             />
             <InputRightElement width="5.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleJoin}>
+              <Button h="1.75rem" size="sm" onClick={() => handleJoin(code)}>
                 Connect
               </Button>
             </InputRightElement>
