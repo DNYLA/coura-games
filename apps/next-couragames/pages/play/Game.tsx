@@ -1,13 +1,13 @@
 import { Box, Flex } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
-import { Games, LobbyEvents } from 'libs/shared-types/src';
+import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 
 /* eslint-disable-next-line */
 export interface HomeProps {
-  lobby: any;
+  lobby: ClientLobby;
   setLobby: any;
 }
 
@@ -40,12 +40,32 @@ const MenuButton = styled.button`
 `;
 
 export function RPSGame({ lobby, setLobby }: HomeProps) {
+  const router = useRouter();
   const socket = useContext(SocketContext).socket;
+  const { id } = router.query;
 
   useEffect(() => {
     //Check if lobby is valid
-  });
+    console.log('here');
+    console.log(lobby);
 
+    socket?.on('player_joined', (player) => {
+      const curPlayers = [...lobby.players];
+      curPlayers.push(player);
+      setLobby({ ...lobby, players: curPlayers });
+    });
+
+    // socket?.on('join_lobby', (data) => {
+    //   console.log(data);
+    //   if (!data.valid) {
+    //     router.push('/play/rock-paper-scissors');
+    //   } else {
+    //     setLobby(data);
+    //   }
+    // });
+  }, [socket, router, setLobby, lobby, id]);
+
+  //Shouldnt happen but left in testing to prevent errors
   if (!lobby) {
     return (
       <StyledHome>
@@ -62,8 +82,13 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
     <StyledHome>
       <Title>Rock, Paper, Scissors</Title>
       <Flex display={'flex'} flexDir={'column'}>
-        Code: {lobby.code}
+        Code: {lobby.id}
       </Flex>
+      <Box>
+        {lobby.players.map((p, i) => (
+          <div key={i}>{p.username}</div>
+        ))}
+      </Box>
     </StyledHome>
   );
 }
