@@ -30,9 +30,9 @@ export function createLobby(socket: Socket, type: Games) {
   socket.data.gameId = code;
 
   socket.emit('lobby_info', {
-    code,
+    id: code,
     maxPlayers: 2,
-    players: [],
+    players,
     started: false,
     lastActivity: game.lastActivity,
   });
@@ -40,16 +40,41 @@ export function createLobby(socket: Socket, type: Games) {
 }
 
 export function joinLobby(socket: Socket, type: Games, id: string) {
-  console.log(type);
-  console.log(id);
   const lobby = currentGames.get(id);
+  if (!lobby)
+    return socket.emit('join_lobby', {
+      invalid: true,
+      reason: 'Lobby does not exist.',
+    });
 
-  if (!lobby) {
-    socket.emit('join_lobby', { valid: false });
-    return;
+  if (lobby.players.length + 1 > lobby.maxPlayers) {
+    return socket.emit('join_lobby', {
+      invalid: true,
+      reason: 'Lobby has reached maximum player limit.',
+    });
   }
 
-  socket.emit('join_lobby', {valid: true,  })
+  //Add player to playersList
+  const randomNumber = generateCode();
+  const newPlayer: Player = {
+    id: socket.id,
+    username: `Guest-${randomNumber}`,
+    points: 0,
+    lastActivity: new Date(),
+  };
+  lobby.players.push(newPlayer);
+
+  console.log('Valid Lobby');
+  socket.emit('join_lobby', {
+    id: lobby.id,
+    maxPlayers: 2,
+    players: lobby.players,
+    started: false,
+    lastActivity: lobby.lastActivity,
+  });
+
+  socket.to(lobby.id).emit('player_joined', newPlayer);
+  socket.join(lobby.id);
 }
 
 function generateCode() {
