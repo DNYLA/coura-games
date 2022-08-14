@@ -20,3 +20,11 @@ export type Player = {
   points: 0;
   lastActivity: Date;
 };
+
+export type ClientLobby = {
+  id: string;
+  maxPlayers: number;
+  players: Player[];
+  started: boolean;
+  lastActivity: Date;
+};
