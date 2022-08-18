@@ -1,8 +1,9 @@
 import { Games, Player } from '@couragames/shared-types';
+import { main } from 'libs/game-logic/src/lib/rps';
 import { Socket } from 'socket.io';
 import { Lobby } from '../types';
 
-const currentGames = new Map<string, Lobby>();
+export const currentGames = new Map<string, Lobby>();
 
 export function createLobby(socket: Socket, type: Games) {
   const code = generateCode();
@@ -22,6 +23,7 @@ export function createLobby(socket: Socket, type: Games) {
     type,
     players,
     maxPlayers: 2,
+    minPlayers: 2,
     started: false,
     lastActivity: new Date(),
   };
@@ -75,6 +77,18 @@ export function joinLobby(socket: Socket, type: Games, id: string) {
 
   socket.to(lobby.id).emit('player_joined', newPlayer);
   socket.join(lobby.id);
+}
+
+export function startGame(socket: Socket, type: Games, id: string) {
+  const lobby = currentGames.get(id);
+
+  if (!lobby || socket.id !== lobby.hostId || lobby.started) return; //Lobby Doesnt Exist || Invalid Permissions || Already Started
+
+  if (lobby.players.length !== lobby.minPlayers) return; //Send back message as acknlowedgement later.
+
+  if (type === Games.RPS) {
+    main(lobby, socket);
+  }
 }
 
 function generateCode() {
