@@ -6,6 +6,24 @@ export type Lobby = {
   type: Games;
   players: Player[];
   maxPlayers: number;
+  minPlayers: number;
   started: boolean;
   lastActivity: Date;
+  data?: RPSInfo;
 };
+
+export type RPSInfo = BaseInfo & {
+  round: number;
+  playerOneChoice?: RPSChoice;
+  playerTwoChoice?: RPSChoice;
+};
+
+type BaseInfo = {
+  timer: Date;
+};
+
+export enum RPSChoice {
+  Rock,
+  Paper,
+  Scissors,
+}
