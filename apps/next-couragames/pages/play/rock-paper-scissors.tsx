@@ -67,7 +67,7 @@ export function RPSLobby(props: HomeProps) {
     //Called when someone hosts a game
     socket?.on('lobby_info', (data) => {
       router.push(`?lobby=${data.id}`);
-      setLobbyInfo(data);
+      setLobbyInfo({ ...data, isHost: true });
     });
 
     //Called when client attempts to connect
@@ -77,7 +77,7 @@ export function RPSLobby(props: HomeProps) {
         setErrMessage(data.reason);
         setTimeout(() => setErrMessage(null), 5000);
       } else {
-        setLobbyInfo(data);
+        setLobbyInfo({ ...data, isHost: false });
         router.push(`?lobby=${data.id}`);
       }
     });
