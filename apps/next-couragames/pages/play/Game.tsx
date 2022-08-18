@@ -55,15 +55,14 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
       setLobby({ ...lobby, players: curPlayers });
     });
 
-    // socket?.on('join_lobby', (data) => {
-    //   console.log(data);
-    //   if (!data.valid) {
-    //     router.push('/play/rock-paper-scissors');
-    //   } else {
-    //     setLobby(data);
-    //   }
-    // });
+    return () => {
+      socket.off('player_joined');
+    };
   }, [socket, router, setLobby, lobby, id]);
+
+  const handleStart = () => {
+    console.log('Starting Game');
+  };
 
   //Shouldnt happen but left in testing to prevent errors
   if (!lobby) {
@@ -89,6 +88,10 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
           <div key={i}>{p.username}</div>
         ))}
       </Box>
+
+      {lobby.isHost && lobby.players.length === lobby.maxPlayers && (
+        <MenuButton onClick={handleStart}>Start Game</MenuButton>
+      )}
     </StyledHome>
   );
 }

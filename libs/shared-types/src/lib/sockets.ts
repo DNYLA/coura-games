@@ -27,4 +27,5 @@ export type ClientLobby = {
   players: Player[];
   started: boolean;
   lastActivity: Date;
+  isHost?: boolean;
 };
