@@ -84,7 +84,8 @@ export function startGame(socket: Socket, type: Games, id: string) {
 
   if (!lobby || socket.id !== lobby.hostId || lobby.started) return; //Lobby Doesnt Exist || Invalid Permissions || Already Started
 
-  if (lobby.players.length !== lobby.minPlayers) return; //Send back message as acknlowedgement later.
+  //Send back message as acknlowedgement later. (Probably not needed as the button shouldnt be shown client side unless they can start)
+  if (lobby.players.length !== lobby.minPlayers) return;
 
   if (type === Games.RPS) {
     main(lobby, socket);
