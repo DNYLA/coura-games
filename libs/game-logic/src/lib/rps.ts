@@ -1,3 +1,4 @@
+import { RPSRoundInfo } from '@couragames/shared-types';
 import { currentGames } from 'libs/game-logic/src/lib/game-logic';
 import { Lobby } from 'libs/game-logic/src/types';
 import { Socket } from 'socket.io';
@@ -13,7 +14,16 @@ export function main(lobby: Lobby, host: Socket) {
 
   //Send Current Info
   lobby.data = { round: 0, timer: d };
-  host.to(lobby.id).emit('round_started', lobby.data);
+
+  const roundInfo: RPSRoundInfo = {
+    p1Score: lobby.players[0].points,
+    p2Score: lobby.players[0].points,
+    totalRounds: 0,
+    currentRound: 0,
+    timer: d,
+  };
+  host.to(lobby.id).emit('round_started', roundInfo);
+  host.emit('round_started', roundInfo);
 }
 
 function roundEndedCallback(socket: Socket, id: string) {

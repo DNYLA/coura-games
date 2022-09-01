@@ -1,6 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
+import { RPSRoundInfo } from '@couragames/shared-types';
 import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -42,8 +43,11 @@ const MenuButton = styled.button`
 export function RPSGame({ lobby, setLobby }: HomeProps) {
   const router = useRouter();
   const socket = useContext(SocketContext).socket;
-  const { id } = router.query;
-
+  const [score, setScore] = useState<RPSRoundInfo>();
+  //Indicates weather round is currently active
+  //Cant really use timer because both players could have alreadt made there moves before timer
+  //runs out
+  const [isPlaying, setIsPlaying] = useState(false);
   useEffect(() => {
     //Check if lobby is valid
     console.log('here');
@@ -55,15 +59,27 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
       setLobby({ ...lobby, players: curPlayers });
     });
 
+    socket?.on('round_started', (info) => {
+      setScore(info);
+      console.log('Started Game');
+    });
+
     return () => {
       socket.off('player_joined');
     };
-  }, [socket, router, setLobby, lobby, id]);
+  }, [socket, router, setLobby, lobby, router.query.lobby]);
 
   const handleStart = () => {
+    socket.emit('lobby', {
+      game: Games.RPS,
+      type: LobbyEvents.Start,
+      id: lobby.id,
+    });
+
     console.log('Starting Game');
   };
 
+  //If !Lobby Render Create || Join Game.
   //Shouldnt happen but left in testing to prevent errors
   if (!lobby) {
     return (
@@ -76,23 +92,32 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
     );
   }
 
-  //If !Lobby Render Create || Join Game.
-  return (
-    <StyledHome>
-      <Title>Rock, Paper, Scissors</Title>
-      <Flex display={'flex'} flexDir={'column'}>
-        Code: {lobby.id}
-      </Flex>
-      <Box>
-        {lobby.players.map((p, i) => (
-          <div key={i}>{p.username}</div>
-        ))}
-      </Box>
+  //If game not started
+  if (!score)
+    return (
+      <StyledHome>
+        <Title>Rock, Paper, Scissors</Title>
+        <Flex display={'flex'} flexDir={'column'}>
+          Code: {lobby.id}
+        </Flex>
+        <Box>
+          {lobby.players.map((p, i) => (
+            <div key={i}>{p.username}</div>
+          ))}
+        </Box>
 
-      {lobby.isHost && lobby.players.length === lobby.maxPlayers && (
-        <MenuButton onClick={handleStart}>Start Game</MenuButton>
-      )}
-    </StyledHome>
+        {lobby.isHost && lobby.players.length === lobby.maxPlayers && (
+          <MenuButton onClick={handleStart}>Start Game</MenuButton>
+        )}
+      </StyledHome>
+    );
+
+  //Round/Play Game here
+
+  return (
+    <div>
+      This is the game <p>Test</p>
+    </div>
   );
 }
 
