@@ -29,3 +29,11 @@ export type ClientLobby = {
   lastActivity: Date;
   isHost?: boolean;
 };
+
+export type RPSRoundInfo = {
+  p1Score: number;
+  p2Score: number;
+  totalRounds: number;
+  currentRound: number;
+  timer: Date;
+};

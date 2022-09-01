@@ -9,10 +9,10 @@ import * as cors from 'cors';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { router as authRouter } from './routes/auth';
-import { getFrontendURL } from 'apps/api/src/utils';
 import { User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
+import { getFrontendURL } from './utils';
 require('./config/passport-local');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();

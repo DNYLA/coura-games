@@ -9,7 +9,7 @@ export type Lobby = {
   minPlayers: number;
   started: boolean;
   lastActivity: Date;
-  data?: RPSInfo;
+  data?: RPSInfo; //This should be redundant (No need to store?)
 };
 
 export type RPSInfo = BaseInfo & {

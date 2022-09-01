@@ -3,7 +3,7 @@ import UserContext from '../context/auth';
 import useAuth from '../hooks/useAuth';
 import { getSocketUrl } from '../utils';
 import { io, Socket } from 'socket.io-client';
-import SocketContext from 'apps/next-couragames/context/socket';
+import SocketContext from '../context/socket';
 
 export default function AppProviders({ children }: any) {
   const { user, login, logout, signup, error, setError } = useAuth();
