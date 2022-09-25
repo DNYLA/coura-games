@@ -117,6 +117,11 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
   return (
     <div>
       This is the game <p>Test</p>
+      <Box display="flex" justifyContent="center" gap="5">
+        <MenuButton onClick={handleStart}>Rock</MenuButton>
+        <MenuButton onClick={handleStart}>Paper</MenuButton>
+        <MenuButton onClick={handleStart}>Scissors</MenuButton>
+      </Box>
     </div>
   );
 }

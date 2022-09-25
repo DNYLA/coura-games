@@ -14,7 +14,6 @@ export function main(lobby: Lobby, host: Socket) {
 
   //Send Current Info
   lobby.data = { round: 0, timer: d };
-
   const roundInfo: RPSRoundInfo = {
     p1Score: lobby.players[0].points,
     p2Score: lobby.players[0].points,
@@ -24,6 +23,7 @@ export function main(lobby: Lobby, host: Socket) {
   };
   host.to(lobby.id).emit('round_started', roundInfo);
   host.emit('round_started', roundInfo);
+  lobby.started = true; //Game is now live
 }
 
 function roundEndedCallback(socket: Socket, id: string) {
