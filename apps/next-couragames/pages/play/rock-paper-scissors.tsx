@@ -75,7 +75,11 @@ export function RPSLobby(props: HomeProps) {
       console.log(data);
       if (data.invalid) {
         setErrMessage(data.reason);
-        setTimeout(() => setErrMessage(null), 5000);
+        // setTimeout(() => setErrMessage(null), 5000);
+        setTimeout(() => {
+          setErrMessage(null);
+          router.push('');
+        }, 5000);
       } else {
         setLobbyInfo({ ...data, isHost: false });
         router.push(`?lobby=${data.id}`);
