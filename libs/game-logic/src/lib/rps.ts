@@ -1,4 +1,4 @@
-import { RPSRoundInfo } from '@couragames/shared-types';
+import { RPSMove, RPSRoundInfo } from '@couragames/shared-types';
 import { currentGames } from 'libs/game-logic/src/lib/game-logic';
 import { Lobby } from 'libs/game-logic/src/types';
 import { Socket } from 'socket.io';
@@ -33,3 +33,5 @@ function roundEndedCallback(socket: Socket, id: string) {
 
   //Send User A Never Picked || User B Never Chose
 }
+
+function calculateMove(socket: Socket, move: RPSMove) {}
