@@ -23,6 +23,10 @@ export function handleLobbyEvent(socket: Socket, event: LobbyEvent) {
     case LobbyEvents.Start:
       startGame(socket, event.game, event.id);
       break;
+    case LobbyEvents.PlayerLeave:
+      throw new Error('Not Implemented');
+    case LobbyEvents.Ended:
+      throw new Error('Not Implemented');
     default:
       console.log('Unknow');
       break;
