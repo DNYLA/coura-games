@@ -6,6 +6,8 @@ export enum LobbyEvents {
   Create,
   Join,
   Start,
+  PlayerLeave,
+  Ended,
 }
 
 export type LobbyEvent = {
@@ -36,4 +38,14 @@ export type RPSRoundInfo = {
   totalRounds: number;
   currentRound: number;
   timer: Date;
+};
+
+export enum RPSMove {
+  Rock,
+  Paper,
+  Scissors,
+}
+
+export type RPSInfo = {
+  P1Move: RPSMove;
 };
