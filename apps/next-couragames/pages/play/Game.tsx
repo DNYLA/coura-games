@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
-import { RPSRoundInfo } from '@couragames/shared-types';
+import { RPSMove, RPSRoundInfo } from '@couragames/shared-types';
 import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -61,6 +61,7 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
 
     socket?.on('round_started', (info) => {
       setScore(info);
+      console.log(info);
       console.log('Started Game');
     });
 
@@ -77,6 +78,10 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
     });
 
     console.log('Starting Game');
+  };
+
+  const submitMove = (move: RPSMove) => {
+    socket.emit('rps_move', { id: lobby.id, move: move });
   };
 
   //If !Lobby Render Create || Join Game.
@@ -118,9 +123,11 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
     <div>
       This is the game <p>Test</p>
       <Box display="flex" justifyContent="center" gap="5">
-        <MenuButton onClick={handleStart}>Rock</MenuButton>
-        <MenuButton onClick={handleStart}>Paper</MenuButton>
-        <MenuButton onClick={handleStart}>Scissors</MenuButton>
+        <MenuButton onClick={() => submitMove(RPSMove.Rock)}>Rock</MenuButton>
+        <MenuButton onClick={() => submitMove(RPSMove.Paper)}>Paper</MenuButton>
+        <MenuButton onClick={() => submitMove(RPSMove.Scissors)}>
+          Scissors
+        </MenuButton>
       </Box>
     </div>
   );

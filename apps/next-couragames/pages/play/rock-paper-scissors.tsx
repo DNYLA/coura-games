@@ -10,6 +10,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import Timer from 'apps/next-couragames/components/Timer';
 import SocketContext from 'apps/next-couragames/context/socket';
 import { RPSGame } from 'apps/next-couragames/pages/play/Game';
 import e from 'express';
@@ -131,6 +132,7 @@ export function RPSLobby(props: HomeProps) {
         </Alert>
       )}
       <Flex display={'flex'} flexDir={'column'}>
+        <Timer />
         <MenuButton onClick={handleCreate}>Create</MenuButton>
         <MenuButton onClick={showJoin}>
           {showInput ? 'Cancel' : 'Join'}
