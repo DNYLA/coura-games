@@ -37,7 +37,7 @@ export type RPSRoundInfo = {
   p2Score: number;
   totalRounds: number;
   currentRound: number;
-  timer: Date;
+  timer: number;
 };
 
 export enum RPSMove {
