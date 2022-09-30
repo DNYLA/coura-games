@@ -1,4 +1,4 @@
-import { Games, Player } from '@couragames/shared-types';
+import { Games, Player, RPSMove } from '@couragames/shared-types';
 
 export type Lobby = {
   id: string;
@@ -14,8 +14,8 @@ export type Lobby = {
 
 export type RPSInfo = BaseInfo & {
   round: number;
-  playerOneChoice?: RPSChoice;
-  playerTwoChoice?: RPSChoice;
+  playerOneChoice?: RPSMove;
+  playerTwoChoice?: RPSMove;
 };
 
 type BaseInfo = {

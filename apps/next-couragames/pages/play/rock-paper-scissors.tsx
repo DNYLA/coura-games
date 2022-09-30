@@ -68,6 +68,7 @@ export function RPSLobby(props: HomeProps) {
     //Called when someone hosts a game
     socket?.on('lobby_info', (data) => {
       router.push(`?lobby=${data.id}`);
+      console.log(data);
       setLobbyInfo({ ...data, isHost: true });
     });
 
@@ -79,8 +80,8 @@ export function RPSLobby(props: HomeProps) {
         // setTimeout(() => setErrMessage(null), 5000);
         setTimeout(() => {
           setErrMessage(null);
-          router.push('');
         }, 5000);
+        router.push('');
       } else {
         setLobbyInfo({ ...data, isHost: false });
         router.push(`?lobby=${data.id}`);
@@ -132,7 +133,6 @@ export function RPSLobby(props: HomeProps) {
         </Alert>
       )}
       <Flex display={'flex'} flexDir={'column'}>
-        <Timer />
         <MenuButton onClick={handleCreate}>Create</MenuButton>
         <MenuButton onClick={showJoin}>
           {showInput ? 'Cancel' : 'Join'}
