@@ -1,8 +1,12 @@
 import useCountdown from 'apps/next-couragames/hooks/useCountdown';
 import React from 'react';
 
-export default function Timer() {
-  const { countdown } = useCountdown(new Date(1664460379 * 1000));
+export interface TimerProps {
+  end: Date;
+}
+
+export default function Timer({ end }: TimerProps) {
+  const { countdown } = useCountdown(end);
   return (
     <div>
       This is my TImer

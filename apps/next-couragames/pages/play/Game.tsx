@@ -5,6 +5,7 @@ import { RPSMove, RPSRoundInfo } from '@couragames/shared-types';
 import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
+import Timer from 'apps/next-couragames/components/Timer';
 
 /* eslint-disable-next-line */
 export interface HomeProps {
@@ -121,7 +122,7 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
 
   return (
     <div>
-      This is the game <p>Test</p>
+      <Timer end={new Date(score.timer)} />
       <Box display="flex" justifyContent="center" gap="5">
         <MenuButton onClick={() => submitMove(RPSMove.Rock)}>Rock</MenuButton>
         <MenuButton onClick={() => submitMove(RPSMove.Paper)}>Paper</MenuButton>

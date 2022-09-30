@@ -1,4 +1,5 @@
 import { handleLobbyEvent } from '@couragames/game-logic';
+import { calculateMove } from 'libs/game-logic/src/lib/rps';
 import { Games, LobbyEvent, RPSMove } from 'libs/shared-types/src';
 import { Server, Socket } from 'socket.io';
 
@@ -10,8 +11,9 @@ export const socketEventHandler = (io: Server) => {
 
     //This event SHOULD be added whenever a player/socket enters a
     //RPS game not when the socket is initialised.
-    socket.on('rps_move', (data: RPSMove) => {
+    socket.on('rps_move', (data: { id: string; move: RPSMove }) => {
       // RPS
+      calculateMove(socket, data.id, data.move);
     });
   });
 };
