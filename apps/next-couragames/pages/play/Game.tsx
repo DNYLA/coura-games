@@ -60,7 +60,7 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
       setLobby({ ...lobby, players: curPlayers });
     });
 
-    socket?.on('round_started', (info) => {
+    socket?.on('rps_round_started', (info) => {
       setScore(info);
       console.log(info);
       console.log('Started Game');
