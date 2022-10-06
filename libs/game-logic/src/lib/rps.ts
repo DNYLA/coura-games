@@ -88,8 +88,8 @@ function roundEndedCallback(socket: Socket, id: string, round: number) {
   }
 
   //Reset Moves
-  lobby.data.playerOneChoice = null;
-  lobby.data.playerTwoChoice = null;
+  lobby.data.playerOneChoice = undefined;
+  lobby.data.playerTwoChoice = undefined;
 
   //Set Timeout for 5 seconds to start new round.
   setTimeout(() => nextRoundCallback(socket, id, round), 5000);
@@ -128,8 +128,16 @@ export function calculateMove(socket: Socket, id: string, move: RPSMove) {
   }
 
   console.log('verifying');
+  console.log(lobby.data);
+
   //Verify if both players have made a choice
-  if (!lobby.data.playerOneChoice && !lobby.data.playerTwoChoice) return;
+  //Must check if it is undefined as according to javascript
+  //the number 0 is also represents false so we can not check if (!playerOneChoice)
+  if (
+    lobby.data.playerOneChoice === undefined ||
+    lobby.data.playerTwoChoice === undefined
+  )
+    return;
   console.log('Calling endCallback');
   roundEndedCallback(socket, id, lobby.data.round);
 }
