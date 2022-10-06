@@ -40,6 +40,12 @@ export type RPSRoundInfo = {
   timer: number;
 };
 
+export type RPSWinner = {
+  p1Move: RPSMove;
+  p2Move: RPSMove;
+  winner?: boolean;
+};
+
 export enum RPSMove {
   Rock,
   Paper,

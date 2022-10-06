@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
-import { RPSMove, RPSRoundInfo } from '@couragames/shared-types';
+import { RPSMove, RPSRoundInfo, RPSWinner } from '@couragames/shared-types';
 import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -45,6 +45,7 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
   const router = useRouter();
   const socket = useContext(SocketContext).socket;
   const [score, setScore] = useState<RPSRoundInfo>();
+  const [winner, setWinner] = useState<RPSWinner>();
   //Indicates weather round is currently active
   //Cant really use timer because both players could have alreadt made there moves before timer
   //runs out
@@ -62,8 +63,13 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
 
     socket?.on('rps_round_started', (info) => {
       setScore(info);
+      setWinner(null);
       console.log(info);
       console.log('Started Game');
+    });
+
+    socket?.on('rps_round_ended', (data) => {
+      setWinner(data);
     });
 
     return () => {
@@ -119,6 +125,18 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
     );
 
   //Round/Play Game here
+
+  if (winner)
+    return (
+      <div>
+        <p>Player One Move {winner.p1Move}</p>
+        <p>Player Two Move {winner.p2Move}</p>
+        <p>
+          Winner{' '}
+          {winner ? 'Player One' : winner === null ? 'Draw' : 'Player Two'}
+        </p>
+      </div>
+    );
 
   return (
     <div>

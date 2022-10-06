@@ -19,7 +19,7 @@ export function main(lobby: Lobby, host: Socket) {
   lobby.data = { round: 0, timer: d };
   const roundInfo: RPSRoundInfo = {
     p1Score: lobby.players[0].points,
-    p2Score: lobby.players[0].points,
+    p2Score: lobby.players[1].points,
     totalRounds: 0,
     currentRound: 0,
     timer: d.getTime(),
@@ -30,35 +30,78 @@ export function main(lobby: Lobby, host: Socket) {
   lobby.started = true; //Game is now live
 }
 
-function nextRoundCallback(socket: Socket, id: string, round: number) {}
+function nextRoundCallback(socket: Socket, id: string, round: number) {
+  const lobby = validLobby(id, socket.id);
+  if (!lobby) return;
+
+  const d = new Date();
+  d.setSeconds(d.getSeconds() + MAX_ROUND_TIME);
+
+  //Call Timeout
+  setTimeout(
+    () => roundEndedCallback(socket, id, round),
+    MAX_ROUND_TIME * 1000
+  );
+
+  //Send Current Info
+  const roundInfo: RPSRoundInfo = {
+    p1Score: lobby.players[0].points,
+    p2Score: lobby.players[1].points,
+    totalRounds: 0,
+    currentRound: round,
+    timer: d.getTime(),
+  };
+
+  socket.to(lobby.id).emit('rps_round_started', roundInfo);
+  socket.emit('rps_round_started', roundInfo);
+}
 
 function roundEndedCallback(socket: Socket, id: string, round: number) {
   const lobby = validLobby(id, socket.id);
   if (!lobby) return;
+  if (lobby.data.round !== round) return; // Not the same round dont run
+  lobby.data.round++; //Increment round here to prevent any timeouts from running incorrently
+
   const ply = lobby.players.find((ply) => ply.id === socket.id);
   const moves = lobby.data;
+  const p1Move = moves.playerOneChoice,
+    p2Move = moves.playerTwoChoice;
+  let winner = null; //IF true P1 won if false P2 Won
 
-  if (!moves.playerOneChoice && !moves.playerTwoChoice) {
-    socket.emit('rps_round_ended', {
-      p1Move: null,
-      p2Move: null,
-      winner: null,
-    }); //send timeout message
-  } else if (moves.playerOneChoice && !moves.playerTwoChoice) {
-    return; //send Player One Wins
-  } else if (!moves.playerOneChoice && moves.playerTwoChoice) {
-    return; //send Player Two Wins
+  if (p1Move && !p2Move) {
+    winner = true;
+  } else if (!p1Move && p2Move) {
+    winner = false;
+  } else {
+    winner = computeWinner(p1Move, p2Move);
   }
 
-  // lobby.players[]
+  socket.to(lobby.id).emit('rps_round_ended', { p1Move, p2Move, winner });
+  socket.emit('rps_round_ended', { p1Move, p2Move, winner });
 
-  //Calculate Winner
+  //Update Winner
+
+  if (winner) {
+    lobby.players[0].points++;
+  } else {
+    lobby.players[1].points++;
+  }
 
   //Reset Moves
-  lobby.data.playerOneChoice = undefined;
-  lobby.data.playerTwoChoice = undefined;
+  lobby.data.playerOneChoice = null;
+  lobby.data.playerTwoChoice = null;
 
-  //Send User A Never Picked || User B Never Chose
+  //Set Timeout for 5 seconds to start new round.
+  setTimeout(() => nextRoundCallback(socket, id, round), 5000);
+}
+
+//https://stackoverflow.com/questions/41457556/rock-paper-scissors-get-winner-mathematically
+//Equation from StackOverFlow
+//Returns true if p1 wins, false if p2 wins undefined if draw
+function computeWinner(m1: RPSMove, m2: RPSMove) {
+  if ((m1 + 1) % 3 == m2) return false;
+  else if (m1 == m2) return null;
+  else return true;
 }
 
 export function calculateMove(socket: Socket, id: string, move: RPSMove) {
@@ -73,12 +116,22 @@ export function calculateMove(socket: Socket, id: string, move: RPSMove) {
   ///Not a valid move. No need to acknowledge since uer has sent over invalid move meaning they are  attempting to cheat or exploit the system
   if (!(move in RPSMove)) return;
 
-  //Checking if the data is empty prevents cheating/users resending a "move" after selecting one.
-  if (isPlayerOne && !lobby.data.playerOneChoice)
-    lobby.data.playerOneChoice = move;
-  else if (!lobby.data.playerTwoChoice) lobby.data.playerTwoChoice = move;
+  console.log('is plauer one:', isPlayerOne);
 
+  //Checking if the data is empty prevents cheating/users resending a "move" after selecting one.
+  if (isPlayerOne && !lobby.data.playerOneChoice) {
+    lobby.data.playerOneChoice = move;
+    console.log('Confirmed set player1');
+  } else if (!lobby.data.playerTwoChoice) {
+    lobby.data.playerTwoChoice = move;
+    console.log('confirmed set p2');
+  }
+
+  console.log('verifying');
   //Verify if both players have made a choice
+  if (!lobby.data.playerOneChoice && !lobby.data.playerTwoChoice) return;
+  console.log('Calling endCallback');
+  roundEndedCallback(socket, id, lobby.data.round);
 }
 
 //Possibility to pass ID back then fetch
