@@ -1,12 +1,12 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Center, Flex } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
 import { RPSMove, RPSRoundInfo, RPSWinner } from '@couragames/shared-types';
 import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Timer from 'apps/next-couragames/components/Timer';
-
+import { MenuButton } from 'apps/next-couragames/utils/styles';
 /* eslint-disable-next-line */
 export interface HomeProps {
   lobby: ClientLobby;
@@ -26,26 +26,11 @@ const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
-const MenuButton = styled.button`
-  background-color: #4a5568;
-  padding: 7px;
-  border: 2px solid white;
-  border-radius: 4px;
-  font-size: 20px;
-  :hover {
-    background-color: #718096;
-    border-radius: 7px;
-    transition: all 300ms;
-  }
-  margin-bottom: 10px;
-  transition: all 650ms ease;
-`;
-
 export function RPSGame({ lobby, setLobby }: HomeProps) {
   const router = useRouter();
   const socket = useContext(SocketContext).socket;
   const [score, setScore] = useState<RPSRoundInfo>();
-  const [winner, setWinner] = useState<RPSWinner>();
+  const [results, setResults] = useState<RPSWinner>();
   //Indicates weather round is currently active
   //Cant really use timer because both players could have alreadt made there moves before timer
   //runs out
@@ -63,13 +48,13 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
 
     socket?.on('rps_round_started', (info) => {
       setScore(info);
-      setWinner(null);
+      setResults(null);
       console.log(info);
       console.log('Started Game');
     });
 
     socket?.on('rps_round_ended', (data) => {
-      setWinner(data);
+      setResults(data);
     });
 
     return () => {
@@ -89,6 +74,17 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
 
   const submitMove = (move: RPSMove) => {
     socket.emit('rps_move', { id: lobby.id, move: move });
+  };
+
+  const renderPlayers = () => {
+    if (lobby.players.length === 1) {
+      return <p>Waiting for opponent to join...</p>;
+    } else
+      return (
+        <p>
+          You vs {lobby.players.find((ply) => ply.id !== socket.id).username}
+        </p>
+      );
   };
 
   //If !Lobby Render Create || Join Game.
@@ -112,11 +108,7 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
         <Flex display={'flex'} flexDir={'column'}>
           Code: {lobby.id}
         </Flex>
-        <Box>
-          {lobby.players.map((p, i) => (
-            <div key={i}>{p.username}</div>
-          ))}
-        </Box>
+        <Box>{renderPlayers()}</Box>
 
         {lobby.isHost && lobby.players.length === lobby.maxPlayers && (
           <MenuButton onClick={handleStart}>Start Game</MenuButton>
@@ -126,21 +118,33 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
 
   //Round/Play Game here
 
-  if (winner)
+  if (results)
     return (
       <div>
-        <p>Player One Move {winner.p1Move}</p>
-        <p>Player Two Move {winner.p2Move}</p>
+        <p>Player One Move {results.p1Move}</p>
+        <p>Player Two Move {results.p2Move}</p>
         <p>
           Winner{' '}
-          {winner ? 'Player One' : winner === null ? 'Draw' : 'Player Two'}
+          {results.winner
+            ? 'Player One'
+            : results.winner === null
+            ? 'Draw'
+            : 'Player Two'}
         </p>
       </div>
     );
 
   return (
-    <div>
-      <Timer end={new Date(score.timer)} />
+    <Box
+      justifyContent="center"
+      alignContent="center"
+      display="flex"
+      flexFlow="column"
+      flexDir="column"
+    >
+      <Box display="flex" justifyContent="center">
+        <Timer end={new Date(score.timer)} />
+      </Box>
       <Box display="flex" justifyContent="center" gap="5">
         <MenuButton onClick={() => submitMove(RPSMove.Rock)}>Rock</MenuButton>
         <MenuButton onClick={() => submitMove(RPSMove.Paper)}>Paper</MenuButton>
@@ -148,7 +152,13 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
           Scissors
         </MenuButton>
       </Box>
-    </div>
+
+      <Box>
+        Score:
+        <p>Player One: {score.p1Score}</p>
+        <p>Player Two: {score.p2Score}</p>
+      </Box>
+    </Box>
   );
 }
 
