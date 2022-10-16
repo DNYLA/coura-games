@@ -12,12 +12,11 @@ import {
 import styled from '@emotion/styled';
 import Timer from 'apps/next-couragames/components/Timer';
 import SocketContext from 'apps/next-couragames/context/socket';
-import { RPSGame } from 'apps/next-couragames/pages/play/Game';
-import e from 'express';
 import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-
+import { MenuButton } from 'apps/next-couragames/utils/styles';
+import RPSGame from 'apps/next-couragames/pages/play/rock-paper-scissors/game';
 /* eslint-disable-next-line */
 export interface HomeProps {}
 
@@ -32,21 +31,6 @@ const Title = styled.h1`
   font-weight: 600;
   text-align: center;
   margin-bottom: 20px;
-`;
-
-const MenuButton = styled.button`
-  background-color: #4a5568;
-  padding: 7px;
-  border: 2px solid white;
-  border-radius: 4px;
-  font-size: 20px;
-  :hover {
-    background-color: #718096;
-    border-radius: 7px;
-    transition: all 300ms;
-  }
-  margin-bottom: 10px;
-  transition: all 650ms ease;
 `;
 
 export function RPSLobby(props: HomeProps) {
