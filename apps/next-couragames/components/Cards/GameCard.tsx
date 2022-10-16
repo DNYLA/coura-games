@@ -43,6 +43,8 @@ export const GameCard = ({ game, handleClick }: GameCardProps) => {
       alignItems="center"
       justifyContent="center"
       onClick={handleClick}
+      w={250}
+      h={250}
     >
       <Box
         bg={'gray.800'}
@@ -57,6 +59,8 @@ export const GameCard = ({ game, handleClick }: GameCardProps) => {
           cursor={'pointer'}
           alt="Clash Thumbnail"
           rounded="md"
+          objectFit={'fill'}
+          maxH={'100%'}
         />
         <Box
           pl={'4'}

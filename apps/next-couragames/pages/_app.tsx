@@ -1,5 +1,6 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import AppProviders from 'apps/next-couragames/components/app-providers';
+import Chat from 'apps/next-couragames/components/Chat';
 import { Navbar } from 'apps/next-couragames/components/navbar';
 import UserContext, {
   IUserContext,
@@ -37,6 +38,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <ChakraProvider theme={config}>
         <Navbar />
         <Component {...pageProps} />
+        <Chat />
       </ChakraProvider>
     </AppProviders>
   );
