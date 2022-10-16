@@ -29,6 +29,13 @@ export function Index() {
       currentPlayers: 5,
       new: false,
     },
+    {
+      name: 'Tic Tac Toe',
+      link: 'tic-tac-toe',
+      thumbnail: 'https://miro.medium.com/max/790/1*mIjIjWIUc45MQjLDVkOC-w.png',
+      currentPlayers: 35,
+      new: true,
+    },
   ]);
 
   // useEffect(() => {
@@ -101,13 +108,15 @@ export function Index() {
           overflowX="auto"
         >
           {!isLoading &&
-            games.map((game, i) => (
-              <GameCard
-                key={i}
-                handleClick={() => router.push(`/${game.name}`)}
-                game={game}
-              />
-            ))}
+            games
+              .filter((g) => g.new === true)
+              .map((game, i) => (
+                <GameCard
+                  key={i}
+                  handleClick={() => router.push(`/${game.name}`)}
+                  game={game}
+                />
+              ))}
           {/* <Collapse in={isLoading} animateOpacity>
             <HomeSkeletonCards isLoading={true} amount={6} />
           </Collapse> */}
