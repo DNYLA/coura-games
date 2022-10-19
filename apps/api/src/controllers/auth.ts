@@ -2,8 +2,6 @@ import { PrismaClient, User } from '.prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
-const DEFAULT_IMAGE =
-  'https://ronaldmottram.co.nz/wp-content/uploads/2019/01/default-user-icon-8.jpg';
 
 export const signup = async (
   req: Request,
@@ -13,7 +11,8 @@ export const signup = async (
   console.log('Signing Up');
 
   const { username, password } = req.body;
-  const errorMsg = 'Unable to process request. Try Again!';
+  const errorMsg = 'Unable to process request. Try Again!'; //Make Global Error? -> Automatically Send 500 with message
+
   //Check if user already Exists
   let foundUser: User;
   try {
@@ -35,7 +34,7 @@ export const signup = async (
   }
 
   //Hash with BCrypt
-  let hashedPass;
+  let hashedPass: string;
   try {
     hashedPass = bcrypt.hashSync(password, 12);
   } catch (err) {
@@ -50,15 +49,13 @@ export const signup = async (
       data: {
         username,
         password: hashedPass,
-        avatarUrl: DEFAULT_IMAGE,
+        // avatarUrl: DEFAULT_IMAGE,
       },
     });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: errorMsg });
   }
-
-  //Generate JWT Token
 
   //Send Back Data
   // return res.status(203).json({
