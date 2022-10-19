@@ -12,14 +12,20 @@ const ChatContainer = styled.div`
   bottom: 15px;
   right: 10px;
   padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export default function Chat() {
+  const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => {};
 
   return (
-    <Box>
-      <ChatContainer>Chat</ChatContainer>
+    <Box zIndex={15}>
+      <ChatContainer>
+        <span>Chat</span>
+        <span>X</span>
+      </ChatContainer>
 
       <Box onClick={handleOpen}>This is the chat</Box>
     </Box>
