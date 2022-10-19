@@ -37,7 +37,7 @@ export function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Box>
+    <Box zIndex={-1}>
       <Flex
         bg={'rgba(60,60,60,0.2)'}
         backdropFilter={'auto'}
@@ -98,40 +98,42 @@ export function Navbar() {
           </Flex>
         </Flex>
         {user ? (
-          <Menu>
-            <MenuButton
-              as={Button}
-              rounded={'full'}
-              variant={'link'}
-              cursor={'pointer'}
-              minW={0}
-            >
-              <Avatar
-                size={'sm'}
-                name={user.username}
-                src={user.avatarUrl ?? ''}
-              />
-            </MenuButton>
-            <MenuList alignItems={'center'}>
-              <br />
-              <Center>
+          <Box zIndex={-1}>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rounded={'full'}
+                variant={'link'}
+                cursor={'pointer'}
+                minW={0}
+              >
                 <Avatar
-                  size={'2xl'}
+                  size={'sm'}
                   name={user.username}
                   src={user.avatarUrl ?? ''}
                 />
-              </Center>
-              <br />
-              <Center>
-                <p>{user.username}</p>
-              </Center>
-              <br />
-              <MenuDivider />
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Account Settings</MenuItem>
-              <MenuItem onClick={logout}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
+              </MenuButton>
+              <MenuList alignItems={'center'}>
+                <br />
+                <Center>
+                  <Avatar
+                    size={'2xl'}
+                    name={user.username}
+                    src={user.avatarUrl ?? ''}
+                  />
+                </Center>
+                <br />
+                <Center>
+                  <p>{user.username}</p>
+                </Center>
+                <br />
+                <MenuDivider />
+                <MenuItem>Profile</MenuItem>
+                <MenuItem>Account Settings</MenuItem>
+                <MenuItem onClick={logout}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>
         ) : (
           <Stack
             flex={{ base: 1, md: 0 }}
