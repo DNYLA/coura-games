@@ -2,103 +2,9 @@ import { Box } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
 import React, { useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faChevronLeft,
-  faCircleXmark,
-  faClose,
-} from '@fortawesome/free-solid-svg-icons';
-import { Icon, WarningIcon } from '@chakra-ui/icons';
-import {
-  Avatar,
-  AvatarBadge,
-  SlideFade,
-  useDimensions,
-  WrapItem,
-} from '@chakra-ui/react';
-
-interface FriendsListProps {
-  setId: any;
-}
-
-function FriendsList({ setId }: FriendsListProps) {
-  const friendsList = [
-    {
-      name: 'John',
-      lastMessage: 'Hop on Fortnight!',
-      online: true,
-      avatar:
-        'https://i.scdn.co/image/ab6761610000e5eb9c30c6b69a55d48decd71600',
-    },
-    {
-      name: 'Barbara',
-      online: false,
-      lastMessage: 'want to play a game?',
-      avatar:
-        'https://i1.sndcdn.com/artworks-QEVOnOm6VJ04F5Rp-1fEbAA-t500x500.jpg',
-    },
-    {
-      name: 'John',
-      lastMessage: 'Hop on Fortnight!',
-      online: true,
-      avatar:
-        'https://i.scdn.co/image/ab6761610000e5eb9c30c6b69a55d48decd71600',
-    },
-    {
-      name: 'Barbara',
-      online: false,
-      lastMessage: 'want to play a game?',
-      avatar:
-        'https://i1.sndcdn.com/artworks-QEVOnOm6VJ04F5Rp-1fEbAA-t500x500.jpg',
-    },
-    {
-      name: 'John',
-      lastMessage: 'Hop on Fortnight!',
-      online: true,
-      avatar:
-        'https://i.scdn.co/image/ab6761610000e5eb9c30c6b69a55d48decd71600',
-    },
-    {
-      name: 'Barbara',
-      online: false,
-      lastMessage: 'want to play a game?',
-      avatar:
-        'https://i1.sndcdn.com/artworks-QEVOnOm6VJ04F5Rp-1fEbAA-t500x500.jpg',
-    },
-  ];
-  return (
-    <Box maxH={'100%'} overflow={'auto'}>
-      {friendsList.map((friend, i) => (
-        <Box
-          key={i}
-          display={'flex'}
-          alignContent={'center'}
-          alignItems={'center'}
-          padding={'5px'}
-          borderBottom={'1px solid rgba(0,0,0,0.2)'}
-        >
-          <WrapItem>
-            <Avatar name={friend.name} src={friend.avatar}>
-              <AvatarBadge boxSize="1em" bg="green.500" />
-            </Avatar>
-          </WrapItem>
-          <Box
-            display={'flex'}
-            flexFlow={'column'}
-            padding={'5px'}
-            pl={'8px'}
-            cursor={'pointer'}
-            onClick={() => setId(friend.name)}
-          >
-            <span style={{ fontWeight: '500' }}>{friend.name}</span>
-            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.75)' }}>
-              {friend.lastMessage}
-            </span>
-          </Box>
-        </Box>
-      ))}
-    </Box>
-  );
-}
+import { faChevronLeft, faClose } from '@fortawesome/free-solid-svg-icons';
+import { Collapse, useDimensions, useDisclosure } from '@chakra-ui/react';
+import FriendsList from 'apps/next-couragames/components/Chat/friends-list';
 
 function DirectMessage() {
   return <Box>This is a DM</Box>;
@@ -106,7 +12,8 @@ function DirectMessage() {
 
 export default function Chat() {
   // const [isOpen, setIsOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  // const [isOpen, setIsOpen] = useState(true);
+  const { isOpen, onToggle } = useDisclosure();
   const [chatId, setChatId] = useState(null);
 
   const hide = {
@@ -117,16 +24,17 @@ export default function Chat() {
     display: 'block',
   };
 
-  const toggle = () => setIsOpen(!isOpen);
+  // const toggle = () => setIsOpen(!isOpen);
   const elementRef = useRef();
   const dimensions = useDimensions(elementRef, true);
 
   console.log(dimensions);
   return (
     <ChatBox>
-      <SlideFade in={isOpen} offsetY="20px">
+      {/* <SlideFade in={isOpen} offsetY={'0px'} offsetX={'0px'}> */}
+      <Collapse in={isOpen} animateOpacity>
         <Container ref={elementRef} style={isOpen ? show : hide}>
-          <Header onClick={toggle}>
+          <Header onClick={onToggle}>
             {chatId ? (
               <FontAwesomeIcon
                 icon={faChevronLeft}
@@ -137,10 +45,10 @@ export default function Chat() {
                 }}
               />
             ) : (
-              <div></div>
+              <FontAwesomeIcon icon={faChevronLeft} style={{ opacity: '0%' }} />
             )}
             {/* <Icon as={faChevronLeft} /> */}
-            <h1 style={{ fontWeight: '600' }}>Chat</h1>
+            <h1 style={{ fontWeight: '600' }}>{chatId ?? 'Chat'}</h1>
             <FontAwesomeIcon icon={faClose} style={{ cursor: 'pointer' }} />
             {/* <FontAwesomeIcon icon={faCircleXmark} style={{}} /> */}
           </Header>
@@ -149,8 +57,10 @@ export default function Chat() {
           </Box>
           <Box></Box>
         </Container>
-      </SlideFade>
-      <Popup onClick={toggle} style={isOpen ? hide : {}}>
+      </Collapse>
+      {/* </SlideFade> */}
+
+      <Popup onClick={onToggle} style={isOpen ? hide : {}}>
         <span>Chat</span>
         <FontAwesomeIcon icon={faClose} style={{ cursor: 'pointer' }} />
       </Popup>
