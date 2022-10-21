@@ -15,6 +15,7 @@ import {
   useDimensions,
   WrapItem,
 } from '@chakra-ui/react';
+import DirectMessage from 'apps/next-couragames/components/Chat/DirectMessage';
 
 interface FriendsListProps {
   setId: any;
@@ -100,10 +101,6 @@ function FriendsList({ setId }: FriendsListProps) {
   );
 }
 
-function DirectMessage() {
-  return <Box>This is a DM</Box>;
-}
-
 export default function Chat() {
   // const [isOpen, setIsOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
@@ -145,7 +142,11 @@ export default function Chat() {
             {/* <FontAwesomeIcon icon={faCircleXmark} style={{}} /> */}
           </Header>
           <Box h={'calc(100% - 35px)'}>
-            {chatId ? <DirectMessage /> : <FriendsList setId={setChatId} />}
+            {chatId ? (
+              <DirectMessage id={chatId} lastMessage={'Invite me to a lobby'} />
+            ) : (
+              <FriendsList setId={setChatId} />
+            )}
           </Box>
           <Box></Box>
         </Container>
