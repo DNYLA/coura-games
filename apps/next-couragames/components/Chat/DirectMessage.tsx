@@ -45,8 +45,9 @@ export default function DirectMessage({ id, lastMessage }: DirectMessageProps) {
 
   return (
     <Box>
-      {messages.map((msg) => (
+      {messages.map((msg, i) => (
         <IndividualMessage
+          key={i}
           content={msg.content}
           name={msg.sender ? user.name : user2.name}
           avatar={msg.sender ? user.avatar : user2.avatar}
