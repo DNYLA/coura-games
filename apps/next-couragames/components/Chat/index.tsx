@@ -5,10 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faClose } from '@fortawesome/free-solid-svg-icons';
 import { Collapse, useDimensions, useDisclosure } from '@chakra-ui/react';
 import FriendsList from 'apps/next-couragames/components/Chat/friends-list';
-
-function DirectMessage() {
-  return <Box>This is a DM</Box>;
-}
+import DirectMessage from 'apps/next-couragames/components/Chat/DirectMessage';
 
 export default function Chat() {
   // const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +50,11 @@ export default function Chat() {
             {/* <FontAwesomeIcon icon={faCircleXmark} style={{}} /> */}
           </Header>
           <Box h={'calc(100% - 35px)'}>
-            {chatId ? <DirectMessage /> : <FriendsList setId={setChatId} />}
+            {chatId ? (
+              <DirectMessage id={chatId} lastMessage={'Invite me to a lobby'} />
+            ) : (
+              <FriendsList setId={setChatId} />
+            )}
           </Box>
           <Box></Box>
         </Container>
