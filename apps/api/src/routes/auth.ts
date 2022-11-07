@@ -19,7 +19,7 @@ router.post(
     successRedirect: 'user',
     failureRedirect: 'failed',
   }),
-  (req, res) => {
+  (_, res) => {
     res.sendStatus(200);
   }
 );

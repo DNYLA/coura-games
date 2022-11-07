@@ -103,17 +103,13 @@ function IndividualMessage({ content, sender }: MessageProps) {
   );
 }
 
-interface MessagesProps {
-  sender: boolean;
-}
-
 const MessageCon = styled.div`
   display: inline-block;
   /* display: flex; */
   /* flex-direction: column; */
 `;
 
-const MessageBox = styled.div<MessagesProps>`
+const MessageBox = styled.div<{ sender: boolean }>`
   padding: 5px;
   margin: 5px;
   background-color: rgba(0, 0, 0, 0.2);
