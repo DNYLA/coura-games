@@ -3,6 +3,8 @@ import { ClientLobby, Games, LobbyEvents } from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
 import { MenuButton } from 'apps/next-couragames/utils/styles';
+import Checkbox from 'libs/ui/src/lib/forms/checkbox';
+import Range from 'libs/ui/src/lib/forms/range';
 import React, { useContext, useEffect, useState } from 'react';
 
 export type Settings = {
@@ -27,7 +29,7 @@ export default function LobbySettings({
 }: LobbySettingsProps) {
   const [isOpen, setIsOpen] = useState(true);
   const socket = useContext(SocketContext).socket;
-
+  const [isSettings, setIsSettings] = useState(false);
   useEffect(() => {
     //Check if lobby is valid
     console.log('here');
@@ -69,6 +71,10 @@ export default function LobbySettings({
     setIsOpen(!isOpen);
   };
 
+  const handleSettings = (value: boolean) => {
+    setIsSettings(value);
+  };
+
   return (
     <StyledHome>
       <Title>Rock, Paper, Scissors</Title>
@@ -87,8 +93,19 @@ export default function LobbySettings({
       <SettingsModal open={isOpen}>
         <Container>
           <div className="title">
-            <h2>Settings</h2>
-            <span>X</span>
+            <TitleBar>
+              <h2>Settings</h2>
+              <span>X</span>
+            </TitleBar>
+
+            <div>
+              <Checkbox
+                title={'Random Names'}
+                toggled={isSettings}
+                onToggle={handleSettings}
+              />
+              {/* <Range min={1} max={1} /> */}
+            </div>
           </div>
         </Container>
       </SettingsModal>
@@ -117,20 +134,23 @@ const Container = styled.div`
   border-radius: 6px;
 
   .title {
-    border-radius: 6px 6px 0 0;
-    width: 100%;
-    height: 100%;
-    background-color: #293a43;
-    font-size: 20px;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    span {
-      position: fixed;
-      right: 0;
-    }
+  }
+`;
+
+const TitleBar = styled.div`
+  border-radius: 6px 6px 0 0;
+  width: 100%;
+  height: 100%;
+  background-color: #293a43;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  span {
+    position: fixed;
+    right: 0;
   }
 `;
 
