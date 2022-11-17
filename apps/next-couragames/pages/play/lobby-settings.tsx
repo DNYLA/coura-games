@@ -1,6 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { ClientLobby, Games, LobbyEvents } from '@couragames/shared-types';
-import { InputRange } from '@couragames/ui';
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
 import { MenuButton } from 'apps/next-couragames/utils/styles';
@@ -114,14 +113,6 @@ export default function LobbySettings({
                 step={1}
                 value={inputVal}
                 onChange={(value) => setInputVal(value)}
-              />
-              <InputRange
-                message="Max Players"
-                min={0}
-                max={10}
-                step={1}
-                value={inputVal}
-                onChange={(value) => setInputVal(Number(value.target.value))}
               />
             </div>
           </div>
