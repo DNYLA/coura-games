@@ -8,9 +8,12 @@ import { User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
 import { getFrontendURL } from './utils';
+import { redis } from 'apps/api/src/redis';
 require('./config/passport-local');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
+
+redis.connect();
 
 const app = express();
 const httpServer = createServer(app);
