@@ -23,17 +23,21 @@ export default function Range({
   };
 
   return (
-    <Container>
-      <StyledRange
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={handleChange}
-      />
-      <h1>{value}</h1>
-    </Container>
+    <>
+      <Container>
+        <p>{title}:</p>
+
+        <StyledRange
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={handleChange}
+        />
+        <h1>{value}</h1>
+      </Container>
+    </>
   );
 }
 
@@ -52,6 +56,8 @@ const makeLongShadow = (color: any, size: any) => {
 };
 
 const Container = styled.div`
+  p {
+  }
   user-select: none;
   display: flex;
   flex-direction: row;
@@ -72,7 +78,7 @@ const StyledRange = styled.input`
   width: 100%;
   margin: 0;
   height: ${height};
-  background: #202225;
+  background: transparent;
   border-radius: 15px;
   cursor: pointer;
 
