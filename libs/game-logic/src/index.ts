@@ -4,6 +4,7 @@ import {
   joinLobby,
   startGame,
 } from 'libs/game-logic/src/lib/game-logic';
+import { redis } from 'libs/game-logic/src/redis';
 import { Socket } from 'socket.io';
 export { createLobby } from './lib/game-logic';
 
@@ -32,3 +33,5 @@ export function handleLobbyEvent(socket: Socket, event: LobbyEvent) {
       break;
   }
 }
+
+export { redis };

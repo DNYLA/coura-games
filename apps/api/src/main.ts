@@ -8,7 +8,7 @@ import { User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
 import { getFrontendURL } from './utils';
-import { redis as redisClent } from 'apps/api/src/redis';
+import { redis as redisClent } from '@couragames/game-logic';
 import * as connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 require('./config/passport-local');
@@ -71,7 +71,9 @@ app.use(
   })
 );
 
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: { origin: [getFrontendURL()], credentials: true },
+});
 socketEventHandler(io);
 
 app.use(express.json()); //Parses All incoming data into JSON
