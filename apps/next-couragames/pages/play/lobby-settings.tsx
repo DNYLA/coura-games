@@ -30,7 +30,7 @@ export default function LobbySettings({
   const [isOpen, setIsOpen] = useState(true);
   const socket = useContext(SocketContext).socket;
   const [isSettings, setIsSettings] = useState(false);
-  const [inputVal, setInputVal] = useState(0);
+  const [minPlayers, setMinPlayers] = useState(2);
 
   useEffect(() => {
     //Check if lobby is valid
@@ -108,11 +108,19 @@ export default function LobbySettings({
               />
               <Range
                 title="Max Players"
+                min={minPlayers}
+                max={lobby.maxPlayers}
+                step={1}
+                value={lobby.maxPlayers}
+                onChange={(value) => setLobby({ ...lobby, maxPlayers: value })}
+              />
+              <Range
+                title="Min Players"
                 min={0}
                 max={10}
                 step={1}
-                value={inputVal}
-                onChange={(value) => setInputVal(value)}
+                value={minPlayers}
+                onChange={(value) => setMinPlayers(value)}
               />
             </div>
           </div>
@@ -139,7 +147,7 @@ const SettingsModal = styled.div<{ open: boolean }>`
 const Container = styled.div`
   width: 300px;
   background-color: #2e3a4e;
-  /* padding: 10px; */
+  padding: 5px;
   border-radius: 6px;
 
   .title {
