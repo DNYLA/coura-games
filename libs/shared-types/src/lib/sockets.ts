@@ -25,11 +25,18 @@ export type Player = {
 
 export type ClientLobby = {
   id: string;
-  maxPlayers: number;
+  maxPlayersAllowed: number;
+  minPlayers: number;
   players: Player[];
   started: boolean;
   lastActivity: Date;
   isHost?: boolean;
+  settings: LobbySettings;
+};
+
+export type LobbySettings = {
+  randomNames: boolean;
+  maxPlayers: number;
 };
 
 export type RPSRoundInfo = {

@@ -7,16 +7,9 @@ import Checkbox from 'libs/ui/src/lib/forms/checkbox';
 import Range from 'libs/ui/src/lib/forms/range';
 import React, { useContext, useEffect, useState } from 'react';
 
-export type Settings = {
-  minPlayers: number;
-  maxPlayers: number;
-  maxRounds: number;
-  randomNames: boolean;
-};
-
 export interface LobbySettingsProps {
   lobby: ClientLobby;
-  setLobby: any;
+  setLobby: React.Dispatch<React.SetStateAction<ClientLobby>>;
   // settings: Settings;
   type: Games;
 }
@@ -85,7 +78,7 @@ export default function LobbySettings({
       </Flex>
       <Box>{renderPlayers()}</Box>
 
-      {lobby.isHost && lobby.players.length === lobby.maxPlayers && (
+      {lobby.isHost && lobby.players.length >= lobby.minPlayers && (
         <>
           <MenuButton onClick={handleStart}>Start Game</MenuButton>
           <MenuButton onClick={toggleSettings}>Settings</MenuButton>
@@ -108,19 +101,16 @@ export default function LobbySettings({
               />
               <Range
                 title="Max Players"
-                min={minPlayers}
-                max={lobby.maxPlayers}
+                min={lobby.minPlayers}
+                max={lobby.maxPlayersAllowed}
                 step={1}
-                value={lobby.maxPlayers}
-                onChange={(value) => setLobby({ ...lobby, maxPlayers: value })}
-              />
-              <Range
-                title="Min Players"
-                min={0}
-                max={10}
-                step={1}
-                value={minPlayers}
-                onChange={(value) => setMinPlayers(value)}
+                value={lobby.settings.maxPlayers}
+                onChange={(value) =>
+                  setLobby({
+                    ...lobby,
+                    settings: { ...lobby.settings, maxPlayers: value },
+                  })
+                }
               />
             </div>
           </div>
