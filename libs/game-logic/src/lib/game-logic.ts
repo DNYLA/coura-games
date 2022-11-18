@@ -1,12 +1,14 @@
-import { Games, Player } from '@couragames/shared-types';
+import { ClientLobby, Games, Player } from '@couragames/shared-types';
+import { getLobby, setLobby } from 'libs/game-logic/src/lib/redisManager';
 import { main } from 'libs/game-logic/src/lib/rps';
+import { redis } from 'libs/game-logic/src/redis';
 import { Socket } from 'socket.io';
 import { Lobby } from '../types';
 
 export const currentGames = new Map<string, Lobby>();
 
-export function createLobby(socket: Socket, type: Games) {
-  const code = generateCode();
+export async function createLobby(socket: Socket, type: Games) {
+  const code = await generateCode();
   const randomNumber = generateCode();
   const players: Player[] = [
     {
@@ -36,21 +38,15 @@ export function createLobby(socket: Socket, type: Games) {
     },
   };
 
-  currentGames.set(code, game);
+  await setLobby(code, game, { expire: 60 * 30 });
   socket.data.gameId = code;
 
-  socket.emit('lobby_info', {
-    id: code,
-    maxPlayers: 2,
-    players,
-    started: false,
-    lastActivity: game.lastActivity,
-  });
+  socket.emit('lobby_info', stripLobby(game));
   socket.join(code);
 }
 
-export function joinLobby(socket: Socket, type: Games, id: string) {
-  const lobby = currentGames.get(id);
+export async function joinLobby(socket: Socket, type: Games, id: string) {
+  const lobby: Lobby = await getLobby(id);
   if (!lobby)
     return socket.emit('join_lobby', {
       invalid: true,
@@ -73,22 +69,15 @@ export function joinLobby(socket: Socket, type: Games, id: string) {
     lastActivity: new Date(),
   };
   lobby.players.push(newPlayer);
+  setLobby(id, lobby);
 
-  console.log('Valid Lobby');
-  socket.emit('join_lobby', {
-    id: lobby.id,
-    maxPlayers: 2,
-    players: lobby.players,
-    started: false,
-    lastActivity: lobby.lastActivity,
-  });
-
+  socket.emit('join_lobby', stripLobby(lobby));
   socket.to(lobby.id).emit('player_joined', newPlayer);
   socket.join(lobby.id);
 }
 
-export function startGame(socket: Socket, type: Games, id: string) {
-  const lobby = currentGames.get(id);
+export async function startGame(socket: Socket, type: Games, id: string) {
+  const lobby: Lobby = await getLobby(id);
 
   if (!lobby || socket.id !== lobby.hostId || lobby.started) return; //Lobby Doesnt Exist || Invalid Permissions || Already Started
 
@@ -100,14 +89,29 @@ export function startGame(socket: Socket, type: Games, id: string) {
   }
 }
 
-function generateCode() {
+async function generateCode() {
   //Find a way to generate a string that start with 0
   const code = String(Math.floor(Math.random() * 90000) + 10000);
 
   //Check if GameCode Already Exists
-  // const exists = await getLobby(code);
-  // if (!exists) return code;
-  // else return generateCode();
+  const exists = await getLobby(code);
+  if (!exists) return code;
+  else return generateCode();
+}
 
-  return code;
+function stripLobby(lobby: Lobby): ClientLobby {
+  const clientLobby: ClientLobby = {
+    id: lobby.id,
+    maxPlayersAllowed: lobby.maxPlayersAllowed,
+    minPlayers: lobby.minPlayers,
+    players: lobby.players,
+    started: lobby.started,
+    lastActivity: lobby.lastActivity,
+    settings: {
+      randomNames: false,
+      maxPlayers: lobby.maxPlayersAllowed,
+    },
+  };
+
+  return clientLobby;
 }

@@ -1,3 +1,4 @@
+import { Lobby } from 'libs/game-logic/src/types';
 import { redis } from '../../../../libs/game-logic/src/redis';
 
 class RedisManager {
@@ -29,7 +30,18 @@ async function getJson(key, options: RedisOptions) {
   return data;
 }
 
-async function getLobby(code: string, options: RedisOptions) {
+export async function setLobby(
+  code: string,
+  game: Lobby,
+  options?: RedisOptions
+) {
+  return await setJson(`lobby-${code}`, game, options);
+}
+
+export async function getLobby(
+  code: string,
+  options?: RedisOptions
+): Promise<any> {
   return await getJson(`lobby-${code}`, options);
 }
 
