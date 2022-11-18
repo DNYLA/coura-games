@@ -23,7 +23,7 @@ export default function Range({
   };
 
   return (
-    <>
+    <Main>
       <Container>
         <p>{title}:</p>
 
@@ -37,7 +37,7 @@ export default function Range({
         />
         <h1>{value}</h1>
       </Container>
-    </>
+    </Main>
   );
 }
 
@@ -55,16 +55,24 @@ const makeLongShadow = (color: any, size: any) => {
   return shadow;
 };
 
+//Refactor Names
+const Main = styled.div``;
+
 const Container = styled.div`
+  text-align: center;
+  align-items: center;
+  align-content: center;
+
   p {
+    width: 100px;
   }
   user-select: none;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-
+  gap: 10px;
   h1 {
-    padding-left: 10px;
+    /* padding-left: 10px; */
   }
 `;
 
