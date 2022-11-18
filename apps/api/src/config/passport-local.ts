@@ -42,5 +42,6 @@ passport.serializeUser((user: any, cb: any) => {
 
 passport.deserializeUser(async (id: number, cb: any) => {
   const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) return cb(null, false); //Throw Error // Delete Session
   cb(null, user);
 });

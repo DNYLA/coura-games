@@ -17,15 +17,23 @@ export function createLobby(socket: Socket, type: Games) {
     },
   ];
 
+  //Move this into config variable
+  const maxPlayers = 2;
+  const minPlayers = 2;
+
   const game: Lobby = {
     id: code,
     hostId: socket.id,
     type,
     players,
-    maxPlayers: 2,
-    minPlayers: 2,
+    maxPlayersAllowed: maxPlayers,
+    minPlayers: minPlayers,
     started: false,
     lastActivity: new Date(),
+    settings: {
+      randomNames: false,
+      maxPlayers,
+    },
   };
 
   currentGames.set(code, game);
@@ -49,7 +57,7 @@ export function joinLobby(socket: Socket, type: Games, id: string) {
       reason: 'Lobby does not exist.',
     });
 
-  if (lobby.players.length + 1 > lobby.maxPlayers) {
+  if (lobby.players.length + 1 > lobby.settings.maxPlayers) {
     return socket.emit('join_lobby', {
       invalid: true,
       reason: 'Lobby has reached maximum player limit.',

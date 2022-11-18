@@ -5,11 +5,17 @@ export type Lobby = {
   hostId: string;
   type: Games;
   players: Player[];
-  maxPlayers: number;
-  minPlayers: number;
+  maxPlayersAllowed: number; //Game cannot handle more than x players
+  minPlayers: number; //Game Requires atleast x players before starting
   started: boolean;
   lastActivity: Date;
+  settings: LobbySettings;
   data?: RPSInfo; //This should be redundant (No need to store?)
+};
+
+export type LobbySettings = {
+  randomNames: boolean;
+  maxPlayers: number;
 };
 
 export type RPSInfo = BaseInfo & {
