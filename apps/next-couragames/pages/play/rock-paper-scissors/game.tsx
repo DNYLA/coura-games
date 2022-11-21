@@ -110,7 +110,7 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
         </Flex>
         <Box>{renderPlayers()}</Box>
 
-        {lobby.isHost && lobby.players.length === lobby.maxPlayers && (
+        {lobby.isHost && lobby.players.length === lobby.minPlayers && (
           <MenuButton onClick={handleStart}>Start Game</MenuButton>
         )}
       </StyledHome>
