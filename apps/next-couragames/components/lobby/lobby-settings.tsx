@@ -17,42 +17,60 @@ export default function LobbySettings({ lobby, setLobby }: LobbySettingsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isRandomNames, setIsRandomNames] = useState(false);
 
+  const socket = useContext(SocketContext).socket;
+
   const toggleSettings = () => {
     setIsOpen(!isOpen);
   };
 
-  return (
-    <SettingsModal open={isOpen}>
-      <Container>
-        <div className="title">
-          <TitleBar>
-            <h2>Settings</h2>
-            <span onClick={toggleSettings}>X</span>
-          </TitleBar>
+  const handleStart = () => {
+    socket.emit('lobby', {
+      game: Games.RPS,
+      type: LobbyEvents.Start,
+      id: lobby.id,
+    });
 
-          <div>
-            <Checkbox
-              title={'Random Names'}
-              toggled={isRandomNames}
-              onToggle={(value) => setIsRandomNames(value)}
-            />
-            <Range
-              title="Max Players"
-              min={lobby.minPlayers}
-              max={lobby.maxPlayersAllowed}
-              step={1}
-              value={lobby.settings.maxPlayers}
-              onChange={(value) =>
-                setLobby({
-                  ...lobby,
-                  settings: { ...lobby.settings, maxPlayers: value },
-                })
-              }
-            />
+    console.log('Starting Game');
+  };
+
+  return (
+    <>
+      {lobby.players.length >= lobby.minPlayers && (
+        <MenuButton onClick={handleStart}>Start Game</MenuButton>
+      )}
+      <MenuButton onClick={toggleSettings}>Settings</MenuButton>
+      <SettingsModal open={isOpen}>
+        <Container>
+          <div className="title">
+            <TitleBar>
+              <h2>Settings</h2>
+              <span onClick={toggleSettings}>X</span>
+            </TitleBar>
+
+            <div>
+              <Checkbox
+                title={'Random Names'}
+                toggled={isRandomNames}
+                onToggle={(value) => setIsRandomNames(value)}
+              />
+              <Range
+                title="Max Players"
+                min={lobby.minPlayers}
+                max={lobby.maxPlayersAllowed}
+                step={1}
+                value={lobby.settings.maxPlayers}
+                onChange={(value) =>
+                  setLobby({
+                    ...lobby,
+                    settings: { ...lobby.settings, maxPlayers: value },
+                  })
+                }
+              />
+            </div>
           </div>
-        </div>
-      </Container>
-    </SettingsModal>
+        </Container>
+      </SettingsModal>
+    </>
   );
 }
 
