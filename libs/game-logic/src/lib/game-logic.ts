@@ -9,7 +9,7 @@ export const currentGames = new Map<string, Lobby>();
 
 export async function createLobby(socket: Socket, type: Games) {
   const code = await generateCode();
-  const randomNumber = generateCode();
+  const randomNumber = await generateCode();
   const players: Player[] = [
     {
       id: socket.id,
@@ -61,7 +61,7 @@ export async function joinLobby(socket: Socket, type: Games, id: string) {
   }
 
   //Add player to playersList
-  const randomNumber = generateCode();
+  const randomNumber = await generateCode();
   const newPlayer: Player = {
     id: socket.id,
     username: `Guest-${randomNumber}`,
@@ -83,6 +83,10 @@ export async function startGame(socket: Socket, type: Games, id: string) {
 
   //Send back message as acknlowedgement later. (Probably not needed as the button shouldnt be shown client side unless they can start)
   if (lobby.players.length !== lobby.minPlayers) return;
+  setLobby(id, { ...lobby, started: true });
+
+  socket.to(lobby.id).emit('game_started');
+  socket.emit('game_started');
 
   if (type === Games.RPS) {
     main(lobby, socket);

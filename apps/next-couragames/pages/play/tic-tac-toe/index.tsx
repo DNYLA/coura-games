@@ -1,11 +1,11 @@
-import Lobby from 'apps/next-couragames/pages/play/lobby';
-import RPSGame from 'apps/next-couragames/pages/play/rock-paper-scissors/game';
+import { Games } from '@couragames/shared-types';
+import Lobby from 'apps/next-couragames/components/lobby';
 import React from 'react';
 
 export default function index() {
   return (
-    <Lobby redirect="rock-paper-scissors">
-      <div>Test</div>
+    <Lobby game={Games.RPS} redirect="rock-paper-scissors">
+      <div>Tic Tac Toe</div>
     </Lobby>
   );
 }
