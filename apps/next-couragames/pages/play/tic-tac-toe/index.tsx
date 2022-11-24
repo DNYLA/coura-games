@@ -3,15 +3,17 @@ import Lobby from 'apps/next-couragames/components/lobby';
 import SocketContext from 'apps/next-couragames/context/socket';
 import React, { useContext, useEffect } from 'react';
 
-export default function index() {
+export default function TicTacToe() {
   const socket = useContext(SocketContext).socket;
 
   useEffect(() => {
-    socket?.on('rps_round_started', (info) => {
+    socket?.on('tictac_round_started', (info) => {
       console.log('Started Game');
     });
 
-    socket?.on('rps_round_ended', (data) => {});
+    socket?.on('tictac_round_ended', (data) => {
+      console.log('Game Ended');
+    });
 
     return () => {
       socket?.off('rps_round_ended');
@@ -19,7 +21,7 @@ export default function index() {
   }, [socket]);
 
   return (
-    <Lobby game={Games.RPS} redirect="rock-paper-scissors">
+    <Lobby game={Games.TicTacToe} redirect="tic-tac-toe">
       <div>Tic Tac Toe</div>
     </Lobby>
   );
