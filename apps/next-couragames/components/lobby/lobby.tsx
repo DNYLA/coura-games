@@ -12,23 +12,18 @@ export interface ActiveLobbyProps {
   lobby: ClientLobby;
   setLobby: React.Dispatch<React.SetStateAction<ClientLobby>>;
   // settings: Settings;
-  type: Games;
+  game: Games;
 }
 
 export default function ActiveLobby({
   lobby,
   setLobby,
-  // settings,
-  type,
+  game,
 }: ActiveLobbyProps) {
   const [isOpen, setIsOpen] = useState(true);
   const socket = useContext(SocketContext).socket;
 
   useEffect(() => {
-    //Check if lobby is valid
-    console.log('here');
-    console.log(lobby);
-
     socket?.on('player_joined', (player) => {
       const curPlayers = [...lobby.players];
       curPlayers.push(player);
@@ -42,7 +37,7 @@ export default function ActiveLobby({
 
   const handleStart = () => {
     socket.emit('lobby', {
-      game: Games.RPS,
+      game: game,
       type: LobbyEvents.Start,
       id: lobby.id,
     });
