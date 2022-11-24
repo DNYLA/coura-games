@@ -20,7 +20,6 @@ export default function ActiveLobby({
   setLobby,
   game,
 }: ActiveLobbyProps) {
-  const [isOpen, setIsOpen] = useState(true);
   const socket = useContext(SocketContext).socket;
 
   useEffect(() => {
@@ -35,16 +34,6 @@ export default function ActiveLobby({
     };
   }, [socket, setLobby, lobby]);
 
-  const handleStart = () => {
-    socket.emit('lobby', {
-      game: game,
-      type: LobbyEvents.Start,
-      id: lobby.id,
-    });
-
-    console.log('Starting Game');
-  };
-
   const renderPlayers = () => {
     if (lobby.players.length === 1) {
       return <p>Waiting for opponent to join...</p>;
@@ -56,10 +45,6 @@ export default function ActiveLobby({
       );
   };
 
-  const toggleSettings = () => {
-    setIsOpen(!isOpen);
-  };
-
   console.log(`is Host ${lobby.isHost}`);
 
   return (
@@ -69,13 +54,6 @@ export default function ActiveLobby({
         Code: {lobby.id}
       </Flex>
       <Box>{renderPlayers()}</Box>
-
-      {lobby.isHost && lobby.players.length >= lobby.minPlayers && (
-        <>
-          <MenuButton onClick={handleStart}>Start Game</MenuButton>
-          <MenuButton onClick={toggleSettings}>Settings</MenuButton>
-        </>
-      )}
 
       {lobby.isHost && <LobbySettings lobby={lobby} setLobby={setLobby} />}
     </StyledHome>
