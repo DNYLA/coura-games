@@ -54,8 +54,9 @@ export function Lobby({ redirect, game, children }: HomeProps) {
     return () => {
       socket?.off('lobby_info');
       socket?.off('join_lobby');
+      socket?.off('game_started');
     };
-  }, [socket, router]);
+  }, [socket, router, lobbyInfo]);
 
   if (lobby) {
     if (typeof lobby !== 'string') {
@@ -66,7 +67,7 @@ export function Lobby({ redirect, game, children }: HomeProps) {
       } else if (lobbyInfo) {
         return (
           <ActiveLobby
-            type={game}
+            game={game}
             lobby={lobbyInfo}
             setLobby={setLobbyInfo}
             // settings={}

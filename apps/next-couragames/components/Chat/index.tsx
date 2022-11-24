@@ -25,7 +25,6 @@ export default function Chat() {
   const elementRef = useRef();
   const dimensions = useDimensions(elementRef, true);
 
-  console.log(dimensions);
   return (
     <ChatBox>
       {/* <SlideFade in={isOpen} offsetY={'0px'} offsetX={'0px'}> */}
