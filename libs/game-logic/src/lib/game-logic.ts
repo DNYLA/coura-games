@@ -1,6 +1,7 @@
 import { ClientLobby, Games, Player } from '@couragames/shared-types';
 import { getLobby, setLobby } from 'libs/game-logic/src/lib/redisManager';
-import { main } from 'libs/game-logic/src/lib/rps';
+import { main as RPSMain } from 'libs/game-logic/src/lib/rps';
+import { TicTacToe } from 'libs/game-logic/src/lib/tictactoe';
 import { redis } from 'libs/game-logic/src/redis';
 import { Socket } from 'socket.io';
 import { Lobby } from '../types';
@@ -88,8 +89,15 @@ export async function startGame(socket: Socket, type: Games, id: string) {
   socket.to(lobby.id).emit('game_started');
   socket.emit('game_started');
 
-  if (type === Games.RPS) {
-    main(lobby, socket);
+  switch (type) {
+    case Games.RPS:
+      RPSMain(lobby, socket);
+      break;
+    case Games.TicTacToe:
+      new TicTacToe(lobby, socket);
+      break;
+    default:
+      console.log('Unknown Game');
   }
 }
 

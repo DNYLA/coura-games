@@ -1,5 +1,6 @@
 export enum Games {
   RPS,
+  TicTacToe,
 }
 
 export enum LobbyEvents {
