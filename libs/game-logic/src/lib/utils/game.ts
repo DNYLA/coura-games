@@ -13,7 +13,11 @@ export abstract class Game {
   constructor(lobby: Lobby, host: Socket) {
     this.lobby = lobby;
     this.host = host;
+    this.setupGame();
+  }
 
+  setupGame() {
+    this.init();
     const d = new Date();
     d.setSeconds(d.getSeconds() + this.MAX_ROUND_TIME);
 
@@ -22,10 +26,10 @@ export abstract class Game {
     this.emitNewRoundData(d);
   }
 
+  abstract init(): void;
   abstract roundEnded(round: number): void;
   abstract nextRound(round: number): void;
-  abstract emitNewRoundData(timer: Date);
-
+  abstract emitNewRoundData(timer: Date): void;
   // abstract calculateMove(socket: Socket, id: string, round: number): void;
   // abstract computeWinner(socket: Socket, id: string, round: number): void;
 
@@ -39,5 +43,10 @@ export abstract class Game {
     this.lobby = lobby;
 
     return true;
+  }
+
+  broadcast(event: string, message: unknown): void {
+    this.host.to(this.lobby.id).emit(event, message);
+    this.host.emit(event, message);
   }
 }

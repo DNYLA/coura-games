@@ -6,6 +6,7 @@ const redis = Redis.createClient({
 });
 
 redis.on('connect', async () => {
+  // redis.flushDb();
   console.log('Redis: Connected');
 });
 
