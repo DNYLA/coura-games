@@ -10,6 +10,7 @@ import {
 import { Games, LobbyEvents } from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import SocketContext from 'apps/next-couragames/context/socket';
+import { getDisplayName } from 'apps/next-couragames/utils/helpers';
 import { MenuButton } from 'apps/next-couragames/utils/styles';
 import { useContext, useState } from 'react';
 
@@ -35,13 +36,13 @@ export default function CreateLobby({
   };
 
   const handleCreate = () => {
-    socket.emit('lobby', { game: game, type: LobbyEvents.Create });
+    socket.emit('lobby', { game, type: LobbyEvents.Create });
     // router.push('?lobby=5');
   };
 
   return (
     <StyledHome>
-      <Title>Rock, Paper, Scissors</Title>
+      <Title>{getDisplayName(game)}</Title>
       {errorMessage && (
         <Alert status="error" mb={5}>
           <AlertIcon />

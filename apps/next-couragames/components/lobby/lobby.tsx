@@ -3,6 +3,7 @@ import { ClientLobby, Games, LobbyEvents } from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import LobbySettings from 'apps/next-couragames/components/lobby/lobby-settings';
 import SocketContext from 'apps/next-couragames/context/socket';
+import { getDisplayName } from 'apps/next-couragames/utils/helpers';
 import { MenuButton } from 'apps/next-couragames/utils/styles';
 import Checkbox from 'libs/ui/src/lib/forms/checkbox';
 import Range from 'libs/ui/src/lib/forms/range';
@@ -49,13 +50,15 @@ export default function ActiveLobby({
 
   return (
     <StyledHome>
-      <Title>Rock, Paper, Scissors</Title>
+      <Title>{getDisplayName(game)}</Title>
       <Flex display={'flex'} flexDir={'column'}>
         Code: {lobby.id}
       </Flex>
       <Box>{renderPlayers()}</Box>
 
-      {lobby.isHost && <LobbySettings lobby={lobby} setLobby={setLobby} />}
+      {lobby.isHost && (
+        <LobbySettings lobby={lobby} setLobby={setLobby} game={game} />
+      )}
     </StyledHome>
   );
 }
