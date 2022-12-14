@@ -10,10 +10,15 @@ import React, { useContext, useEffect, useState } from 'react';
 export interface LobbySettingsProps {
   lobby: ClientLobby;
   setLobby: React.Dispatch<React.SetStateAction<ClientLobby>>;
+  game: Games;
   // settings: Settings;
 }
 
-export default function LobbySettings({ lobby, setLobby }: LobbySettingsProps) {
+export default function LobbySettings({
+  lobby,
+  setLobby,
+  game,
+}: LobbySettingsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isRandomNames, setIsRandomNames] = useState(false);
 
@@ -25,7 +30,7 @@ export default function LobbySettings({ lobby, setLobby }: LobbySettingsProps) {
 
   const handleStart = () => {
     socket.emit('lobby', {
-      game: Games.RPS,
+      game,
       type: LobbyEvents.Start,
       id: lobby.id,
     });

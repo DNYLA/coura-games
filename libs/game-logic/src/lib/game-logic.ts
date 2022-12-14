@@ -2,9 +2,9 @@ import { ClientLobby, Games, Player } from '@couragames/shared-types';
 import { getLobby, setLobby } from 'libs/game-logic/src/lib/redisManager';
 import { main as RPSMain } from 'libs/game-logic/src/lib/rps';
 import { TicTacToe } from 'libs/game-logic/src/lib/tictactoe';
-import { redis } from 'libs/game-logic/src/redis';
+import { redis } from 'libs/game-logic/src/lib/utils/redis';
 import { Socket } from 'socket.io';
-import { Lobby } from '../types';
+import { Lobby } from './utils/types';
 
 export const currentGames = new Map<string, Lobby>();
 
@@ -22,7 +22,7 @@ export async function createLobby(socket: Socket, type: Games) {
 
   //Move this into config variable
   const maxPlayers = 2;
-  const minPlayers = 2;
+  const minPlayers = 1;
 
   const game: Lobby = {
     id: code,

@@ -1,5 +1,6 @@
 import { setLobby } from 'libs/game-logic/src/lib/redisManager';
-import { Game, Lobby } from 'libs/game-logic/src/types';
+import { Game } from 'libs/game-logic/src/lib/utils/game';
+import { Lobby } from 'libs/game-logic/src/lib/utils/types';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
@@ -47,7 +48,7 @@ export class TicTacToe extends Game {
     this.lobby.data = { round: 0, timer };
     const roundInfo: any = {
       p1Score: this.lobby.players[0].points,
-      p2Score: this.lobby.players[1].points,
+      // p2Score: this.lobby.players[1].points,
       totalRounds: 0,
       currentRound: 0,
       timer: timer.getTime(),
