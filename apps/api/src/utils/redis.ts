@@ -1,4 +1,4 @@
-import { redis } from '../../../../libs/game-logic/src/redis';
+import { redis } from '@couragames/game-logic';
 
 class RedisManager {
   /**

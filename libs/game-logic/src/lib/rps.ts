@@ -1,6 +1,6 @@
 import { RPSMove, RPSRoundInfo } from '@couragames/shared-types';
 import { currentGames } from 'libs/game-logic/src/lib/game-logic';
-import { Lobby } from 'libs/game-logic/src/types';
+import { Lobby } from 'libs/game-logic/src/lib/utils/types';
 import { Socket } from 'socket.io';
 
 const MAX_ROUND_TIME = 60; //In Seconds
