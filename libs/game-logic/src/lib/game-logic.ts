@@ -7,6 +7,7 @@ import { Socket } from 'socket.io';
 import { Lobby } from './utils/types';
 
 export const currentGames = new Map<string, Lobby>();
+export const ticTacToeGames = new Map<string, TicTacToe>();
 
 export async function createLobby(socket: Socket, type: Games) {
   const code = await generateCode();
@@ -22,7 +23,7 @@ export async function createLobby(socket: Socket, type: Games) {
 
   //Move this into config variable
   const maxPlayers = 2;
-  const minPlayers = 1;
+  const minPlayers = 2;
 
   const game: Lobby = {
     id: code,
@@ -94,7 +95,8 @@ export async function startGame(socket: Socket, type: Games, id: string) {
       RPSMain(lobby, socket);
       break;
     case Games.TicTacToe:
-      new TicTacToe(lobby, socket);
+      const ticTacToe = new TicTacToe(lobby, socket);
+      ticTacToeGames.set(lobby.id, ticTacToe);
       break;
     default:
       console.log('Unknown Game');

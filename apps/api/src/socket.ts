@@ -1,4 +1,8 @@
-import { handleLobbyEvent } from '@couragames/game-logic';
+import {
+  handleGameMove,
+  handleLobbyEvent,
+  handlePlayAgain,
+} from '@couragames/game-logic';
 import { calculateMove } from 'libs/game-logic/src/lib/rps';
 import { Games, LobbyEvent, RPSMove } from 'libs/shared-types/src';
 import { Server, Socket } from 'socket.io';
@@ -14,6 +18,17 @@ export const socketEventHandler = (io: Server) => {
     socket.on('rps_move', (data: { id: string; move: RPSMove }) => {
       // RPS
       calculateMove(socket, data.id, data.move);
+    });
+
+    socket.on(
+      'tictactoe_move',
+      (data: { id: string; x: number; y: number }) => {
+        handleGameMove(socket, Games.TicTacToe, data, data.id);
+      }
+    );
+
+    socket.on('tictactoe_playagain', (data: { id: string }) => {
+      handlePlayAgain(socket, data.id);
     });
   });
 };
