@@ -1,7 +1,13 @@
-import { Games, LobbyEvent, LobbyEvents } from '@couragames/shared-types';
+import {
+  Games,
+  LobbyEvent,
+  LobbyEvents,
+  RPSMove,
+} from '@couragames/shared-types';
 import {
   createLobby,
   joinLobby,
+  RPSGames,
   startGame,
   ticTacToeGames,
 } from 'libs/game-logic/src/lib/game-logic';
@@ -45,13 +51,15 @@ export function handleGameMove(
 ) {
   switch (game) {
     case Games.RPS:
-      console.log('RPS');
+      const rpsInstance = RPSGames.get(id);
+      if (!rpsInstance) return;
+      rpsInstance.calculateMove(socket, data as RPSMove);
       break;
     case Games.TicTacToe:
       //Find Game
-      const game = ticTacToeGames.get(id);
-      if (!game) return;
-      game.handleTurn(socket, data as { x: number; y: number });
+      const instance = ticTacToeGames.get(id);
+      if (!instance) return;
+      instance.handleTurn(socket, data as { x: number; y: number });
       break;
   }
 }
