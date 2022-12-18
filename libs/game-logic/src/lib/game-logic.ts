@@ -1,6 +1,6 @@
 import { ClientLobby, Games, Player } from '@couragames/shared-types';
 import { getLobby, setLobby } from 'libs/game-logic/src/lib/redisManager';
-import { main as RPSMain } from 'libs/game-logic/src/lib/rps';
+import { RPS } from 'libs/game-logic/src/lib/rps';
 import { TicTacToe } from 'libs/game-logic/src/lib/tictactoe';
 import { redis } from 'libs/game-logic/src/lib/utils/redis';
 import { Socket } from 'socket.io';
@@ -8,6 +8,7 @@ import { Lobby } from './utils/types';
 
 export const currentGames = new Map<string, Lobby>();
 export const ticTacToeGames = new Map<string, TicTacToe>();
+export const RPSGames = new Map<string, RPS>();
 
 export async function createLobby(socket: Socket, type: Games) {
   const code = await generateCode();
@@ -92,7 +93,8 @@ export async function startGame(socket: Socket, type: Games, id: string) {
 
   switch (type) {
     case Games.RPS:
-      RPSMain(lobby, socket);
+      const rps = new RPS(lobby, socket);
+      RPSGames.set(lobby.id, rps);
       break;
     case Games.TicTacToe:
       const ticTacToe = new TicTacToe(lobby, socket);
