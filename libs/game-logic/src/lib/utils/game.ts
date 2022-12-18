@@ -17,16 +17,16 @@ export abstract class Game {
   }
 
   setupGame() {
-    this.init();
     const d = new Date();
     d.setSeconds(d.getSeconds() + this.MAX_ROUND_TIME);
+    this.init(d);
 
     setTimeout(() => this.roundEnded(0), this.MAX_ROUND_TIME * 1000);
 
     this.emitNewRoundData(d);
   }
 
-  abstract init(): void;
+  abstract init(timer?: Date): void;
   abstract roundEnded(round: number): void;
   abstract nextRound(round: number): void;
   abstract emitNewRoundData(timer: Date): void;
