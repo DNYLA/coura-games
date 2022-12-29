@@ -11,7 +11,12 @@ export default function MemberProfile() {
   const { username } = router.query;
   const { user } = useContext(UserContext);
 
-  if (user && user.username === username) return <SelfProfile />;
+  if (
+    user &&
+    typeof username === 'string' &&
+    user.username.toLowerCase() === username.toLowerCase()
+  )
+    return <SelfProfile />;
 
   return <div>Not Done</div>;
 }
