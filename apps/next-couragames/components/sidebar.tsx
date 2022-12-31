@@ -91,10 +91,10 @@ export default function Sidebar() {
   return (
     <StyledSidebar>
       <Link href={'/'}>
-        <Title primary>Coura</Title>
-      </Link>
-      <Link href={'/'}>
-        <Title>Games</Title>
+        <>
+          <Title primary>Coura</Title>
+          <Title>Games</Title>
+        </>
       </Link>
 
       <TopNav>{generateItems(topNavItems)}</TopNav>
