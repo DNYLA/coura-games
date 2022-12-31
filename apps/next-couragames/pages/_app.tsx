@@ -27,7 +27,9 @@ const config = extendTheme({
   styles: {
     global: (props) => ({
       body: {
-        bg: '#2c2c2c',
+        // bg: '#2c2c2c',
+        // bg: '#2B2B2B',
+        bg: '#313131',
       },
     }),
   },
