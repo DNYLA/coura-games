@@ -73,6 +73,7 @@ const Container = styled.div`
   grid-template-columns: repeat(4, 1fr);
   background-color: hsl(226, 43%, 10%);
   margin-top: 30px;
+  border-radius: 10px;
   /* padding-top: 0px; */
 `;
 
@@ -119,6 +120,6 @@ const GridItem = styled.div`
 `;
 
 const TitleItem = styled(GridItem)`
-  background-color: red;
+  background-color: hsl(235, 45%, 61%);
   grid-row: 1 / 3;
 `;
