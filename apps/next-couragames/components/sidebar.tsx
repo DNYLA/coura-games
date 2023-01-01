@@ -127,6 +127,10 @@ export default function Sidebar() {
 
 const StyledSidebar = styled.div`
   display: flex;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  align-self: auto;
   flex-direction: column;
   background-color: #2c2c2c;
   height: 100vh;
