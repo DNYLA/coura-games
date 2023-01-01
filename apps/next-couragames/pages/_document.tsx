@@ -12,9 +12,9 @@ export default function Document() {
         />
 
         <link
-          href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap"
           rel="stylesheet"
-        ></link>
+        />
       </Head>
       <body>
         <Main />
