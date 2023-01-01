@@ -7,14 +7,16 @@ import { FiEdit, FiMinus, FiPlus } from 'react-icons/fi';
 import { MdEdit } from 'react-icons/md';
 import UserContext from 'apps/next-couragames/context/auth';
 import moment from 'moment';
+import UserStats from 'apps/next-couragames/pages/member/user-stats';
 
 export default function SelfProfile() {
+  const { user } = useContext(UserContext);
   return (
     <Profile>
       <Container>
         <Main>
           <ProfHeader />
-          <div>Time Stat Info Here</div>
+          <UserStats name={user.username} />
           <Comments />
         </Main>
         <Sidebar>Sidebar</Sidebar>
