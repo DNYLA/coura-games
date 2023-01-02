@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { MenuButton } from '../../../utils/styles';
 import { Box } from '@chakra-ui/react';
+import TicTacToeDesign from 'apps/next-couragames/pages/play/tic-tac-toe/design';
 
 export default function TicTacToe() {
   const [board, setBoard] = useState(
@@ -104,11 +105,69 @@ export default function TicTacToe() {
     socket.emit('tictactoe_playagain', { id: lobby });
   };
 
-  // const checkWin = () => {};
+  const handleHover = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    x: number,
+    y: number,
+    isEnter: boolean
+  ) => {
+    if (!isEnter) {
+      e.currentTarget.textContent = displayValue(board[x][y]);
+      return;
+    }
 
+    if (board[x][y] !== 0) return;
+    e.currentTarget.textContent = 'X';
+  };
+
+  // const checkWin = () => {};
   return (
     <Lobby game={Games.TicTacToe} redirect="tic-tac-toe">
       <Container>
+        <div>X Turn</div>
+        <Game>
+          {board.map((rows, x) => {
+            return rows.map((col, y) => (
+              <GridItem
+                value={col}
+                onClick={() => submitMove(x, y)}
+                onMouseOver={(e) => handleHover(e, x, y, true)}
+                onMouseLeave={(e) => handleHover(e, x, y, false)}
+              >
+                {displayValue(col)}
+              </GridItem>
+            ));
+          })}
+        </Game>
+        <div className="stat_container">
+          <GameInfo type={0}>
+            <p>X (YOU)</p>
+            <span>0</span>
+          </GameInfo>
+
+          <GameInfo type={1}>
+            <p>TIES</p>
+            <span>2</span>
+          </GameInfo>
+
+          <GameInfo type={2}>
+            <p>O (OPP)</p>
+            <span>5</span>
+          </GameInfo>
+        </div>
+        {restartInfo.ended && (
+          <Box marginTop={'10px'}>
+            <MenuButton onClick={handlePlayAgain}>
+              {restartInfo.message}
+            </MenuButton>
+          </Box>
+        )}
+      </Container>
+    </Lobby>
+  );
+  return (
+    <Lobby game={Games.TicTacToe} redirect="tic-tac-toe">
+      <PrevContainer>
         <div>Tic Tac Toe</div>
         <p>{infoMessage}</p>
         <GameTable>
@@ -131,12 +190,80 @@ export default function TicTacToe() {
             </MenuButton>
           </Box>
         )}
-      </Container>
+      </PrevContainer>
     </Lobby>
   );
 }
 
+const cols = {
+  naughts: '#feaf00',
+  crosses: '#00c7bf',
+};
+
 const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .stat_container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* background-color: red; */
+    min-width: 250px;
+  }
+`;
+
+const Game = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* background-color: red; */
+  min-width: 250px;
+`;
+
+const GameInfo = styled.div<{ type: number }>`
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: ${(props) =>
+    props.type === 0
+      ? cols.crosses
+      : props.type === 1
+      ? '#a3bfca'
+      : cols.naughts};
+
+  margin: 10px 15px;
+  height: 50px;
+  display: flex;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  color: black;
+
+  span {
+    font-size: 16px;
+    font-weight: 600;
+  }
+`;
+
+const GridItem = styled.div<{ value: number }>`
+  cursor: ${(props) => (props.value === 0 ? 'pointer' : 'not-allowed')};
+  margin: 10px 15px;
+  height: 50px;
+  display: flex;
+  font-size: 25px;
+  text-align: center;
+  background-color: #173641;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+
+  color: ${(props) => (props.value === 1 ? cols.crosses : cols.naughts)};
+`;
+
+const PrevContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
