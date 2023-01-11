@@ -63,3 +63,12 @@ export enum RPSMove {
 export type RPSInfo = {
   P1Move: RPSMove;
 };
+
+export type TicTacToeInfo = {
+  p1Score: number; //Player One Is Always the host
+  p2Score: number;
+  draws: number;
+  isCrosses: boolean;
+  board: number[][];
+  timer: number;
+};
