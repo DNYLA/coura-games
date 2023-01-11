@@ -20,7 +20,9 @@ export default function TicTacToeDesign() {
       <Game>
         {board.map((rows, x) => {
           return rows.map((col, y) => (
-            <GridItem value={col}>{displayValue(col)}</GridItem>
+            <GridItem key={y} value={col}>
+              {displayValue(col)}
+            </GridItem>
           ));
         })}
       </Game>
