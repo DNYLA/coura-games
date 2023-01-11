@@ -1,3 +1,4 @@
+import { TicTacToeInfo } from '@couragames/shared-types';
 import { setLobby } from 'libs/game-logic/src/lib/redisManager';
 import { Game } from 'libs/game-logic/src/lib/utils/game';
 import { Lobby } from 'libs/game-logic/src/lib/utils/types';
@@ -35,14 +36,16 @@ export class TicTacToe extends Game {
   private gameEnded = false;
   playerOneRestart = false;
   playerTwoRestart = false;
+  data: Omit<TicTacToeInfo, 'isCrosses' | 'timer'>;
   //Value of
   // 0 == Empty Slot
   // 1 == Crosses
   // 2 == Naughts
-  board = Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => 0));
+  // board = Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => 0));
 
   constructor(lobby: Lobby, host: Socket) {
     super(lobby, host);
+    this.isPlayerOneCrosses = !!Math.floor(Math.random() * 2); //We Want The users type to stay the same through out every round
 
     //Once Initialisation is done we can change other varialbes
   }
@@ -51,24 +54,27 @@ export class TicTacToe extends Game {
     this.playerOneRestart = false;
     this.playerTwoRestart = false;
     this.gameEnded = false;
-
-    this.board = Array.from({ length: 3 }, () =>
+    const emptyboard = Array.from({ length: 3 }, () =>
       Array.from({ length: 3 }, () => 0)
     );
+    if (!this.data) {
+      this.data = {
+        board: emptyboard,
+        p1Score: 0,
+        p2Score: 0,
+        draws: 0,
+      };
+    } else {
+      this.data.board = emptyboard;
+    }
 
     //Randomise Whos first
-    const isPlayerOneFirst = Math.floor(Math.random() * 2);
-
-    if (isPlayerOneFirst) {
-      this.isPlayerOneTurn = true;
-      this.isPlayerOneCrosses = true;
-    } else {
-      this.isPlayerOneTurn = false;
-      this.isPlayerOneCrosses = false;
-    }
+    //Doesnt work debug and find out why
+    this.isPlayerOneTurn = !!Math.floor(Math.random() * 2);
 
     //This is better than having to set Info to 0 every move on client side as thats an
     //extra client side call whereas this is one per restart
+
     this.broadcast('tictactoe_replay', 0);
   }
 
@@ -84,11 +90,23 @@ export class TicTacToe extends Game {
   emitNewRoundData(timer: Date) {
     this.lobby.data = { round: 0, timer };
 
-    const roundInfo: any = {
-      board: this.board,
+    const gameInfo: TicTacToeInfo = {
+      p1Score: 0,
+      p2Score: 0,
+      draws: 0,
+      isCrosses: !this.isPlayerOneCrosses,
+      board: this.data.board,
       timer: timer.getTime(),
     };
-    this.broadcast('tictac_nextround', roundInfo);
+
+    //There will be a better way to handle this
+    this.host.to(this.lobby.id).emit('tictac_nextround', gameInfo); //doesnt send to host
+    this.host.emit('tictac_nextround', {
+      ...gameInfo,
+      isCrosses: this.isPlayerOneCrosses,
+    });
+
+    // this.broadcast('tictac_nextround', roundInfo);
     // this.host.to(this.lobby.id).emit('tictac_nextround', roundInfo);
     // this.host.emit('tictac_nextround', roundInfo);
     this.lobby.started = true; //Game is now live (Sometimes this will already be set to true)
@@ -100,12 +118,12 @@ export class TicTacToe extends Game {
     const { x, y } = data;
 
     const setMove = (value: number) => {
-      if (this.board[x][y] !== 0) {
+      if (this.data.board[x][y] !== 0) {
         socket.emit('game_message', 'This position has already been selected!');
         return false;
       }
 
-      this.board[x][y] = value;
+      this.data.board[x][y] = value;
       return true;
     };
 
@@ -127,12 +145,24 @@ export class TicTacToe extends Game {
 
     this.isPlayerOneTurn = !this.isPlayerOneTurn;
     const curResult = this.checkWinner();
+
     if (curResult >= 1) {
       this.gameEnded = true;
       const winner = curResult === 2 ? socket.id : 'draw';
+      if (curResult === 1) {
+        this.data.draws++;
+      } else if (this.host.id === socket.id) {
+        this.data.p1Score++;
+      } else {
+        this.data.p2Score++;
+      }
+
       this.broadcast('tictac_gameended', {
-        board: this.board,
+        board: this.data.board,
         winner,
+        p1Score: this.data.p1Score,
+        p2Score: this.data.p2Score,
+        draws: this.data.draws,
       });
     } else {
       const d = new Date();
@@ -146,7 +176,7 @@ export class TicTacToe extends Game {
   // Returns 2 -> Winner Found
   private checkWinner(): number {
     //Check Columns
-    const board = this.board;
+    const board = this.data.board;
 
     const isDraw = board.every((row) => row.every((value) => value !== 0));
     console.log(`isDraw: ${isDraw}`);
