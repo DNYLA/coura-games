@@ -1,4 +1,4 @@
-import { Games } from '@couragames/shared-types';
+import { Games, TicTacToeInfo } from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import Lobby from '../../../components/lobby';
 import SocketContext from '../../../context/socket';
@@ -13,6 +13,13 @@ export default function TicTacToe() {
     Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => 0))
   );
   const [curPlayer, setCurPlayer] = useState(true); //True -> P1; False -> P2
+  const [gameInfo, setGameInfo] = useState<Omit<TicTacToeInfo, 'board'>>({
+    p1Score: 0,
+    p2Score: 0,
+    draws: 0,
+    isCrosses: false,
+    timer: 0,
+  }); //True -> P1; False -> P2
   const [infoMessage, setInfoMessage] = useState('');
   const [restartInfo, setRestartInfo] = useState({
     message: 'Play Again',
@@ -23,17 +30,25 @@ export default function TicTacToe() {
   const router = useRouter();
   const { lobby } = router.query;
   useEffect(() => {
-    socket?.on('tictac_nextround', (info) => {
+    socket?.on('tictac_nextround', (info: TicTacToeInfo) => {
       console.log('Started Game');
       console.log(info);
       console.log(info.board);
+      const { p1Score, p2Score, draws, isCrosses, timer } = info;
       setBoard(info.board);
+      setGameInfo({ p1Score, p2Score, draws, isCrosses, timer });
       setInfoMessage('');
     });
 
     socket?.on('tictac_gameended', (data) => {
       setBoard(data.board);
       setRestartInfo({ ...restartInfo, ended: true });
+      setGameInfo({
+        ...gameInfo,
+        p1Score: data.p1Score,
+        p2Score: data.p2Score,
+        draws: data.draws,
+      });
 
       if (data.winner === 'draw') {
         setInfoMessage('You drew the game!');
@@ -44,8 +59,6 @@ export default function TicTacToe() {
       const message = didWin ? 'You won the game!' : 'You lost the game!';
 
       setInfoMessage(message);
-
-      console.log('Game Ended');
     });
 
     socket?.on('game_message', (message) => {
@@ -78,7 +91,7 @@ export default function TicTacToe() {
     // else if (position === 1) return 'X';
     // else return 'O';
 
-    return !position ? ' ' : position === 1 ? 'X' : 'O';
+    return !position ? '' : position === 1 ? 'X' : 'O';
   };
 
   const validateMove = (x: number, y: number) => {
@@ -113,23 +126,29 @@ export default function TicTacToe() {
   ) => {
     if (!isEnter) {
       e.currentTarget.textContent = displayValue(board[x][y]);
+      e.currentTarget.style.color = '';
       return;
     }
 
     if (board[x][y] !== 0) return;
-    e.currentTarget.textContent = 'X';
+    e.currentTarget.textContent = gameInfo.isCrosses ? 'X' : 'O';
+    e.currentTarget.style.color = gameInfo.isCrosses
+      ? cols.crosses
+      : cols.naughts;
   };
 
   // const checkWin = () => {};
   return (
     <Lobby game={Games.TicTacToe} redirect="tic-tac-toe">
       <Container>
+        {infoMessage && <div>{infoMessage}</div>}
         <div>X Turn</div>
         <Game>
           {board.map((rows, x) => {
             return rows.map((col, y) => (
               <GridItem
                 value={col}
+                key={y}
                 onClick={() => submitMove(x, y)}
                 onMouseOver={(e) => handleHover(e, x, y, true)}
                 onMouseLeave={(e) => handleHover(e, x, y, false)}
@@ -141,18 +160,18 @@ export default function TicTacToe() {
         </Game>
         <div className="stat_container">
           <GameInfo type={0}>
-            <p>X (YOU)</p>
-            <span>0</span>
+            <p>X ({gameInfo.isCrosses ? 'You' : 'OPP'})</p>
+            <span>{gameInfo.p1Score}</span>
           </GameInfo>
 
           <GameInfo type={1}>
             <p>TIES</p>
-            <span>2</span>
+            <span>{gameInfo.draws}</span>
           </GameInfo>
 
           <GameInfo type={2}>
-            <p>O (OPP)</p>
-            <span>5</span>
+            <p>X ({!gameInfo.isCrosses ? 'You' : 'OPP'})</p>
+            <span>{gameInfo.p2Score}</span>
           </GameInfo>
         </div>
         {restartInfo.ended && (
@@ -163,34 +182,6 @@ export default function TicTacToe() {
           </Box>
         )}
       </Container>
-    </Lobby>
-  );
-  return (
-    <Lobby game={Games.TicTacToe} redirect="tic-tac-toe">
-      <PrevContainer>
-        <div>Tic Tac Toe</div>
-        <p>{infoMessage}</p>
-        <GameTable>
-          <tbody>
-            {board.map((rows, x) => (
-              <tr key={x}>
-                {rows.map((col, y) => (
-                  <td key={y} onClick={() => submitMove(x, y)}>
-                    {displayValue(col)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </GameTable>
-        {restartInfo.ended && (
-          <Box marginTop={'10px'}>
-            <MenuButton onClick={handlePlayAgain}>
-              {restartInfo.message}
-            </MenuButton>
-          </Box>
-        )}
-      </PrevContainer>
     </Lobby>
   );
 }
