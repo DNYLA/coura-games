@@ -1,4 +1,4 @@
-import { failed, logout, signup, user } from '../controllers/auth';
+import { failed, logout, signup, user } from '../services/auth';
 import { Router } from 'express';
 import * as passport from 'passport';
 
