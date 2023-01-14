@@ -4,6 +4,7 @@ import * as cors from 'cors';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { router as authRouter } from './routes/auth';
+import { router as memberRouter } from './routes/member';
 import { User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
@@ -83,6 +84,7 @@ app.use(passport.session());
 
 //Routes
 app.use('/api/auth', authRouter);
+app.use('/api/member', memberRouter);
 (async () => {
   await redisClent.connect();
 
