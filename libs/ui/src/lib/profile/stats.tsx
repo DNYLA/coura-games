@@ -10,7 +10,7 @@ type StatInfo = {
   value: string | number;
   previous: string | number;
 };
-export default function UserStats({ name }: UserStatsProps) {
+export function UserStats() {
   const [prevTitle, setPrevTitle] = useState('Last Week -');
   const stats: StatInfo[] = [
     {

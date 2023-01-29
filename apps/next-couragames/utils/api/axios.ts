@@ -1,6 +1,6 @@
+import { PublicUser, User } from '@couragames/shared-types';
 import axios, { AxiosRequestConfig } from 'axios';
 import { GetServerSidePropsContext } from 'next';
-import { User } from '../../context/auth';
 import { getAPIUrl } from '../index'; //Looks weird as just '..' so i added the index part
 
 const CONFIG: AxiosRequestConfig = {
@@ -17,20 +17,5 @@ export const getUser = () => AXIOS.get(`/auth/user/`);
 export const signUp = (username: string, password: string) =>
   AXIOS.post<User>('/auth/signup', { username, password });
 
-export const fetchUser = async (context: GetServerSidePropsContext) => {
-  // const headers = validateCookies(context);
-  const headers = null;
-  console.log(context);
-  console.log(headers);
-  if (!headers) return { redirect: { destination: '/' } };
-  try {
-    const { data: guilds } = await axios.get<Guild[]>(`${API_URL}/guilds`, {
-      headers,
-    });
-    console.log(guilds);
-    return { props: { guilds } };
-  } catch (err) {
-    console.log(err);
-    return { redirect: { destination: '/' } };
-  }
-};
+export const fetchUserProfile = (username: string) =>
+  AXIOS.get<PublicUser>(`/member/${username}`);
