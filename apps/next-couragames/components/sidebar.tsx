@@ -5,7 +5,7 @@ import { GrGamepad } from 'react-icons/gr';
 import { BsArrowBarLeft, BsBoxArrowLeft } from 'react-icons/bs';
 import { BiLogOut } from 'react-icons/bi';
 import { FcBusinessman, FcConferenceCall, FcRating } from 'react-icons/fc';
-import UserContext from 'apps/next-couragames/context/auth';
+import UserContext from '../context/auth';
 import { IconType } from 'react-icons';
 import { FaCog } from 'react-icons/fa';
 
@@ -67,15 +67,13 @@ export default function Sidebar() {
       if (item.state != ItemState.LoggedOutOnly)
         return (
           <Link href={item.url}>
-            <NavButton>
-              <item.icon />
-              <span>{item.text}</span>
-            </NavButton>
+            <item.icon />
+            <span>{item.text}</span>
           </Link>
         );
 
       return (
-        <Link href={item.url}>
+        <Link href={item.url} key={item.text} legacyBehavior>
           <AuthButton
             primary={item.primary}
             // as={Link}
@@ -90,7 +88,7 @@ export default function Sidebar() {
 
   return (
     <StyledSidebar>
-      <Link href={'/'}>
+      <Link href={'/'} legacyBehavior>
         <>
           <Title primary>Coura</Title>
           <Title>Games</Title>
@@ -102,17 +100,15 @@ export default function Sidebar() {
       {user && (
         <BottomNav>
           <Link href={'/'}>
-            <AltButton>
-              <BsArrowBarLeft />
-              <span>Collapse</span>
-            </AltButton>
+            <BsArrowBarLeft />
+            <span>Collapse</span>
           </Link>
+
           <Link href={'/settings'}>
-            <AltButton>
-              <FaCog />
-              <span>Settings</span>
-            </AltButton>
+            <FaCog />
+            <span>Settings</span>
           </Link>
+
           <Link href={'/'}>
             <AltButton onClick={logout}>
               <BiLogOut />
@@ -221,6 +217,29 @@ const TopNav = styled.div`
   flex-direction: column;
   align-items: center;
   /* gap: 5px; */
+
+  a {
+    display: flex;
+    /* justify-content: center; */
+    text-align: center;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+    padding: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 18px;
+    p {
+      float: right;
+    }
+    svg {
+      font-size: 25px;
+    }
+
+    :hover {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  }
 `;
 const BottomNav = styled.div`
   display: flex;
@@ -228,6 +247,40 @@ const BottomNav = styled.div`
   align-items: center;
   justify-content: center;
   align-content: center;
+
+  a {
+    display: flex;
+    width: 100%;
+    text-align: right;
+    /* justify-content: center; */
+    text-align: center;
+    gap: 10px;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 18px;
+
+    span {
+      display: inline;
+
+      text-align: center;
+      float: right;
+    }
+    /* svg {
+    font-size: 25px;
+  } */
+
+    :hover {
+      background-color: rgba(0, 0, 0, 0.3);
+
+      span {
+        color: white;
+        text-align: right;
+      }
+    }
+
+    color: hsla(255, 100%, 100%, 0.5);
+  }
 `;
 const Title = styled.p<{ primary?: boolean }>`
   font-size: 20px;

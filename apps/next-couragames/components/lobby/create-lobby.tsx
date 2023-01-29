@@ -9,9 +9,9 @@ import {
 } from '@chakra-ui/react';
 import { Games, LobbyEvents } from '@couragames/shared-types';
 import styled from '@emotion/styled';
-import SocketContext from 'apps/next-couragames/context/socket';
-import { getDisplayName } from 'apps/next-couragames/utils/helpers';
-import { MenuButton } from 'apps/next-couragames/utils/styles';
+import SocketContext from '../../context/socket';
+import { getDisplayName } from '../../utils/helpers';
+import { MenuButton } from '../../utils/styles';
 import { useContext, useState } from 'react';
 
 export interface CreateLobbyProps {

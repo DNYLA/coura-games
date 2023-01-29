@@ -6,9 +6,8 @@ import { io, Socket } from 'socket.io-client';
 import SocketContext from '../context/socket';
 
 export default function AppProviders({ children }: any) {
-  const { user, login, logout, signup, error, setError } = useAuth();
+  const { user, login, logout, signup, error, setError, loading } = useAuth();
   const [socket, setSocket] = useState<Socket>();
-
   useEffect(() => {
     if (socket) return;
 
@@ -23,6 +22,7 @@ export default function AppProviders({ children }: any) {
     setSocket(sockConnection);
   }, []);
 
+  if (loading) return <div>Loading2..</div>;
   return (
     <UserContext.Provider
       value={{

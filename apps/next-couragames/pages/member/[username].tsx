@@ -1,73 +1,60 @@
 import { Box, Flex, HStack, Image, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import UserContext from 'apps/next-couragames/context/auth';
-import SelfProfile from 'apps/next-couragames/pages/member/SelfProfile';
+import UserContext from '../../context/auth';
 import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
-import { FaEnvelope, FaMapPin, FaSuitcase } from 'react-icons/fa';
-
+import React, { useContext, useEffect, useState } from 'react';
+import { Comments, ProfileHeader, Sidebar, UserStats } from '@couragames/ui';
+import { PublicUser } from '@couragames/shared-types';
+import { fetchUserProfile } from '../../utils/api/axios';
 export default function MemberProfile() {
   const router = useRouter();
   const { username } = router.query;
   const { user } = useContext(UserContext);
+  const [member, setMember] = useState<PublicUser>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (Array.isArray(username)) return;
+    if (!username || !user.username) return;
+    fetchUserProfile(username ?? user.username).then(({ data }) => {
+      setMember(data);
+      setLoading(false);
+    });
+  }, [username, user]);
 
-  if (
-    user &&
-    typeof username === 'string' &&
-    user.username.toLowerCase() === username.toLowerCase()
-  )
-    return <SelfProfile />;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  return <div>Not Done</div>;
+  return (
+    <Profile>
+      <Container>
+        <Main>
+          <ProfileHeader member={member} />
+          <UserStats />
+          <Comments user={user} />
+        </Main>
+        <Sidebar>Sidebar</Sidebar>
+      </Container>
+    </Profile>
+  );
 }
+const Profile = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  margin: 20px 50px;
+`;
 
 const Container = styled.div`
-  /* padding: 0px 150px; */
-  /* display: flex; */
-`;
-
-const BaseLayout = styled.div`
-  max-width: 960px;
-  margin: 100px auto;
-  padding: 10px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  /* grid-template-columns: repeat(3, 1fr); */
-  gap: 10px;
-
-  @media (max-width: 500px) {
-    grid-template-columns: 1fr;
-  }
-
-  /* grid-template-rows: repeat(3, 1fr); */
-  /* grid-auto-rows: minmax(100px, auto); */
-  /* grid-template-columns: 1fr 1.5fr 1fr; */
-  /* grid-template-columns: repeat(3, 1fr); */
-  /* grid-gap: 1em; */
-  /* grid-auto-rows: 100px; */
-  /* grid-auto-rows: minmax(100px, auto); */
+  /* grid-template-columns: minmax(0, 1fr) 30rem; */
+  grid-template-columns: 2.5fr 1fr;
+  gap: 2.4em;
+  margin: 0 auto;
+  max-width: 105rem;
+  width: 100%;
 `;
 
-const Item = styled.div`
-  color: #fff;
-  background-color: steelblue;
-  font-size: 20px;
-  padding: 20px;
-  border: skyblue 1px solid;
-
-  /* :nth-of-type(1) {
-    color: #000;
-    grid-column: 1/3;
-  }
-
-  :nth-of-type(3) {
-    background: #333;
-    grid-row: 2/4;
-  }
-
-  :nth-of-type(4) {
-    background: #333;
-    /* grid-column: 1/3; */
-  /* grid-row: 2/4; */
-  /* } */
+const Main = styled.div`
+  /* padding: 1rem; */
 `;
