@@ -16,10 +16,16 @@ export type User = {
 
 export type Comment = {
   id: number;
-  message: string;
+  fromUserId: number;
+  toUserId: number;
+  content: string;
   likes: number;
   dislikes: number;
-  date: Date;
-  author: string;
-  author_avatar?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Comments = {
+  users: User[];
+  comments: Comment[];
 };

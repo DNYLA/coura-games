@@ -3,25 +3,43 @@ import styled from '@emotion/styled';
 import UserContext from '../../context/auth';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
-import { Comments, ProfileHeader, Sidebar, UserStats } from '@couragames/ui';
-import { PublicUser } from '@couragames/shared-types';
-import { fetchUserProfile } from '../../utils/api/axios';
+import {
+  Comments as CommentsSection,
+  ProfileHeader,
+  Sidebar,
+  UserStats,
+} from '@couragames/ui';
+import { Comments, PublicUser } from '@couragames/shared-types';
+import { fetchComments, fetchUserProfile } from '../../utils/api/axios';
 export default function MemberProfile() {
   const router = useRouter();
   const { username } = router.query;
   const { user } = useContext(UserContext);
   const [member, setMember] = useState<PublicUser>(null);
-  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState<Comments>({
+    comments: [],
+    users: [],
+  });
+  const [commentsLoading, setCommentsLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(true);
   useEffect(() => {
     if (Array.isArray(username)) return;
     if (!username || !user.username) return;
-    fetchUserProfile(username ?? user.username).then(({ data }) => {
-      setMember(data);
-      setLoading(false);
-    });
+
+    fetchUserProfile(username ?? user.username)
+      .then(({ data }) => {
+        setMember(data);
+      })
+      .finally(() => setProfileLoading(false));
+
+    fetchComments(username ?? user.username)
+      .then(({ data }) => {
+        setComments(data);
+      })
+      .finally(() => setCommentsLoading(false));
   }, [username, user]);
 
-  if (loading) {
+  if (commentsLoading || profileLoading) {
     return <div>Loading...</div>;
   }
 
@@ -31,7 +49,7 @@ export default function MemberProfile() {
         <Main>
           <ProfileHeader member={member} />
           <UserStats />
-          <Comments user={user} />
+          <CommentsSection user={user} comments={comments} />
         </Main>
         <Sidebar>Sidebar</Sidebar>
       </Container>

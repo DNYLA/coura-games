@@ -1,6 +1,6 @@
 import { PublicUser } from '@couragames/shared-types';
 import styled from '@emotion/styled';
-
+import moment from 'moment';
 interface HeaderProps {
   member: PublicUser;
 }
@@ -31,7 +31,7 @@ export function ProfileHeader({ member }: HeaderProps) {
         </Item>
         <Item>
           <h3>Joined</h3>
-          <p>{new Date(member.joined).toDateString()}</p>
+          <p>{moment(member.joined).format('MMM Do, YYYY')}</p>
         </Item>
       </Info>
     </Container>
