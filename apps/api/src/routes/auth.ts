@@ -20,6 +20,7 @@ router.post(
     failureRedirect: 'failed',
   }),
   (_, res) => {
+    console.log('HERE');
     res.sendStatus(200);
   }
 );

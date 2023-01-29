@@ -4,12 +4,12 @@ import * as cors from 'cors';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { router as authRouter } from './routes/auth';
-import { router as memberRouter } from './routes/member';
+import { router as memberRouter } from './routes/member.controller';
 import { User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
 import { getFrontendURL } from './utils';
-import { redis as redisClent } from '@couragames/game-logic';
+// import { redis as redisClent } from '@couragames/game-logic';
 import * as connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 require('./config/passport-local');
@@ -36,27 +36,34 @@ app.use(
   })
 );
 
-const RedisStore = connectRedis(session);
-const redis = createClient({
+const redisClient = createClient({
   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
   password: process.env.REDIS_PASSWORD,
 });
-redis.connect();
+redisClient.connect();
 
-redis.on('connect', function (err) {
+redisClient.on('connect', function (err) {
   console.log('Connected to redis successfully');
 });
 
-redis.on('error', function (err) {
+redisClient.on('error', function (err) {
   console.log('Could not establish a connection with redis. ' + err);
 });
+const RedisStore = connectRedis(session);
 
 app.use(
   session({
-    // store: new RedisStore({ client: redis }),
+    // store: new RedisStore({ client: redisClient }),
+    // store: new RedisStore({
+    //   host: process.env.REDIS_HOST,
+    //   port: Number(process.env.REDIS_PORT),
+    //   pass: process.env.REDIS_PASSWORD,
+    //   client: createClient(),
+    //   ttl: 260,
+    // }),
     name: 'session-id',
     secret: '123-456-789',
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     // cookie: {
     //   httpOnly: true,
@@ -71,6 +78,8 @@ app.use(
     },
   })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 const io = new Server(httpServer, {
   cors: { origin: [getFrontendURL()], credentials: true },
@@ -78,15 +87,14 @@ const io = new Server(httpServer, {
 socketEventHandler(io);
 
 app.use(express.json()); //Parses All incoming data into JSON
-app.use(express.urlencoded({ extended: false })); //Allows us to retreive data from Form Submissions
-app.use(passport.initialize());
-app.use(passport.session());
-
+app.use(express.urlencoded({ extended: true })); //Allows us to retreive data from Form Submissions
 //Routes
 app.use('/api/auth', authRouter);
 app.use('/api/member', memberRouter);
+
 (async () => {
-  await redisClent.connect();
+  // await redisClent.connect();
+  // await redisClient.connect();
 
   const server = httpServer.listen(port, () => {
     console.log(`Listening at http://localhost:${port}/api`);
