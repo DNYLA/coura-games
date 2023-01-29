@@ -1,15 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { User } from '@couragames/shared-types';
 import { createContext, Dispatch, SetStateAction } from 'react';
 
 export type AlertNotification = {
   show: boolean;
   message: string;
-};
-
-export type User = {
-  id: number;
-  username: string;
-  avatarUrl?: string;
 };
 
 type UserConextType = {

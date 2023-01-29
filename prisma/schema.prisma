@@ -13,7 +13,12 @@ datasource db {
 model User {
   id        Int     @id @default(autoincrement())
   username  String  @unique()
+  status String?
   // email     String
   password  String
   avatarUrl String?
+  profileBanner String?
+  points Int @default(0)
+  joined DateTime @default(now())
 }
+
