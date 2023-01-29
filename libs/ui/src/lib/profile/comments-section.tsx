@@ -1,66 +1,47 @@
-import { User, Comment } from '@couragames/shared-types';
+import {
+  User,
+  Comment,
+  Comments as CommentsType,
+} from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import { UserComment } from './comment';
 import { useState } from 'react';
 
 interface CommentsProps {
   user?: User;
+  comments: CommentsType;
 }
 
-export function Comments({ user }: CommentsProps) {
+export function Comments({ user, comments }: CommentsProps) {
   const message =
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat magnam vitae itaque quae porro voluptatibus minus hic! Soluta suscipit laudantium fugiat vero tempora, ipsum accusantium illum ea vel quod molestias ut repellat, natus ducimus eaque obcaecati consequuntur libero doloremque cupiditate est dicta nam? Dicta animi libero amet officia totam quisquam!';
   const img_ur =
     'https://yt3.ggpht.com/oHmF1pFUKwRFGsUbzNYKkbhIJoaW4b-L_IZ0HZnmerBL_MdLwiVSaCg2YgNzj8LI8HXF59SYk8U=s900-c-k-c0x00ffffff-no-rj';
 
-  const [fetchedComments, setComments] = useState<Comment[]>([
-    {
-      id: 0,
-      message: 'Welcome to this community!',
-      likes: 35,
-      dislikes: 2,
-      date: new Date('12/29/2022'),
-      author: 'Dan',
-      author_avatar: img_ur,
-    },
-    {
-      id: 1,
-      message,
-      likes: 2,
-      dislikes: 3,
-      date: new Date('11/29/2022'),
-      author: 'John2',
-      author_avatar:
-        'https://api.time.com/wp-content/uploads/2020/02/Roddy-Ricch-the-Box-interview.jpg?quality=85&w=2000',
-    },
-  ]);
-
   const postComment = () => {
     if (!user) return;
     console.log('Running');
 
-    const curComments = [...fetchedComments];
-    if (curComments[0].message === newMessage || !newMessage) return; //Throw Error -> Show a message to user
-    curComments.unshift({
-      id: fetchedComments.length - 1,
-      message: newMessage,
-      likes: 0,
-      dislikes: 0,
-      date: new Date(),
-      author: user.username,
-      author_avatar: user.avatarUrl,
-    });
-    setComments(curComments);
+    // const curComments = [...fetchedComments];
+    // if (curComments[0].message === newMessage || !newMessage) return; //Throw Error -> Show a message to user
+    // curComments.unshift({
+    //   id: fetchedComments.length - 1,
+    //   message: newMessage,
+    //   likes: 0,
+    //   dislikes: 0,
+    //   date: new Date(),
+    //   author: user.username,
+    //   author_avatar: user.avatarUrl,
+    // });
+    // setComments(curComments);
   };
 
   const deleteComment = (id: number) => {
-    const curComments = [...fetchedComments];
-    const index = curComments.findIndex((c) => c.id === id);
-
-    if (index === -1) return; //Unfindable || Already Deleted
-
-    curComments.splice(index, 1);
-    setComments(curComments);
+    // const curComments = [...fetchedComments];
+    // const index = curComments.findIndex((c) => c.id === id);
+    // if (index === -1) return; //Unfindable || Already Deleted
+    // curComments.splice(index, 1);
+    // setComments(curComments);
   };
 
   const [newMessage, setNewMessage] = useState('');
@@ -78,14 +59,23 @@ export function Comments({ user }: CommentsProps) {
           <button onClick={postComment}>POST</button>
         </PostComment>
       )}
-      {fetchedComments.map((comment) => (
-        <UserComment
-          key={comment.id}
-          comment={comment}
-          handleDelete={deleteComment}
-          isOwner={user?.username === comment.author}
-        />
-      ))}
+      {comments.comments.map((comment) => {
+        const author = comments.users.find(
+          (user) => user.id === comment.fromUserId
+        );
+
+        if (!author) return null;
+
+        return (
+          <UserComment
+            key={comment.id}
+            comment={comment}
+            handleDelete={deleteComment}
+            isOwner={user?.id === comment.fromUserId}
+            author={author}
+          />
+        );
+      })}
     </Container>
   );
 }

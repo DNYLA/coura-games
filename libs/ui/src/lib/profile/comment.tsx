@@ -1,20 +1,26 @@
 import { useContext } from 'react';
 import { FiMinus, FiPlus } from 'react-icons/fi';
 import { MdEdit } from 'react-icons/md';
-import { Comment } from '@couragames/shared-types';
+import { Comment, User } from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import moment from 'moment';
 
 interface CommentProps {
   comment: Comment;
+  author: User;
   isOwner: boolean;
   handleDelete: (id: number) => void;
 }
 
-export function UserComment({ comment, isOwner, handleDelete }: CommentProps) {
-  const { id, message, likes, dislikes, date, author, author_avatar } = comment;
+export function UserComment({
+  comment,
+  author,
+  isOwner,
+  handleDelete,
+}: CommentProps) {
+  const { id, content, likes, dislikes, createdAt } = comment;
 
-  const now = moment(date).fromNow();
+  const now = moment(createdAt).fromNow();
   return (
     <Container>
       <UpVotes>
@@ -26,7 +32,7 @@ export function UserComment({ comment, isOwner, handleDelete }: CommentProps) {
         <Panel>
           <Author>
             <img
-              src={author_avatar}
+              src={author.avatarUrl}
               onError={(e) => {
                 e.stopPropagation();
                 e.currentTarget.src =
@@ -34,7 +40,7 @@ export function UserComment({ comment, isOwner, handleDelete }: CommentProps) {
               }}
               alt="commenter avatar"
             ></img>
-            <p>{author}</p>
+            <p>{author.username}</p>
             <span>{now}</span>
           </Author>
           {isOwner && (
@@ -52,7 +58,7 @@ export function UserComment({ comment, isOwner, handleDelete }: CommentProps) {
           )}
         </Panel>
 
-        <p>{message}</p>
+        <p>{content}</p>
       </Message>
     </Container>
   );
