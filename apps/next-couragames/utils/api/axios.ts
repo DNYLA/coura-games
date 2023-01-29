@@ -1,4 +1,4 @@
-import { PublicUser, User } from '@couragames/shared-types';
+import { Comment, Comments, PublicUser, User } from '@couragames/shared-types';
 import axios, { AxiosRequestConfig } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import { getAPIUrl } from '../index'; //Looks weird as just '..' so i added the index part
@@ -19,3 +19,6 @@ export const signUp = (username: string, password: string) =>
 
 export const fetchUserProfile = (username: string) =>
   AXIOS.get<PublicUser>(`/member/${username}`);
+
+export const fetchComments = (username: string, page?: number) =>
+  AXIOS.get<Comments>(`/member/${username}/comments?page=${page ?? 0}`);

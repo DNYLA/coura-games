@@ -11,14 +11,28 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  username  String  @unique()
-  status String?
+  id            Int       @id @default(autoincrement())
+  username      String    @unique()
+  status        String?
   // email     String
-  password  String
-  avatarUrl String?
+  password      String
+  avatarUrl     String?
   profileBanner String?
-  points Int @default(0)
-  joined DateTime @default(now())
+  points        Int       @default(0)
+  joined        DateTime  @default(now())
+  comments      Comment[]
 }
 
+model Comment {
+  id         Int       @id @default(autoincrement())
+  fromUserId Int
+  toUserId   Int
+  toUser     User      @relation(fields: [toUserId], references: [id])
+  content    String
+  likes      Int       @default(0)
+  dislikes   Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  deletedAt  DateTime?
+  deleted    Boolean   @default(false)
+}

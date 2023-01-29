@@ -1,0 +1,2 @@
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_toUserId_fkey" FOREIGN KEY ("toUserId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
