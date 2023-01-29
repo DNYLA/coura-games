@@ -6,8 +6,8 @@ import {
   Slide,
   SlideFade,
 } from '@chakra-ui/react';
-import UserContext from 'apps/next-couragames/context/auth';
-import { Game } from 'apps/next-couragames/utils/types';
+import UserContext from '../context/auth';
+import { Game } from '../utils/types';
 import { Router } from 'express';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';

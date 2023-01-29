@@ -52,7 +52,10 @@ const useAuth = () => {
         setUser(data);
         setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
   }, [login, signup]); //Login & Logout only change on mount so this is only called once.
 
   return { user, login, logout, signup, error, setError, loading };

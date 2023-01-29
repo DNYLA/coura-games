@@ -4,7 +4,7 @@ import * as cors from 'cors';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { router as authRouter } from './routes/auth';
-import { router as memberRouter } from './routes/member.controller';
+import { router as memberRouter } from './routes/user.controller';
 import { User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
@@ -37,6 +37,7 @@ app.use(
 );
 
 const redisClient = createClient({
+  legacyMode: true,
   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
   password: process.env.REDIS_PASSWORD,
 });
@@ -53,7 +54,7 @@ const RedisStore = connectRedis(session);
 
 app.use(
   session({
-    // store: new RedisStore({ client: redisClient }),
+    store: new RedisStore({ client: redisClient }),
     // store: new RedisStore({
     //   host: process.env.REDIS_HOST,
     //   port: Number(process.env.REDIS_PORT),
@@ -87,7 +88,7 @@ const io = new Server(httpServer, {
 socketEventHandler(io);
 
 app.use(express.json()); //Parses All incoming data into JSON
-app.use(express.urlencoded({ extended: true })); //Allows us to retreive data from Form Submissions
+app.use(express.urlencoded({ extended: false })); //Allows us to retreive data from Form Submissions
 //Routes
 app.use('/api/auth', authRouter);
 app.use('/api/member', memberRouter);
