@@ -49,7 +49,7 @@ export function UserStats() {
     <Container>
       <TitleItem>Title Container</TitleItem>
       {stats.map((stat) => (
-        <GridItem>
+        <GridItem key={stat.title}>
           <div className="grid_title">
             <p>{stat.title}</p>
             {/* <BsThreeDots /> */}

@@ -27,7 +27,7 @@ router.get('/:username', async (req, res, next) => {
   res.send(user);
 });
 
-router.get('/:username/comments', async (req, res, next) => {
+router.get('/:username/comment', async (req, res, next) => {
   const userName = req.params.username;
 
   if (!userName) return res.sendStatus(400).send('No Username Provided');
@@ -39,28 +39,53 @@ router.get('/:username/comments', async (req, res, next) => {
   }
 
   //Fetch Individual Users
-  const userIds = comments.map((comment) => comment.fromUserId);
+  const userIds = comments.map((comment) => comment.authorId);
   const userInfos = await userService.getManyUsers(userIds);
 
   res.send({ comments, users: userInfos });
 });
 
-router.get('/:username/comments/create', async (req, res, next) => {
+router.post('/:username/comment', async (req, res, next) => {
+  const user = req.user;
+  const data = req.body;
+  if (!user) return res.sendStatus(401);
   const userName = req.params.username;
-
   if (!userName) return res.sendStatus(400).send('No Username Provided');
-  const comments = await commentsService.getComments(userName);
-
-  if (!comments || comments.length === 0) {
-    res.send({ comments: [], users: [] });
-    return;
+  console.log(data);
+  try {
+    const newComment = await commentsService.createComment(
+      userName,
+      user.id,
+      data.message
+    );
+    res.send(newComment);
+  } catch {
+    res.sendStatus(500);
   }
 
-  //Fetch Individual Users
-  const userIds = comments.map((comment) => comment.fromUserId);
-  const userInfos = await userService.getManyUsers(userIds);
+  // res.send({ comments, users: userInfos });
+});
 
-  res.send({ comments, users: userInfos });
+router.delete('/:username/comment', async (req, res, next) => {
+  const user = req.user;
+  const id = parseInt(req.query.id as string);
+
+  if (isNaN(id)) return res.sendStatus(400);
+
+  if (!user) return res.sendStatus(401);
+
+  const userName = req.params.username;
+  if (!userName) return res.sendStatus(400).send('No Username Provided');
+
+  try {
+    const valid = await commentsService.deleteComment(id, user.id);
+    if (valid) res.sendStatus(200);
+    else res.sendStatus(401); //Function returns false if not authorised
+  } catch {
+    res.sendStatus(500);
+  }
+
+  // res.send({ comments, users: userInfos });
 });
 
 export { router };

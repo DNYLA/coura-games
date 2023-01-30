@@ -25,7 +25,7 @@ model User {
 
 model Comment {
   id         Int       @id @default(autoincrement())
-  fromUserId Int
+  authorId Int
   toUserId   Int
   toUser     User      @relation(fields: [toUserId], references: [id])
   content    String
@@ -33,6 +33,4 @@ model Comment {
   dislikes   Int       @default(0)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
-  deletedAt  DateTime?
-  deleted    Boolean   @default(false)
 }
