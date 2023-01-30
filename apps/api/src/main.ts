@@ -9,7 +9,7 @@ import { User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
 import { getFrontendURL } from './utils';
-// import { redis as redisClent } from '@couragames/game-logic';
+import { redis as redisClent } from '@couragames/game-logic';
 import * as connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 require('./config/passport-local');
@@ -94,7 +94,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/member', memberRouter);
 
 (async () => {
-  // await redisClent.connect();
+  await redisClent.connect();
   // await redisClient.connect();
 
   const server = httpServer.listen(port, () => {

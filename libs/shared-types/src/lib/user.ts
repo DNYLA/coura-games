@@ -16,7 +16,7 @@ export type User = {
 
 export type Comment = {
   id: number;
-  fromUserId: number;
+  authorId: number;
   toUserId: number;
   content: string;
   likes: number;

@@ -60,13 +60,13 @@ export default function Sidebar() {
   ];
 
   const generateItems = (list: NavItem[]) => {
-    return list.map((item) => {
+    return list.map((item, i) => {
       if (item.state === ItemState.LoggedInOnly && !user) return;
       if (item.state === ItemState.LoggedOutOnly && user) return;
 
       if (item.state != ItemState.LoggedOutOnly)
         return (
-          <Link href={item.url}>
+          <Link href={item.url} key={i}>
             <item.icon />
             <span>{item.text}</span>
           </Link>

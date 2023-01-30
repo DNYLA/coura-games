@@ -6,72 +6,74 @@ import {
 import styled from '@emotion/styled';
 import { UserComment } from './comment';
 import { useState } from 'react';
+import { postComment, deleteComment as deleteCommentAPI } from '@couragames/ui';
 
 interface CommentsProps {
+  username: string;
   user?: User;
   comments: CommentsType;
+  addComment: (comment: Comment) => void;
+  deleteComment: (id: number) => void;
 }
 
-export function Comments({ user, comments }: CommentsProps) {
-  const message =
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat magnam vitae itaque quae porro voluptatibus minus hic! Soluta suscipit laudantium fugiat vero tempora, ipsum accusantium illum ea vel quod molestias ut repellat, natus ducimus eaque obcaecati consequuntur libero doloremque cupiditate est dicta nam? Dicta animi libero amet officia totam quisquam!';
-  const img_ur =
-    'https://yt3.ggpht.com/oHmF1pFUKwRFGsUbzNYKkbhIJoaW4b-L_IZ0HZnmerBL_MdLwiVSaCg2YgNzj8LI8HXF59SYk8U=s900-c-k-c0x00ffffff-no-rj';
-
-  const postComment = () => {
+export function Comments({
+  username,
+  user,
+  comments,
+  addComment,
+  deleteComment,
+}: CommentsProps) {
+  const [message, setMessage] = useState('');
+  const handlePost = async () => {
     if (!user) return;
-    console.log('Running');
+    //Throw Error -> Show a message to user informing them they cant send the same message as before or an empty message
+    if (!message) return;
 
-    // const curComments = [...fetchedComments];
-    // if (curComments[0].message === newMessage || !newMessage) return; //Throw Error -> Show a message to user
-    // curComments.unshift({
-    //   id: fetchedComments.length - 1,
-    //   message: newMessage,
-    //   likes: 0,
-    //   dislikes: 0,
-    //   date: new Date(),
-    //   author: user.username,
-    //   author_avatar: user.avatarUrl,
-    // });
-    // setComments(curComments);
+    try {
+      const { data } = await postComment(username, message);
+      console.log(data);
+      addComment(data);
+    } catch (err) {
+      //Show Notification
+      console.log(err);
+    }
   };
 
-  const deleteComment = (id: number) => {
-    // const curComments = [...fetchedComments];
-    // const index = curComments.findIndex((c) => c.id === id);
-    // if (index === -1) return; //Unfindable || Already Deleted
-    // curComments.splice(index, 1);
-    // setComments(curComments);
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteCommentAPI(username, id);
+      deleteComment(id);
+    } catch (err) {}
   };
-
-  const [newMessage, setNewMessage] = useState('');
 
   return (
     <Container>
       {user && (
         <PostComment>
-          <img src={img_ur} alt="Your Avatar"></img>
+          <img src={user.avatarUrl} alt="Your Avatar"></img>
           <textarea
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             placeholder="Enter your comment..."
           />
-          <button onClick={postComment}>POST</button>
+          <button onClick={handlePost}>POST</button>
         </PostComment>
       )}
       {comments.comments.map((comment) => {
         const author = comments.users.find(
-          (user) => user.id === comment.fromUserId
+          (user) => user.id === comment.authorId
         );
 
-        if (!author) return null;
+        console.log(author);
+
+        if (!author) return <div key={comment.id}></div>;
 
         return (
           <UserComment
             key={comment.id}
             comment={comment}
-            handleDelete={deleteComment}
-            isOwner={user?.id === comment.fromUserId}
+            handleDelete={handleDelete}
+            isOwner={user?.id === comment.authorId}
             author={author}
           />
         );

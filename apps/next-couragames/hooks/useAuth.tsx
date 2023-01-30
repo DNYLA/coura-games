@@ -1,7 +1,7 @@
 import { User } from '@couragames/shared-types';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useCallback } from 'react';
-import { getUser, signIn, signOut, signUp } from '../utils/api/axios';
+import { getUser, signIn, signOut, signUp } from '@couragames/ui';
 
 const useAuth = () => {
   const [user, setUser] = useState<User>();

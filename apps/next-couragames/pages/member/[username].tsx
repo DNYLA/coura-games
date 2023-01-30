@@ -5,12 +5,13 @@ import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Comments as CommentsSection,
+  fetchComments,
+  fetchUserProfile,
   ProfileHeader,
   Sidebar,
   UserStats,
 } from '@couragames/ui';
-import { Comments, PublicUser } from '@couragames/shared-types';
-import { fetchComments, fetchUserProfile } from '../../utils/api/axios';
+import { Comments, Comment, PublicUser } from '@couragames/shared-types';
 export default function MemberProfile() {
   const router = useRouter();
   const { username } = router.query;
@@ -20,10 +21,12 @@ export default function MemberProfile() {
     comments: [],
     users: [],
   });
+
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
+
   useEffect(() => {
-    if (Array.isArray(username)) return;
+    if (Array.isArray(username) || !user) return;
     if (!username || !user.username) return;
 
     fetchUserProfile(username ?? user.username)
@@ -43,13 +46,35 @@ export default function MemberProfile() {
     return <div>Loading...</div>;
   }
 
+  const handleNewComment = (comment: Comment) => {
+    const curComments = [...comments.comments];
+    curComments.unshift(comment);
+    setComments({ ...comments, comments: curComments });
+  };
+
+  const handleDelete = (id: number) => {
+    const curComments = [...comments.comments];
+    const index = curComments.findIndex((c) => c.id === id);
+    if (index === -1) return; //Unfindable || Already Deleted
+    curComments.splice(index, 1);
+    setComments({ ...comments, comments: curComments });
+  };
+
+  if (Array.isArray(username)) return <div>Why</div>;
+
   return (
     <Profile>
       <Container>
         <Main>
           <ProfileHeader member={member} />
           <UserStats />
-          <CommentsSection user={user} comments={comments} />
+          <CommentsSection
+            username={username}
+            user={user}
+            comments={comments}
+            addComment={handleNewComment}
+            deleteComment={handleDelete}
+          />
         </Main>
         <Sidebar>Sidebar</Sidebar>
       </Container>
