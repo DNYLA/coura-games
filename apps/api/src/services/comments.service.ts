@@ -1,5 +1,5 @@
 import { PublicUser } from '@couragames/shared-types';
-import { PrismaClient, Comment } from '@prisma/client';
+import { PrismaClient, Comment, User } from '@prisma/client';
 import { UserService } from './user.service';
 
 export class CommentsService implements ICommentsService {
@@ -19,22 +19,52 @@ export class CommentsService implements ICommentsService {
     return comments;
   }
 
-  editComment(id: string, content: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async editComment(
+    id: number,
+    content: string,
+    userId: number
+  ): Promise<boolean> {
+    const comment = await this.getComment(id);
+    if (comment.fromUserId !== userId) return false;
+
+    await this.prisma.comment.update({
+      where: { id },
+      data: {
+        content,
+        updatedAt: new Date(),
+      },
+    });
+
+    return true;
   }
 
-  deleteComment(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async deleteComment(id: number, userId: number): Promise<boolean> {
+    const comment = await this.getComment(id);
+    if (comment.fromUserId !== userId) return false;
+
+    await this.prisma.comment.update({
+      where: { id },
+      data: {
+        deleted: true,
+        deletedAt: new Date(),
+      },
+    });
+
+    return true;
   }
 
   interactComment(id: string, upvote: boolean): Promise<number> {
     throw new Error('Method not implemented.');
   }
+
+  private async getComment(id: number): Promise<Comment> {
+    return await this.prisma.comment.findUnique({ where: { id } });
+  }
 }
 
 interface ICommentsService {
   getComments(userId: string, page?: number): Promise<Comment[]>;
-  editComment(id: string, content: string): Promise<void>;
-  deleteComment(id: string): Promise<void>;
+  editComment(id: number, content: string, userId: number): Promise<boolean>;
+  deleteComment(id: number, userId: number): Promise<boolean>;
   interactComment(id: string, upvote: boolean): Promise<number>;
 }
