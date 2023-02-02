@@ -66,7 +66,7 @@ export default function MemberProfile() {
     <Profile>
       <Container>
         <Main>
-          <ProfileHeader member={member} />
+          <ProfileHeader member={member} selfName={user.username} />
           <UserStats />
           <CommentsSection
             username={username}
