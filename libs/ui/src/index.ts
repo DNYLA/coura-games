@@ -8,3 +8,4 @@ export * from './lib/profile/comments-section';
 export * from './lib/profile/sidebar';
 
 export * from './api';
+export * from './lib/context/auth';
