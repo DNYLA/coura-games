@@ -4,10 +4,7 @@ import AppProviders from 'apps/next-couragames/components/app-providers';
 import Chat from 'apps/next-couragames/components/Chat';
 import { Navbar } from 'apps/next-couragames/components/navbar';
 import Sidebar from 'apps/next-couragames/components/sidebar';
-import UserContext, {
-  IUserContext,
-  User,
-} from 'apps/next-couragames/context/auth';
+import UserContext, { IUserContext } from 'apps/next-couragames/context/auth';
 import useAuth from 'apps/next-couragames/hooks/useAuth';
 import { GetServerSidePropsContext } from 'next';
 // import { Navbar } from '@couragames/ui';
