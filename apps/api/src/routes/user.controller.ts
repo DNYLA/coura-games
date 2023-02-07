@@ -12,7 +12,6 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:username', async (req, res, next) => {
-  console.log('Hit');
   const userName = req.params.username;
 
   if (!userName) return res.sendStatus(400).send('No Username Provided');
