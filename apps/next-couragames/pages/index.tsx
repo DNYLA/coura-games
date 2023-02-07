@@ -48,28 +48,9 @@ export function Index() {
 
   return (
     <Flex direction="column" mt={25}>
-      <Container
-        // direction="row"
-        // mx={50}
-        mb={5}
-        // d="flex"
-        // alignItems="center"
-        // alignContent="center"
-        // justifyContent="center"
-        minW={'90vw'}
-      >
+      <Container mb={5} minW={'90vw'}>
         <Heading mb={2}>Popular</Heading>
-        <Stack
-          direction="row"
-          // mx={50}
-          // mb={5}
-          // m={0}
-          // d="flex"
-          alignItems="center"
-          // justifyContent="center"
-          // justify="center"
-          overflowX="auto"
-        >
+        <Stack direction="row" alignItems="center" overflowX="auto">
           {!isLoading &&
             games.map((game: Game, i) => (
               <GameCard
@@ -84,29 +65,9 @@ export function Index() {
           </Collapse>
         </Stack>
       </Container>
-      <Container
-        // direction="row"
-        // mx={50}
-        mt={10}
-        mb={5}
-        // d="flex"
-        // alignItems="center"
-        // alignContent="center"
-        // justifyContent="center"
-        minW={'90vw'}
-      >
+      <Container mt={10} mb={5} minW={'90vw'}>
         <Heading mb={2}>Recently Created</Heading>
-        <Stack
-          direction="row"
-          // mx={50}
-          // mb={5}
-          // m={0}
-          // d="flex"
-          alignItems="center"
-          // // justifyContent="center"
-          // justify="center"
-          overflowX="auto"
-        >
+        <Stack direction="row" alignItems="center" overflowX="auto">
           {!isLoading &&
             games
               .filter((g) => g.new === true)
