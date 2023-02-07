@@ -113,6 +113,15 @@ export default function TicTacToe() {
     socket.emit('tictactoe_move', { id: lobby, x, y });
   };
 
+  // const submitMove2 = (x: number, y: number) => {
+  //   socket.emit('lobby', {
+  //     game: game,
+  //     type: LobbyEvents.PlayerMove,
+  //     id: lobbyInfo.id,
+  //     payload: data,
+  //   });
+  // };
+
   const handlePlayAgain = () => {
     console.log('yes');
     socket.emit('tictactoe_playagain', { id: lobby });

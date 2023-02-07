@@ -4,6 +4,7 @@ import { getLobby, setLobby } from 'libs/game-logic/src/lib/redisManager';
 import { Game } from 'libs/game-logic/src/lib/utils/game';
 import { Lobby } from 'libs/game-logic/src/lib/utils/types';
 import { Socket } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
 export class RPS extends Game {
   /**
@@ -123,6 +124,38 @@ export class RPS extends Game {
     this.roundEnded(lobby.data.round);
   }
 
+  async handleTurn(socket: Socket, move: RPSMove) {
+    const lobby = this.lobby;
+
+    const isPlayerOne =
+      lobby.players.findIndex((player) => player.id === socket.id) === 0
+        ? true
+        : false;
+    console.log('Here 1.0');
+    console.log(move);
+    ///Not a valid move. No need to acknowledge since uer has sent over invalid move meaning they are  attempting to cheat or exploit the system
+    if (!(move in RPSMove)) return;
+    console.log('Here');
+    //Checking if the data is empty prevents cheating/users resending a "move" after selecting one.
+    if (isPlayerOne && !lobby.data.playerOneChoice) {
+      lobby.data.playerOneChoice = move;
+    } else if (!lobby.data.playerTwoChoice) {
+      lobby.data.playerTwoChoice = move;
+    }
+
+    await setLobby(lobby.id, lobby);
+    //Verify if both players have made a choice
+    //Must check if it is undefined as according to javascript
+    //the number 0 is also represents false so we can not check if (!playerOneChoice)
+    if (
+      lobby.data.playerOneChoice === null ||
+      lobby.data.playerTwoChoice === null
+    )
+      return;
+
+    this.roundEnded(lobby.data.round);
+  }
+
   //https://stackoverflow.com/questions/41457556/rock-paper-scissors-get-winner-mathematically
   //Equation from StackOverFlow
   //Returns true if p1 wins, false if p2 wins undefined if draw
@@ -130,6 +163,12 @@ export class RPS extends Game {
     if ((m1 + 1) % 3 == m2) return false;
     else if (m1 == m2) return null;
     else return true;
+  }
+
+  restartGame(
+    socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+  ): void {
+    throw 'Not Implemented';
   }
 }
 
