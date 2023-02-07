@@ -30,6 +30,8 @@ export abstract class Game {
   abstract roundEnded(round: number): void;
   abstract nextRound(round: number): void;
   abstract emitNewRoundData(timer: Date): void;
+  abstract restartGame(socket: Socket): void;
+  abstract handleTurn(socket: Socket, data: unknown): void;
   // abstract calculateMove(socket: Socket, id: string, round: number): void;
   // abstract computeWinner(socket: Socket, id: string, round: number): void;
 

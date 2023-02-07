@@ -23,6 +23,15 @@ export function Lobby({ redirect, game, children }: HomeProps) {
     socket.emit('lobby', { game: game, type: LobbyEvents.Join, id: code });
   };
 
+  // const submitMove = (data: unknown) => {
+  //   socket.emit('lobby', {
+  //     game: game,
+  //     type: LobbyEvents.PlayerMove,
+  //     id: lobbyInfo.id,
+  //     payload: data,
+  //   });
+  // };
+
   useEffect(() => {
     //Called when someone hosts a game
     socket?.on('lobby_info', (data) => {

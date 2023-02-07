@@ -7,6 +7,8 @@ import {
 import {
   createLobby,
   joinLobby,
+  makeMove,
+  restartGame,
   RPSGames,
   startGame,
   ticTacToeGames,
@@ -18,8 +20,7 @@ import { Socket } from 'socket.io';
 export { createLobby } from './lib/game-logic';
 
 interface SocketData {
-  name: string;
-  age: number;
+  event: LobbyEvent;
 }
 
 export function handleLobbyEvent(socket: Socket, event: LobbyEvent) {
@@ -33,6 +34,10 @@ export function handleLobbyEvent(socket: Socket, event: LobbyEvent) {
     case LobbyEvents.Start:
       startGame(socket, event.game, event.id);
       break;
+    case LobbyEvents.Restart:
+      restartGame(socket, event.game, event.id);
+    case LobbyEvents.PlayerMove:
+      makeMove(socket, event.game, event.id, event.payload);
     case LobbyEvents.PlayerLeave:
       throw new Error('Not Implemented');
     case LobbyEvents.Ended:
