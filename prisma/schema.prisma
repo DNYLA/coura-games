@@ -35,17 +35,34 @@ model Comment {
   updatedAt  DateTime? @updatedAt
 }
 
-model Friend {
-  id Int
-  userOneId Int
-  userTwoId Int
-  status Boolean @default(false)
-  @@id([userOneId, userTwoId])
-}
+// model Friend {
+//   id Int
+//   userOneId Int
+//   userTwoId Int
+//   status Boolean @default(false)
+//   @@id([userOneId, userTwoId])
+// }
+
+// model Notification {
+//   id Int @id @default(autoincrement())
+//   targetId Int
+//   // targetUser User
+//   fromId Int? 
+//   // fromUser User?
+//   type NotificationType
+
+// }
 
 enum FriendStatus {
  Accepted
  Rejected
  Pending
  Blocked //Easier to handle block list here instead of creating a new relation
+}
+
+enum NotificationType {
+  FriendRequest
+  SelfComment
+  FriendComment
+
 }
