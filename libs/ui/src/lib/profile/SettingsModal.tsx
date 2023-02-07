@@ -12,6 +12,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   useDisclosure,
 } from '@chakra-ui/react';
 
@@ -35,9 +36,19 @@ export default function SettingsModal({
         <ModalBody>
           <FormControl>
             <FormLabel>Status</FormLabel>
-            <Input placeholder="Stauts" />
+            <Input placeholder="Winning all the games..." />
           </FormControl>
           <Avatar src={avatarURL}></Avatar>
+        </ModalBody>
+        <ModalBody>
+          <FormControl>
+            <FormLabel>Comments</FormLabel>
+            <Select defaultValue={'option1'}>
+              <option value="option1">Everyone</option>
+              <option value="option2">Friends Only</option>
+              <option value="option3">No One</option>
+            </Select>
+          </FormControl>
         </ModalBody>
 
         <ModalFooter>

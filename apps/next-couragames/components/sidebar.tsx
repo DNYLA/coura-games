@@ -41,7 +41,7 @@ export default function Sidebar() {
       icon: FcRating,
     },
     {
-      url: user ? `/member/${user.username}` : '/login/',
+      url: user ? `/member/${user.username.toLowerCase()}` : '/login/',
       text: 'Profile',
       state: ItemState.LoggedInOnly,
       icon: FcBusinessman,

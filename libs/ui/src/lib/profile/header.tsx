@@ -1,6 +1,6 @@
 import { PublicUser } from '@couragames/shared-types';
 import styled from '@emotion/styled';
-import UserContext from 'libs/ui/src/lib/context/auth';
+import UserContext from '../context/auth';
 import SettingsModal from './SettingsModal';
 import moment from 'moment';
 import { useContext, useState } from 'react';
