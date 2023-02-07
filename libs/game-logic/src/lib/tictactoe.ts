@@ -241,4 +241,35 @@ export class TicTacToe extends Game {
       }, 2500);
     }
   }
+
+  restartGame(socket: Socket) {
+    const isPlayerOne =
+      this.lobby.players.findIndex((player) => player.id === socket.id) === 0
+        ? true
+        : false;
+
+    const emit_restart = () => {
+      const num =
+        (this.playerOneRestart ? 1 : 0) + (this.playerTwoRestart ? 1 : 0);
+      console.log(num);
+      this.broadcast('tictactoe_replay', num);
+    };
+
+    //Check to make sure playerOneRestart isnt already true this prevents users
+    //from spamming other members with restart request
+    if (isPlayerOne && !this.playerOneRestart) {
+      this.playerOneRestart = true;
+      emit_restart();
+    } else if (!isPlayerOne && !this.playerTwoRestart) {
+      this.playerTwoRestart = true;
+      emit_restart();
+    }
+
+    if (this.playerOneRestart && this.playerTwoRestart) {
+      //Handle Restart
+      setTimeout(() => {
+        this.setupGame();
+      }, 2500);
+    }
+  }
 }

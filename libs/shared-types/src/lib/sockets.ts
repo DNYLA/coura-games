@@ -8,13 +8,16 @@ export enum LobbyEvents {
   Join,
   Start,
   PlayerLeave,
+  PlayerMove,
   Ended,
+  Restart,
 }
 
 export type LobbyEvent = {
   id?: string;
   game: Games;
   type: LobbyEvents;
+  payload?: unknown;
 };
 
 export type Player = {
