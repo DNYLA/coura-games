@@ -86,6 +86,10 @@ const Profile = styled.div`
   flex-direction: column;
   min-height: 100dvh;
   margin: 20px 50px;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  width: 100vw;
 `;
 
 const Container = styled.div`
