@@ -45,7 +45,7 @@ export const updateUser = (
     formData.append(k, value ?? '');
   });
 
-  AXIOS.patch<PublicUser>(`/member/${username}`, formData, {
+  AXIOS.patch<PublicUser>(`/member/${username.toLowerCase()}`, formData, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
 };

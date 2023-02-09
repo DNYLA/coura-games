@@ -9,7 +9,11 @@ prisma.$use(async (params, next) => {
   if (params.model !== 'User') return next(params);
   const result = await next(params);
 
-  if (params.action === 'findUnique' || params.action === 'findFirst') {
+  if (
+    params.action === 'findUnique' ||
+    params.action === 'findFirst' ||
+    params.action === 'update'
+  ) {
     if (!result || !result.avatarUrl) return result;
     result.avatarUrl = `${process.env.FILE_HOST}/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${result.avatarUrl}`;
 

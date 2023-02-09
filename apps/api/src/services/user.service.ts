@@ -1,5 +1,5 @@
 import { PublicUser } from '@couragames/shared-types';
-import { PrismaClient, User } from '@prisma/client';
+import { Prisma, PrismaClient, User } from '@prisma/client';
 import { BlockBlobClient } from '@azure/storage-blob';
 import fileUpload = require('express-fileupload');
 import prisma from './prisma.service';
@@ -28,36 +28,41 @@ export class UserService implements IUserService {
     return { ...user, joined: user.joined.getTime() };
   }
 
-  async updateUser(userId: number, files: fileUpload.FileArray) {
+  async updateUser(
+    userId: number,
+    data: Prisma.UserUpdateInput,
+    files: fileUpload.FileArray
+  ) {
     console.log('Here');
+    let blobName: string;
+    if (files && files.avatar && !Array.isArray(files.avatar)) {
+      blobName = await this.uploadUserAvatar(files.avatar);
 
-    if (!files || !files.avatar) return null;
-    if (Array.isArray(files.avatar)) return null;
+      if (!blobName) return null; //Means We Error'd
+    }
 
-    const avatar = files.avatar;
-    console.log(avatar);
-    console.log(avatar.data);
+    if (blobName) {
+      data.avatarUrl = blobName;
+    }
 
-    //Code from Official Azure Github page for examples on how to use there services.
-    //Changed function below to use uploadData instead
-    //https://github.com/Azure-Samples/storage-blob-upload-from-webapp-node/blob/master/routes/upload.js
-
-    const blobName = getBlobName(avatar.name),
-      blobService = new BlockBlobClient(
-        process.env.AZURE_STORAGE_CONNECTION_STRING,
-        process.env.AZURE_STORAGE_CONTAINER_NAME,
-        blobName
-      );
-
-    blobService.uploadData(avatar.data).catch((err) => {
-      console.log(err);
+    try {
+      return await prisma.user.update({
+        where: { id: userId },
+        data,
+        select: {
+          id: true,
+          username: true,
+          status: true,
+          avatarUrl: true,
+          profileBanner: true,
+          points: true,
+          joined: true,
+        },
+      });
+    } catch (err) {
+      console.log('error');
       return null;
-    });
-
-    await prisma.user.update({
-      where: { id: userId },
-      data: { avatarUrl: blobName },
-    });
+    }
   }
 
   async userIdFromName(username: string) {
@@ -81,6 +86,27 @@ export class UserService implements IUserService {
     });
 
     return users;
+  }
+
+  private async uploadUserAvatar(
+    avatar: fileUpload.UploadedFile
+  ): Promise<string> {
+    //Code from Official Azure Github page for examples on how to use there services.
+    //Changed function below to use uploadData instead
+    //https://github.com/Azure-Samples/storage-blob-upload-from-webapp-node/blob/master/routes/upload.js
+    const blobName = getBlobName(avatar.name),
+      blobService = new BlockBlobClient(
+        process.env.AZURE_STORAGE_CONNECTION_STRING,
+        process.env.AZURE_STORAGE_CONTAINER_NAME,
+        blobName
+      );
+
+    try {
+      await blobService.uploadData(avatar.data);
+      return blobName;
+    } catch (err) {
+      return null;
+    }
   }
 }
 
