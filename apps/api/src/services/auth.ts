@@ -1,7 +1,7 @@
 import { PrismaClient, User } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
-const prisma = new PrismaClient();
+import prisma from './prisma.service';
 
 export const signup = async (
   req: Request,

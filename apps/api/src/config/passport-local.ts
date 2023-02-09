@@ -1,9 +1,8 @@
 import { PrismaClient, User } from '@prisma/client';
+import prisma from '../services/prisma.service';
 import * as bcrypt from 'bcrypt';
 import * as passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-
-const prisma = new PrismaClient();
 
 passport.use(
   new LocalStrategy(async function (username: string, password: string, done) {

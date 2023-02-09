@@ -3,6 +3,8 @@ import { Router } from 'express';
 import * as passport from 'passport';
 import { CommentsService } from '../services/comments.service';
 
+// import * as getStream from 'into-stream';
+
 const router = Router();
 const userService = new UserService();
 const commentsService = new CommentsService(userService);
@@ -24,6 +26,18 @@ router.get('/:username', async (req, res, next) => {
   }
 
   res.send(user);
+});
+
+router.patch('/:username', async (req, res, next) => {
+  const userName = req.params.username.toLowerCase();
+  const user = req.user;
+
+  if (!user || user.username.toLowerCase() !== userName)
+    return res.sendStatus(403);
+  if (!userName) return res.sendStatus(400).send('No Username Provided');
+  console.log(req.body);
+  res.send(await userService.updateUser(user.id, req.files));
+  // res.send(user);
 });
 
 router.get('/:username/comment', async (req, res, next) => {
@@ -70,7 +84,6 @@ router.delete('/:username/comment', async (req, res, next) => {
   const id = parseInt(req.query.id as string);
 
   if (isNaN(id)) return res.sendStatus(400);
-
   if (!user) return res.sendStatus(401);
 
   const userName = req.params.username;
