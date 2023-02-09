@@ -6,7 +6,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { MenuButton } from '../../../utils/styles';
 import { Box } from '@chakra-ui/react';
-import TicTacToeDesign from 'apps/next-couragames/pages/play/tic-tac-toe/design';
 
 export default function TicTacToe() {
   const [board, setBoard] = useState(
@@ -26,7 +25,7 @@ export default function TicTacToe() {
     num: 0,
     ended: false,
   });
-  const socket = useContext(SocketContext).socket;
+  const { socket } = useContext(SocketContext);
   const router = useRouter();
   const { lobby } = router.query;
   useEffect(() => {

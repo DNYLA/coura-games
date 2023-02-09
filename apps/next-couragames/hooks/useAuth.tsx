@@ -1,7 +1,13 @@
-import { User } from '@couragames/shared-types';
+import { UpdateUser, User } from '@couragames/shared-types';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useCallback } from 'react';
-import { getUser, signIn, signOut, signUp } from '@couragames/ui';
+import {
+  getUser,
+  signIn,
+  signOut,
+  signUp,
+  updateUser as updateUserEndpoint,
+} from '@couragames/ui';
 
 const useAuth = () => {
   const [user, setUser] = useState<User>();
@@ -44,6 +50,23 @@ const useAuth = () => {
       });
   }, []);
 
+  const updateUser = useCallback(
+    (username: string, data: UpdateUser, image?: File) => {
+      updateUserEndpoint(username, data, image)
+        .then(({ data }) => {
+          setUser(data);
+        })
+        .catch((err) => {
+          const res = err.response;
+          if (res.status === 403 || res.stats === 500) {
+            console.log('Invalid Credentails');
+            //Set Error Message
+          }
+        });
+    },
+    []
+  );
+
   useEffect(() => {
     // if (user) return; //User already fetched so dont refetch
     // console.log('fetching User');
@@ -58,7 +81,7 @@ const useAuth = () => {
       });
   }, [login, signup]); //Login & Logout only change on mount so this is only called once.
 
-  return { user, login, logout, signup, error, setError, loading };
+  return { user, login, logout, signup, updateUser, error, setError, loading };
 };
 
 export default useAuth;

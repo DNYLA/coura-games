@@ -1,6 +1,6 @@
 import { PublicUser } from '@couragames/shared-types';
 import styled from '@emotion/styled';
-import UserContext from '../context/auth';
+import { UserContext } from '../context/auth';
 import SettingsModal from './SettingsModal';
 import moment from 'moment';
 import { useContext, useState } from 'react';
@@ -57,9 +57,6 @@ const ActionButton = styled.button<{ action: ButtonType }>`
 export function ProfileHeader({ member, selfName }: HeaderProps) {
   const { user } = useContext(UserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  console.log('In Member Profile');
-  console.log(user);
 
   const isUser = selfName.toLowerCase() === member.username.toLowerCase();
 

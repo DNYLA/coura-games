@@ -13,7 +13,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { useContext, useState } from 'react';
-import UserContext from '../context/auth';
+import { UserContext } from '@couragames/ui';
 
 /* eslint-disable-next-line */
 export interface LoginProps {}
