@@ -31,14 +31,6 @@ export default function FileUpload({
   setFile,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  // const {
-  //   field: { ref, value, ...inputProps },
-  //   meta: { invalid, isTouched, isDirty },
-  // } = useController({
-  //   name,
-  //   control,
-  //   rules: { required: isRequired },
-  // });
 
   const [value, setValue] = useState('');
   const [invalid, setInvalid] = useState(false);
@@ -55,14 +47,8 @@ export default function FileUpload({
       return;
     }
 
-    const test = e.target.files[0];
     setValue(e.target.files[0].name);
-    console.log(e.target.files[0]);
-
-    console.log(await e.target.files[0].text());
-
     setInvalid(false);
-
     setFile(e.target.files[0]);
   };
 
@@ -87,6 +73,7 @@ export default function FileUpload({
           placeholder={placeholder || 'Your file ...'}
           onClick={handleClick}
           value={value}
+          onChange={() => console.log()}
         />
       </InputGroup>
       <FormErrorMessage>{invalid}</FormErrorMessage>

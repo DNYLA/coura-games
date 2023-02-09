@@ -1,16 +1,9 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import AppProviders from 'apps/next-couragames/components/app-providers';
-import Chat from 'apps/next-couragames/components/Chat';
-import { Navbar } from 'apps/next-couragames/components/navbar';
-import Sidebar from 'apps/next-couragames/components/sidebar';
-import UserContext, { IUserContext } from 'apps/next-couragames/context/auth';
-import useAuth from 'apps/next-couragames/hooks/useAuth';
-import { GetServerSidePropsContext } from 'next';
-// import { Navbar } from '@couragames/ui';
 import { AppProps } from 'next/app';
-import Head from 'next/head';
-import { useState } from 'react';
+import AppProviders from '../components/app-providers';
+import Chat from '../components/Chat';
+import Sidebar from '../components/sidebar';
 
 const colors = {
   brand: {

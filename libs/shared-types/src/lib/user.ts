@@ -11,6 +11,7 @@ export type PublicUser = {
 export type User = {
   id: number;
   username: string;
+  status: string;
   avatarUrl?: string;
 };
 
