@@ -36,7 +36,7 @@ router.patch('/:username', async (req, res, next) => {
     return res.sendStatus(403);
   if (!userName) return res.sendStatus(400).send('No Username Provided');
   console.log(req.body);
-  res.send(await userService.updateUser(user.id, req.files));
+  res.send(await userService.updateUser(user.id, req.body, req.files));
   // res.send(user);
 });
 
