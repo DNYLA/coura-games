@@ -69,6 +69,7 @@ export function ProfileHeader({ member, selfName }: HeaderProps) {
         open={isOpen}
         onClose={onClose}
         avatarURL={member.avatarUrl}
+        username={member.username}
       />
       <Container>
         <Avatar>
