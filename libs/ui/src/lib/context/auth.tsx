@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { User } from '@couragames/shared-types';
+import { UpdateUser, User } from '@couragames/shared-types';
 import { createContext, Dispatch, SetStateAction } from 'react';
 
 export type AlertNotification = {
@@ -13,17 +13,19 @@ type UserConextType = {
   alertMsg: AlertNotification;
   login: (username: string, password: string) => void;
   signup: (username: string, password: string) => void;
+  updateUser: (username: string, data: UpdateUser, image?: File) => void;
   setAlert: Dispatch<SetStateAction<AlertNotification>>;
   resetAlert: () => void;
   logout: () => void;
 };
 
-const UserContext = createContext<UserConextType>({
+export const UserContext = createContext<UserConextType>({
   isLoggedIn: false,
   user: undefined,
   alertMsg: { show: false, message: '' },
   login: () => {},
   signup: () => {},
+  updateUser: () => {},
   setAlert: () => {},
   resetAlert: () => {},
   logout: () => {},
@@ -37,5 +39,3 @@ type IUserConextType = {
 export const IUserContext = createContext<IUserConextType>({
   setUser: () => {},
 });
-
-export default UserContext;

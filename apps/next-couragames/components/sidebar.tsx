@@ -5,7 +5,7 @@ import { GrGamepad } from 'react-icons/gr';
 import { BsArrowBarLeft, BsBoxArrowLeft } from 'react-icons/bs';
 import { BiLogOut } from 'react-icons/bi';
 import { FcBusinessman, FcConferenceCall, FcRating } from 'react-icons/fc';
-import UserContext from '../context/auth';
+import { UserContext } from '@couragames/ui';
 import { IconType } from 'react-icons';
 import { FaCog } from 'react-icons/fa';
 

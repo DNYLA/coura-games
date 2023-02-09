@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -18,8 +18,9 @@ import {
   Image,
 } from '@chakra-ui/react';
 import FileUpload from '../forms/FileUpload';
-import { updateUser } from 'libs/ui/src/api';
+import { updateUser as updateUserEndpoint } from 'libs/ui/src/api';
 import { UpdateUser } from '@couragames/shared-types';
+import { UserContext } from '../context/auth';
 
 interface SettingsModelProps {
   open: boolean;
@@ -34,20 +35,31 @@ export default function SettingsModal({
   avatarURL,
   username,
 }: SettingsModelProps) {
+  const { user, updateUser } = useContext(UserContext);
+
   const [newAvatar, setNewAvatar] = useState<File>();
   const [imageURL, setImageURL] = useState(avatarURL);
   const [settings, setSettings] = useState<UpdateUser>({
-    status: '',
+    status: user!.status,
   });
+
   const onAvatarChange = async (file: File) => {
     setNewAvatar(file);
     setImageURL(URL.createObjectURL(file));
+    // setAlert('Test');
   };
 
   const handleSave = async () => {
-    updateUser(username, settings, newAvatar);
-
-    console.log(imageURL);
+    try {
+      updateUser(username, settings, newAvatar);
+      setNewAvatar(undefined);
+      // setImageURL(data.avatarUrl);
+      // console.log(data);
+      onClose();
+    } catch (err) {
+      //Show Modal
+      console.log('Error');
+    }
   };
 
   return (
@@ -90,15 +102,6 @@ export default function SettingsModal({
                 setSettings({ ...settings, status: e.target.value })
               }
             />
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>Comments</FormLabel>
-            <Select defaultValue={'option1'}>
-              <option value="option1">Everyone</option>
-              <option value="option2">Friends Only</option>
-              <option value="option3">No One</option>
-            </Select>
           </FormControl>
         </ModalBody>
 
