@@ -1,17 +1,15 @@
 import { PublicUser } from '@couragames/shared-types';
 import { PrismaClient, Comment, User, Prisma } from '@prisma/client';
+import prisma from './prisma.service';
 import { UserService } from './user.service';
 
 export class CommentsService implements ICommentsService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private prisma: PrismaClient;
-  constructor(private userService: UserService) {
-    this.prisma = new PrismaClient();
-  }
+  constructor(private userService: UserService) {}
 
   async getComments(username: string, page?: number): Promise<Comment[]> {
     const userId = await this.userService.userIdFromName(username);
-    const comments = await this.prisma.comment.findMany({
+    const comments = await prisma.comment.findMany({
       where: { toUserId: userId },
       orderBy: { createdAt: 'desc' },
     });
@@ -28,7 +26,7 @@ export class CommentsService implements ICommentsService {
 
     //TODO: Add Check if User is Blocked?
 
-    const comment = await this.prisma.comment.create({
+    const comment = await prisma.comment.create({
       data: { authorId, toUserId: userId, content: message },
     });
 
@@ -43,7 +41,7 @@ export class CommentsService implements ICommentsService {
     const comment = await this.getComment(id);
     if (comment.authorId !== userId) return false;
 
-    await this.prisma.comment.update({
+    await prisma.comment.update({
       where: { id },
       data: {
         content,
@@ -58,7 +56,7 @@ export class CommentsService implements ICommentsService {
     const comment = await this.getComment(id);
     if (comment.authorId !== userId) return false;
 
-    await this.prisma.comment.delete({
+    await prisma.comment.delete({
       where: { id },
     });
 
@@ -79,7 +77,7 @@ export class CommentsService implements ICommentsService {
       ? { likes: { increment: 1 } }
       : { dislikes: { increment: 1 } };
 
-    await this.prisma.comment.update({
+    await prisma.comment.update({
       where: { id },
       data,
     });
@@ -88,7 +86,7 @@ export class CommentsService implements ICommentsService {
   }
 
   private async getComment(id: number): Promise<Comment> {
-    return await this.prisma.comment.findUnique({ where: { id } });
+    return await prisma.comment.findUnique({ where: { id } });
   }
 }
 

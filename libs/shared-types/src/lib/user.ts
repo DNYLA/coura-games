@@ -14,6 +14,10 @@ export type User = {
   avatarUrl?: string;
 };
 
+export type UpdateUser = {
+  status?: string;
+};
+
 export type Comment = {
   id: number;
   authorId: number;

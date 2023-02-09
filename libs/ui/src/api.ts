@@ -1,4 +1,11 @@
-import { Comment, Comments, PublicUser, User } from '@couragames/shared-types';
+import { objectFilter } from '@chakra-ui/utils';
+import {
+  Comment,
+  Comments,
+  PublicUser,
+  UpdateUser,
+  User,
+} from '@couragames/shared-types';
 import axios, { AxiosRequestConfig } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
@@ -25,6 +32,23 @@ export const signUp = (username: string, password: string) =>
 
 export const fetchUserProfile = (username: string) =>
   AXIOS.get<PublicUser>(`/member/${username}`);
+
+export const updateUser = (
+  username: string,
+  data: UpdateUser,
+  image?: File
+) => {
+  const formData = new FormData();
+  if (image) formData.append('avatar', image, image.name);
+  Object.keys(data).forEach((k) => {
+    const value = data[k as keyof UpdateUser];
+    formData.append(k, value ?? '');
+  });
+
+  AXIOS.patch<PublicUser>(`/member/${username}`, formData, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
+};
 
 export const fetchComments = (username: string, page?: number) =>
   AXIOS.get<Comments>(`/member/${username}/comment?page=${page ?? 0}`);

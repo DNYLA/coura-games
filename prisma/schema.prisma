@@ -16,7 +16,7 @@ model User {
   status        String?
   // email     String
   password      String
-  avatarUrl     String?
+  avatarUrl     String @default("default.png")
   profileBanner String?
   points        Int       @default(0)
   joined        DateTime  @default(now())
