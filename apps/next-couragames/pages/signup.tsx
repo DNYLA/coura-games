@@ -18,7 +18,8 @@ import {
 } from '@chakra-ui/react';
 import { useCallback, useContext, useState } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import UserContext from 'apps/next-couragames/context/auth';
+import { UserContext } from '@couragames/ui';
+
 /* eslint-disable-next-line */
 export interface SignUpProps {}
 

@@ -76,9 +76,9 @@ export const logout = async (req: Request, res: Response) => {
 export const user = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) return res.status(401).send('Not logged in');
 
-  const { id, username, avatarUrl } = req.user;
+  const { id, username, avatarUrl, status } = req.user;
 
-  return res.json({ id, username, avatarUrl });
+  return res.json({ id, username, avatarUrl, status });
 };
 
 export const failed = async (

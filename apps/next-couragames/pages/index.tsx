@@ -1,16 +1,8 @@
-import { Center, Container, Flex, HStack, Stack } from '@chakra-ui/layout';
-import {
-  Collapse,
-  Heading,
-  ScaleFade,
-  Slide,
-  SlideFade,
-} from '@chakra-ui/react';
-import UserContext from '../context/auth';
+import { Container, Flex, Stack } from '@chakra-ui/layout';
+import { Collapse, Heading } from '@chakra-ui/react';
 import { Game } from '../utils/types';
-import { Router } from 'express';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { GameCard } from '../components/Cards/GameCard';
 
 // import HomeSkeletonCards from './card-skeleton';

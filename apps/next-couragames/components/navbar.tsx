@@ -29,7 +29,7 @@ import {
 } from '@chakra-ui/icons';
 import { useContext } from 'react';
 import Link from 'next/link';
-import UserContext from '../context/auth';
+import { UserContext } from '@couragames/ui';
 
 export function Navbar() {
   const { isOpen, onToggle } = useDisclosure();

@@ -31,7 +31,6 @@ export function Comments({
 
     try {
       const { data } = await postComment(username, message);
-      console.log(data);
       addComment(data);
     } catch (err) {
       //Show Notification
@@ -63,8 +62,6 @@ export function Comments({
         const author = comments.users.find(
           (user) => user.id === comment.authorId
         );
-
-        console.log(author);
 
         if (!author) return <div key={comment.id}></div>;
 
