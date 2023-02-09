@@ -101,6 +101,8 @@ const PostComment = styled.div`
   padding: 25px;
   gap: 30px;
   align-items: center;
+  width: 100%;
+  height: 100%;
 
   img {
     width: 75px;

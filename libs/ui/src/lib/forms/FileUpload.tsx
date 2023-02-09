@@ -18,6 +18,7 @@ interface FileUploadProps {
   control: any;
   children: any;
   isRequired: boolean;
+  setFile: (file: File) => void;
 }
 
 export default function FileUpload({
@@ -27,6 +28,7 @@ export default function FileUpload({
   control,
   children,
   isRequired = false,
+  setFile,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   // const {
@@ -53,40 +55,25 @@ export default function FileUpload({
       return;
     }
 
+    const test = e.target.files[0];
     setValue(e.target.files[0].name);
     console.log(e.target.files[0]);
 
     console.log(await e.target.files[0].text());
 
     setInvalid(false);
+
+    setFile(e.target.files[0]);
   };
 
   return (
-    <FormControl isInvalid={invalid} isRequired>
+    <FormControl isInvalid={invalid} isRequired={isRequired}>
       <FormLabel htmlFor="writeUpFile">{children}</FormLabel>
       <InputGroup>
         <InputLeftElement
           pointerEvents="none"
           children={<Icon as={FiFile} />}
         />
-        {/* <input
-          type="file"
-          accept={fileTypes}
-          name={name}
-          ref={inputRef.current}
-          // {...inputProps}
-          // inputRef={ref}
-          style={{ display: 'none' }}
-        ></input>
-        <Input
-          type={'file'}
-          accept={fileTypes}
-          name={name}
-          placeholder={placeholder || 'Your file ...'}
-          // onClick={(e) => }
-          value={value}
-        /> */}
-
         <input
           type="file"
           accept={fileTypes}
