@@ -35,7 +35,7 @@ export default function Sidebar() {
       icon: FcConferenceCall,
     },
     {
-      url: '/',
+      url: '/league',
       text: 'League',
       state: ItemState.Any,
       icon: FcRating,
