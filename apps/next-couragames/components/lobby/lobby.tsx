@@ -1,13 +1,10 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { ClientLobby, Games, LobbyEvents } from '@couragames/shared-types';
+import { ClientLobby, Games } from '@couragames/shared-types';
 import styled from '@emotion/styled';
-import LobbySettings from 'apps/next-couragames/components/lobby/lobby-settings';
-import SocketContext from 'apps/next-couragames/context/socket';
-import { getDisplayName } from 'apps/next-couragames/utils/helpers';
-import { MenuButton } from 'apps/next-couragames/utils/styles';
-import Checkbox from 'libs/ui/src/lib/forms/checkbox';
-import Range from 'libs/ui/src/lib/forms/range';
-import React, { useContext, useEffect, useState } from 'react';
+import LobbySettings from '../../components/lobby/lobby-settings';
+import SocketContext from '../../context/socket';
+import { getDisplayName } from '../../utils/helpers';
+import React, { useContext, useEffect } from 'react';
 
 export interface ActiveLobbyProps {
   lobby: ClientLobby;

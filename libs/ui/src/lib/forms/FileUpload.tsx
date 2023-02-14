@@ -21,7 +21,7 @@ interface FileUploadProps {
   setFile: (file: File) => void;
 }
 
-export default function FileUpload({
+export function FileUpload({
   name,
   placeholder,
   fileTypes,

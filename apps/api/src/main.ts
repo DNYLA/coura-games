@@ -5,6 +5,7 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { router as authRouter } from './routes/auth';
 import { router as memberRouter } from './routes/user.controller';
+import { router as leaderboardRouter } from './routes/leaderboard.controller';
 import { User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
@@ -45,7 +46,7 @@ const redisClient = createClient({
 });
 redisClient.connect();
 
-redisClient.on('connect', function (err) {
+redisClient.on('connect', function () {
   console.log('Connected to redis successfully');
 });
 
@@ -95,6 +96,7 @@ app.use(fileupload());
 //Routes
 app.use('/api/auth', authRouter);
 app.use('/api/member', memberRouter);
+app.use('/api/leaderboard', leaderboardRouter);
 
 (async () => {
   await redisClent.connect();

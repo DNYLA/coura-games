@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { redis } from '@couragames/game-logic';
 
-class RedisManager {
-  /**
-   *
-   */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
-}
+// class RedisManager {
+//   /**
+//    *
+//    */
+//   // eslint-disable-next-line @typescript-eslint/no-empty-function
+//   constructor() {}
+// }
 
 interface RedisOptions {
   expire?: number;

@@ -1,4 +1,5 @@
-import { PrismaClient, User } from '@prisma/client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { User } from '@prisma/client';
 import prisma from '../services/prisma.service';
 import * as bcrypt from 'bcrypt';
 import * as passport from 'passport';

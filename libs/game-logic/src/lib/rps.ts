@@ -1,8 +1,7 @@
 import { RPSMove, RPSRoundInfo } from '@couragames/shared-types';
-import { currentGames } from 'libs/game-logic/src/lib/game-logic';
-import { getLobby, setLobby } from 'libs/game-logic/src/lib/redisManager';
-import { Game } from 'libs/game-logic/src/lib/utils/game';
-import { Lobby } from 'libs/game-logic/src/lib/utils/types';
+import { setLobby } from './redisManager';
+import { Game } from './utils/game';
+import { Lobby } from './utils/types';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 

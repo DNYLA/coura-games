@@ -1,4 +1,4 @@
-import { PrismaClient, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import prisma from './prisma.service';
@@ -73,7 +73,7 @@ export const logout = async (req: Request, res: Response) => {
   res.sendStatus(200);
 };
 
-export const user = async (req: Request, res: Response, next: NextFunction) => {
+export const user = async (req: Request, res: Response) => {
   if (!req.user) return res.status(401).send('Not logged in');
 
   const { id, username, avatarUrl, status } = req.user;
@@ -81,10 +81,6 @@ export const user = async (req: Request, res: Response, next: NextFunction) => {
   return res.json({ id, username, avatarUrl, status });
 };
 
-export const failed = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const failed = async (req: Request, res: Response) => {
   res.status(401).send('Invalid Credentials');
 };

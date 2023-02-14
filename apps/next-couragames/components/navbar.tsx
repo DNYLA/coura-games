@@ -8,7 +8,6 @@ import {
   Collapse,
   Icon,
   Link as NavLink,
-  LinkProps as NavLinkProps,
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
@@ -19,14 +18,8 @@ import {
   MenuList,
   MenuDivider,
   MenuItem,
-  useColorMode,
 } from '@chakra-ui/react';
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-} from '@chakra-ui/icons';
+import { HamburgerIcon, CloseIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { useContext } from 'react';
 import Link from 'next/link';
 import { UserContext } from '@couragames/ui';
@@ -34,7 +27,6 @@ import { UserContext } from '@couragames/ui';
 export function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
   const { user, logout } = useContext(UserContext);
-  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <Box zIndex={-1}>
@@ -177,7 +169,6 @@ export function Navbar() {
 const DesktopNav = () => {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');
-  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
   return (
     <Stack direction={'row'} spacing={4} alignItems={'center'}>

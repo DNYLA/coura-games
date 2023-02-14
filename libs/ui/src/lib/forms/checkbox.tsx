@@ -7,7 +7,7 @@ export interface CheckboxProps {
   title: string;
 }
 
-export default function Checkbox({ toggled, onToggle, title }: CheckboxProps) {
+export function Checkbox({ toggled, onToggle, title }: CheckboxProps) {
   const onClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     //Do Any local logic
 

@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Flex,
-  Image,
-  Badge,
-  useColorModeValue,
-  Tag,
-  Avatar,
-  TagLabel,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Flex, Image, useColorModeValue } from '@chakra-ui/react';
 import { Game } from '../../utils/types';
 import styled from '@emotion/styled';
 
