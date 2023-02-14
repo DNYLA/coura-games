@@ -1,6 +1,4 @@
-import { Avatar, Box, Flex, WrapItem } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { send } from 'process';
 
 interface DirectMessageProps {
   id: string;
@@ -46,12 +44,13 @@ export default function DirectMessage({ id, lastMessage }: DirectMessageProps) {
   return (
     <Container>
       <MessageLog>
-        {messages.map((msg) => (
+        {messages.map((msg, i) => (
           <IndividualMessage
             content={msg.content}
             name={msg.sender ? user.name : user2.name}
             avatar={msg.sender ? user.avatar : user2.avatar}
             sender={msg.sender}
+            key={i}
           />
         ))}
       </MessageLog>

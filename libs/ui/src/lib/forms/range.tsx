@@ -10,14 +10,7 @@ interface RangeProps {
   onChange: (value: number) => void;
 }
 
-export default function Range({
-  title,
-  min,
-  max,
-  step,
-  value,
-  onChange,
-}: RangeProps) {
+export function Range({ title, min, max, step, value, onChange }: RangeProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(Number(e.target.value));
   };

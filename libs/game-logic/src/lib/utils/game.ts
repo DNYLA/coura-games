@@ -1,5 +1,5 @@
-import { getLobby } from 'libs/game-logic/src/lib/redisManager';
-import { Lobby } from 'libs/game-logic/src/lib/utils/types';
+import { getLobby } from '../redisManager';
+import { Lobby } from './types';
 import { Socket } from 'socket.io';
 
 export abstract class Game {

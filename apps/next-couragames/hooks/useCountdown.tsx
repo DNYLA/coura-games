@@ -35,7 +35,7 @@ const useCountdown = (target: Date) => {
     return () => clearTimeout(timer);
   });
 
-  return { countdown };
+  return { countdown, expired };
 };
 
 export default useCountdown;
