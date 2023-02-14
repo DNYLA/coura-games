@@ -8,6 +8,8 @@ import { Server } from 'socket.io';
 
 export const socketEventHandler = (io: Server) => {
   return io.on('connection', (socket) => {
+    console.log(socket.request);
+
     socket.on('lobby', (data: LobbyEvent) => {
       handleLobbyEvent(socket, data);
     });
