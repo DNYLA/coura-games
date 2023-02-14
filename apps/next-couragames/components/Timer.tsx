@@ -1,6 +1,5 @@
 import { Box } from '@chakra-ui/layout';
-import useCountdown from 'apps/next-couragames/hooks/useCountdown';
-import React from 'react';
+import useCountdown from '../hooks/useCountdown';
 
 export interface TimerProps {
   end: Date;

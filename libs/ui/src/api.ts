@@ -2,6 +2,7 @@ import { objectFilter } from '@chakra-ui/utils';
 import {
   Comment,
   Comments,
+  Leaderboard,
   PublicUser,
   UpdateUser,
   User,
@@ -62,3 +63,6 @@ export const postComment = (username: string, message: string) =>
 
 export const deleteComment = (username: string, id: number) =>
   AXIOS.delete<void>(`/member/${username}/comment?id=${id}`);
+
+export const fetchLeaderboards = () =>
+  AXIOS.get<Leaderboard[]>(`/leaderboard/`);

@@ -1,22 +1,19 @@
 import {
   Alert,
   AlertIcon,
-  Box,
   Button,
   Flex,
   Input,
   InputGroup,
   InputRightElement,
-  useDisclosure,
 } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import Timer from 'apps/next-couragames/components/Timer';
-import SocketContext from 'apps/next-couragames/context/socket';
-import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
+import SocketContext from '../../../context/socket';
+import { ClientLobby, Games, LobbyEvents } from '@couragames/shared-types';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { MenuButton } from 'apps/next-couragames/utils/styles';
-import RPSGame from 'apps/next-couragames/pages/play/rock-paper-scissors/game';
+import { MenuButton } from '../../../utils/styles';
+import RPSGame from './game';
 /* eslint-disable-next-line */
 export interface HomeProps {}
 

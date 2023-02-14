@@ -1,13 +1,26 @@
+import { Leaderboard } from '@couragames/shared-types';
 import styled from '@emotion/styled';
-import Leaderboard from 'apps/next-couragames/pages/league/Leaderboard';
-import AlternativeLeaderboard from 'apps/next-couragames/pages/league/Leaderboard2';
-import React from 'react';
+import LeaderboardItem from './Leaderboard';
+import React, { useEffect, useState } from 'react';
+import { fetchLeaderboards } from '@couragames/ui';
 
 export default function League() {
+  const [data, setData] = useState<Leaderboard[]>();
+
+  useEffect(() => {
+    fetchLeaderboards().then((res) => {
+      setData(res.data);
+    });
+  }, []);
+
   return (
     <Container>
-      <Leaderboard />
-      <AlternativeLeaderboard />
+      {data && (
+        <>
+          <LeaderboardItem data={data[0]} />
+          <LeaderboardItem data={data[1]} />
+        </>
+      )}
     </Container>
   );
 }

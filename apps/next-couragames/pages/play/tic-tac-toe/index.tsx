@@ -11,7 +11,7 @@ export default function TicTacToe() {
   const [board, setBoard] = useState(
     Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => 0))
   );
-  const [curPlayer, setCurPlayer] = useState(true); //True -> P1; False -> P2
+  // const [curPlayer, setCurPlayer] = useState(true); //True -> P1; False -> P2
   const [gameInfo, setGameInfo] = useState<Omit<TicTacToeInfo, 'board'>>({
     p1Score: 0,
     p2Score: 0,
@@ -91,21 +91,6 @@ export default function TicTacToe() {
     // else return 'O';
 
     return !position ? '' : position === 1 ? 'X' : 'O';
-  };
-
-  const validateMove = (x: number, y: number) => {
-    if (board[x][y] !== 0) {
-      console.log('Invalid Move');
-      return;
-    }
-
-    const newVal = curPlayer ? 1 : 2;
-
-    const copy = [...board];
-    copy[x][y] = newVal;
-
-    setBoard(copy);
-    setCurPlayer(!curPlayer);
   };
 
   const submitMove = (x: number, y: number) => {
@@ -260,30 +245,4 @@ const GridItem = styled.div<{ value: number }>`
   align-items: center;
 
   color: ${(props) => (props.value === 1 ? cols.crosses : cols.naughts)};
-`;
-
-const PrevContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-`;
-
-const GameTable = styled.table`
-  /* border: 1px solid white; */
-  tr {
-    /* border: 1px solid white; */
-  }
-
-  td {
-    border: 1px solid white;
-    padding: 5px;
-    width: 55px;
-    height: 25px;
-
-    text-align: center;
-
-    cursor: pointer;
-  }
 `;

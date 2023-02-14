@@ -1,6 +1,5 @@
 import { UserService } from '../services/user.service';
 import { Router } from 'express';
-import * as passport from 'passport';
 import { CommentsService } from '../services/comments.service';
 
 // import * as getStream from 'into-stream';
@@ -13,7 +12,7 @@ router.get('/', async (req, res) => {
   res.send('Yourself');
 });
 
-router.get('/:username', async (req, res, next) => {
+router.get('/:username', async (req, res) => {
   const userName = req.params.username;
 
   if (!userName) return res.sendStatus(400).send('No Username Provided');
@@ -28,7 +27,7 @@ router.get('/:username', async (req, res, next) => {
   res.send(user);
 });
 
-router.patch('/:username', async (req, res, next) => {
+router.patch('/:username', async (req, res) => {
   const userName = req.params.username.toLowerCase();
   const user = req.user;
 
@@ -40,7 +39,7 @@ router.patch('/:username', async (req, res, next) => {
   // res.send(user);
 });
 
-router.get('/:username/comment', async (req, res, next) => {
+router.get('/:username/comment', async (req, res) => {
   const userName = req.params.username;
 
   if (!userName) return res.sendStatus(400).send('No Username Provided');
@@ -58,7 +57,7 @@ router.get('/:username/comment', async (req, res, next) => {
   res.send({ comments, users: userInfos });
 });
 
-router.post('/:username/comment', async (req, res, next) => {
+router.post('/:username/comment', async (req, res) => {
   const user = req.user;
   const data = req.body;
   if (!user) return res.sendStatus(401);
@@ -79,7 +78,7 @@ router.post('/:username/comment', async (req, res, next) => {
   // res.send({ comments, users: userInfos });
 });
 
-router.delete('/:username/comment', async (req, res, next) => {
+router.delete('/:username/comment', async (req, res) => {
   const user = req.user;
   const id = parseInt(req.query.id as string);
 

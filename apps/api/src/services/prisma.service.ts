@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { resourceLimits } from 'worker_threads';
 
 const prisma = new PrismaClient();
 

@@ -3,9 +3,9 @@ import styled from '@emotion/styled';
 import React, { useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faClose } from '@fortawesome/free-solid-svg-icons';
-import { Collapse, useDimensions, useDisclosure } from '@chakra-ui/react';
-import FriendsList from 'apps/next-couragames/components/Chat/friends-list';
-import DirectMessage from 'apps/next-couragames/components/Chat/DirectMessage';
+import { Collapse, useDisclosure } from '@chakra-ui/react';
+import FriendsList from './friends-list';
+import DirectMessage from './DirectMessage';
 
 export default function Chat() {
   // const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,6 @@ export default function Chat() {
 
   // const toggle = () => setIsOpen(!isOpen);
   const elementRef = useRef();
-  const dimensions = useDimensions(elementRef, true);
 
   return (
     <ChatBox>
