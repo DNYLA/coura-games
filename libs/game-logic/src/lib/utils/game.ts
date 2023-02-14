@@ -47,6 +47,10 @@ export abstract class Game {
     return true;
   }
 
+  // async updatePoints(): Promise<number> {
+
+  // }
+
   broadcast(event: string, message: unknown): void {
     this.host.to(this.lobby.id).emit(event, message);
     this.host.emit(event, message);
