@@ -4,12 +4,16 @@ import Link from 'next/link';
 import React, { ReactElement } from 'react';
 import { BsTrophyFill } from 'react-icons/bs';
 import { GiLaurelsTrophy } from 'react-icons/gi';
-import { Leaderboard as LeaderboardType } from '@couragames/shared-types';
+import {
+  Leaderboard as LeaderboardType,
+  LeaderboardStat,
+} from '@couragames/shared-types';
 interface LeaderboardProps {
-  data: LeaderboardType;
+  title: string;
+  data: LeaderboardStat[];
 }
 
-export default function Leaderboard({ data }: LeaderboardProps) {
+export default function Leaderboard({ title, data }: LeaderboardProps) {
   const renderItem = (name: string, points: number, index: number) => {
     let icon: ReactElement;
 
@@ -53,12 +57,10 @@ export default function Leaderboard({ data }: LeaderboardProps) {
   return (
     <Container>
       <Header>
-        <h3>{data.title}</h3>
+        <h3>{title}</h3>
       </Header>
       <Stats>
-        {data.weekly.map((player, i) =>
-          renderItem(player.username, player.points, i)
-        )}
+        {data.map((player, i) => renderItem(player.username, player.points, i))}
       </Stats>
     </Container>
   );
