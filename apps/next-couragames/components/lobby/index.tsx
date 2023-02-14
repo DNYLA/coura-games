@@ -1,9 +1,9 @@
-import SocketContext from 'apps/next-couragames/context/socket';
-import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
+import SocketContext from '../../context/socket';
+import { ClientLobby, Games, LobbyEvents } from '@couragames/shared-types';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import CreateLobby from 'apps/next-couragames/components/lobby/create-lobby';
-import ActiveLobby from 'apps/next-couragames/components/lobby/lobby';
+import CreateLobby from '../../components/lobby/create-lobby';
+import ActiveLobby from '../../components/lobby/lobby';
 
 export interface HomeProps {
   redirect: string;

@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import React, { useContext } from 'react';
-import { GrGamepad } from 'react-icons/gr';
-import { BsArrowBarLeft, BsBoxArrowLeft } from 'react-icons/bs';
+import { useContext } from 'react';
+import { BsArrowBarLeft } from 'react-icons/bs';
 import { BiLogOut } from 'react-icons/bi';
 import { FcBusinessman, FcConferenceCall, FcRating } from 'react-icons/fc';
 import { UserContext } from '@couragames/ui';
@@ -132,29 +131,6 @@ const StyledSidebar = styled.div`
   height: 100vh;
   width: 150px;
   font-family: 'Source Sans Prop', sans-serif;
-`;
-
-const NavButton = styled.a`
-  display: flex;
-  /* justify-content: center; */
-  text-align: center;
-  width: 100%;
-  gap: 10px;
-  align-items: center;
-  padding: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 18px;
-  p {
-    float: right;
-  }
-  svg {
-    font-size: 25px;
-  }
-
-  :hover {
-    background-color: rgba(0, 0, 0, 0.3);
-  }
 `;
 
 const AltButton = styled.a`

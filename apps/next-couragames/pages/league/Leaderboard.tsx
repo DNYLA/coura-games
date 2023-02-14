@@ -1,17 +1,17 @@
 import { Avatar, Icon, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { BsTrophyFill } from 'react-icons/bs';
-import { GiDiamondTrophy, GiLaurelsTrophy, GiQueenCrown } from 'react-icons/gi';
-export default function Leaderboard() {
-  const { title, values } = {
-    title: 'Tic Tac Toe',
-    values: 'Memory Game',
-  };
+import { GiLaurelsTrophy } from 'react-icons/gi';
+import { Leaderboard as LeaderboardType } from '@couragames/shared-types';
+interface LeaderboardProps {
+  data: LeaderboardType;
+}
 
-  const renderItem = (name: string, index: number) => {
-    let icon;
+export default function Leaderboard({ data }: LeaderboardProps) {
+  const renderItem = (name: string, points: number, index: number) => {
+    let icon: ReactElement;
 
     if (index === 0) {
       icon = <Icon as={GiLaurelsTrophy} w={8} h={8} color="orange.300" />;
@@ -20,20 +20,32 @@ export default function Leaderboard() {
       icon = <Icon as={BsTrophyFill} w={8} h={8} color="#a19d94" />;
     } else if (index === 2) {
       icon = <Icon as={BsTrophyFill} w={8} h={8} color="orange.500" />;
+    } else {
+      icon = (
+        <Text w={8} h={8} className="iconText">
+          {index + 1}
+        </Text>
+      );
     }
 
     return (
       <Item>
         {/* <p>Player {name}</p> */}
         {icon}
+
         <Link href="/member/dan" className="link">
-          <Text noOfLines={1}>
-            {index}. Player {name}
-            Player {name}
+          <Avatar
+            name="Dan Abrahmov"
+            src="https://bit.ly/dan-abramov"
+            width={10}
+            h={10}
+          />
+          <Text noOfLines={1} title={name}>
+            {name}
           </Text>
         </Link>
 
-        <span>350</span>
+        <span>{points}</span>
       </Item>
     );
   };
@@ -41,11 +53,11 @@ export default function Leaderboard() {
   return (
     <Container>
       <Header>
-        <h3>{title}</h3>
+        <h3>{data.title}</h3>
       </Header>
       <Stats>
-        {['One One One One', 'Two', 'Three', 'Four'].map((p, i) =>
-          renderItem(p, i)
+        {data.weekly.map((player, i) =>
+          renderItem(player.username, player.points, i)
         )}
       </Stats>
     </Container>
@@ -54,7 +66,8 @@ export default function Leaderboard() {
 
 const Container = styled.div`
   width: 250px;
-  height: 500px;
+  height: 100%;
+  /* height: 500px; */
   background-color: #292929;
   font-family: 'Rubik', sans-serif;
 `;
@@ -81,17 +94,43 @@ const Item = styled.div`
   /* margin-bottom: 5px; */
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   /* justify-content: space-evenly; */
   text-align: center;
   align-items: center;
   /* background-color: lightgray; */
-
+  /* gap: 15%; */
   p {
     font-size: 15px;
   }
+
+  span {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  .iconText,
+  svg {
+    /* margin-left: 0; */
+    /* margin-right: auto; */
+    margin-right: 20px;
+  }
+
   .link {
     color: #69badd;
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 15px;
+
+    span {
+      /* margin-left: 0; */
+      /* margin-right: auto; */
+    }
+
+    p {
+      width: 75px;
+    }
 
     :hover {
       color: #3ba2ce;

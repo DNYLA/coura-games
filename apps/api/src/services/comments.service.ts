@@ -1,5 +1,4 @@
-import { PublicUser } from '@couragames/shared-types';
-import { PrismaClient, Comment, User, Prisma } from '@prisma/client';
+import { Comment, Prisma } from '@prisma/client';
 import prisma from './prisma.service';
 import { UserService } from './user.service';
 
@@ -13,6 +12,10 @@ export class CommentsService implements ICommentsService {
       where: { toUserId: userId },
       orderBy: { createdAt: 'desc' },
     });
+
+    if (page) {
+      //Handle Page Stuff
+    }
 
     return comments;
   }

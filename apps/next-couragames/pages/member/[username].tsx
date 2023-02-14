@@ -1,8 +1,7 @@
-import { Box, Flex, HStack, Image, Text } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { UserContext } from '@couragames/ui';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Comments as CommentsSection,
   fetchComments,

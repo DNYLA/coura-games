@@ -1,16 +1,21 @@
-import { Box, Center, Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import SocketContext from 'apps/next-couragames/context/socket';
+import SocketContext from '../../../context/socket';
 import { RPSMove, RPSRoundInfo, RPSWinner } from '@couragames/shared-types';
-import { ClientLobby, Games, LobbyEvents } from 'libs/shared-types/src';
+import { ClientLobby, Games, LobbyEvents } from '@couragames/shared-types';
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
-import Timer from 'apps/next-couragames/components/Timer';
-import { MenuButton } from 'apps/next-couragames/utils/styles';
-/* eslint-disable-next-line */
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import Timer from '../../../components/Timer';
+import { MenuButton } from '../../../utils/styles';
 export interface HomeProps {
   lobby: ClientLobby;
-  setLobby: any;
+  setLobby: Dispatch<SetStateAction<ClientLobby>>;
 }
 
 const StyledHome = styled.div`
@@ -34,7 +39,6 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
   //Indicates weather round is currently active
   //Cant really use timer because both players could have alreadt made there moves before timer
   //runs out
-  const [isPlaying, setIsPlaying] = useState(false);
   useEffect(() => {
     //Check if lobby is valid
     console.log('here');

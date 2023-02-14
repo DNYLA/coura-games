@@ -23,11 +23,11 @@ export function UserComment({
   const now = moment(createdAt).fromNow();
   return (
     <Container>
-      <UpVotes>
+      {/* <UpVotes>
         <FiPlus />
         <p>{likes - dislikes}</p>
         <FiMinus />
-      </UpVotes>
+      </UpVotes> */}
       <Message>
         <Panel>
           <Author>
@@ -50,10 +50,10 @@ export function UserComment({
                 <p>Delete</p>
               </Button>
 
-              <Button primary>
+              {/* <Button primary>
                 <MdEdit />
                 <p>Edit</p>
-              </Button>
+              </Button> */}
             </div>
           )}
         </Panel>

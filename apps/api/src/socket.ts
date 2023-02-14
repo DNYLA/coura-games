@@ -4,7 +4,7 @@ import {
   handlePlayAgain,
 } from '@couragames/game-logic';
 import { Games, LobbyEvent, RPSMove } from '@couragames/shared-types';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 
 export const socketEventHandler = (io: Server) => {
   return io.on('connection', (socket) => {
