@@ -5,8 +5,14 @@ export type LeaderboardStat = {
 
 export type Leaderboard = {
   title: string;
-  period: string;
   global: LeaderboardStat[];
   weekly: LeaderboardStat[];
   daily: LeaderboardStat[];
 };
+
+//They are given a string value so we can reference leaderboard[LeaderboardType] inside of the json object above.
+export enum LeaderboardType {
+  Daily = 'daily',
+  Weekly = 'weekly',
+  Global = 'global',
+}
