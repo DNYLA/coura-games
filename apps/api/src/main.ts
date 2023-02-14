@@ -55,33 +55,33 @@ redisClient.on('error', function (err) {
 });
 const RedisStore = connectRedis(session);
 
-app.use(
-  session({
-    store: new RedisStore({ client: redisClient }),
-    // store: new RedisStore({
-    //   host: process.env.REDIS_HOST,
-    //   port: Number(process.env.REDIS_PORT),
-    //   pass: process.env.REDIS_PASSWORD,
-    //   client: createClient(),
-    //   ttl: 260,
-    // }),
-    name: 'session-id',
-    secret: '123-456-789',
-    resave: false,
-    saveUninitialized: false,
-    // cookie: {
-    //   httpOnly: true,
-    //   secure: process.env.ENVIRONMENT === 'production' ? true : false,
-    //   sameSite: process.env.ENVIRONMENT === 'production' ? 'none' : 'lax',
-    //   maxAge: 24 * 60 * 60 * 7 * 1000,
-    // },
-    cookie: {
-      secure: false, // if true only transmit cookie over https
-      httpOnly: false, // if true prevent client side JS from reading the cookie
-      maxAge: 1000 * 60 * 60 * 24 * 7, // ms * seconds * minutes * hours * days -> 7 days in miliseconds
-    },
-  })
-);
+const sessionMiddleware = session({
+  store: new RedisStore({ client: redisClient }),
+  // store: new RedisStore({
+  //   host: process.env.REDIS_HOST,
+  //   port: Number(process.env.REDIS_PORT),
+  //   pass: process.env.REDIS_PASSWORD,
+  //   client: createClient(),
+  //   ttl: 260,
+  // }),
+  name: 'session-id',
+  secret: '123-456-789',
+  resave: false,
+  saveUninitialized: false,
+  // cookie: {
+  //   httpOnly: true,
+  //   secure: process.env.ENVIRONMENT === 'production' ? true : false,
+  //   sameSite: process.env.ENVIRONMENT === 'production' ? 'none' : 'lax',
+  //   maxAge: 24 * 60 * 60 * 7 * 1000,
+  // },
+  cookie: {
+    secure: false, // if true only transmit cookie over https
+    httpOnly: false, // if true prevent client side JS from reading the cookie
+    maxAge: 1000 * 60 * 60 * 24 * 7, // ms * seconds * minutes * hours * days -> 7 days in miliseconds
+  },
+});
+
+app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
