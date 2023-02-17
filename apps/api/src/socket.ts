@@ -3,13 +3,19 @@ import {
   handleLobbyEvent,
   handlePlayAgain,
 } from '@couragames/game-logic';
-import { Games, LobbyEvent, RPSMove } from '@couragames/shared-types';
+import {
+  Games,
+  LobbyEvent,
+  RPSMove,
+  SocketData,
+} from '@couragames/shared-types';
 import { Server } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
-export const socketEventHandler = (io: Server) => {
+export const socketEventHandler = (
+  io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>
+) => {
   return io.on('connection', (socket) => {
-    console.log(socket.request);
-
     socket.on('lobby', (data: LobbyEvent) => {
       handleLobbyEvent(socket, data);
     });

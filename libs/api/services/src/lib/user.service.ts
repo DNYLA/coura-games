@@ -2,15 +2,36 @@ import { PublicUser } from '@couragames/shared-types';
 import { Prisma } from '@prisma/client';
 import { BlockBlobClient } from '@azure/storage-blob';
 import fileUpload = require('express-fileupload');
-import prisma from './prisma.service';
-export class UserService implements IUserService {
+import { prisma } from './prisma.service';
+
+class Foo {
+  static async myMethod(b: string): Promise<number>;
+  static async myMethod(a: number): Promise<number>;
+  static async myMethod(a: number, b: string): Promise<number>;
+  static async myMethod(a: string | number, b?: string): Promise<number> {
+    return 15;
+  }
+}
+
+export class UserService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
-  async getUser(username: string): Promise<PublicUser> {
+  static async getUser(req: number): Promise<PublicUser>;
+  static async getUser(req: string): Promise<PublicUser>;
+  static async getUser(req: string | number): Promise<PublicUser> {
     //FindUnique doesnt support insensitive mode
+
+    let where: Prisma.UserWhereInput;
+
+    if (typeof req === 'string') {
+      where = { username: { equals: req, mode: 'insensitive' } };
+    } else {
+      where = { id: req };
+    }
+
     const user = await prisma.user.findFirst({
-      where: { username: { equals: username, mode: 'insensitive' } },
+      where,
       select: {
         //Grab Specific Fields to ensure we dont send back private data.
         id: true,
@@ -28,10 +49,10 @@ export class UserService implements IUserService {
     return { ...user, joined: user.joined.getTime() };
   }
 
-  async updateUser(
+  static async updateUser(
     userId: number,
     data: Prisma.UserUpdateInput,
-    files: fileUpload.FileArray
+    files?: fileUpload.FileArray
   ) {
     console.log('Here');
     let blobName: string;
@@ -65,7 +86,7 @@ export class UserService implements IUserService {
     }
   }
 
-  async userIdFromName(username: string) {
+  static async userIdFromName(username: string) {
     const user = await prisma.user.findFirst({
       where: { username: { equals: username, mode: 'insensitive' } },
       select: {
@@ -77,7 +98,7 @@ export class UserService implements IUserService {
     return user.id;
   }
 
-  async getManyUsers(userIds: number[]) {
+  static async getManyUsers(userIds: number[]) {
     //Make sure Input array is unique
     userIds = [...new Set(userIds)];
     const users = await prisma.user.findMany({
@@ -88,7 +109,7 @@ export class UserService implements IUserService {
     return users;
   }
 
-  private async uploadUserAvatar(
+  private static async uploadUserAvatar(
     avatar: fileUpload.UploadedFile
   ): Promise<string> {
     //Code from Official Azure Github page for examples on how to use there services.
