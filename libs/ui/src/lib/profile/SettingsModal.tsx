@@ -17,10 +17,11 @@ import {
   useDisclosure,
   Image,
 } from '@chakra-ui/react';
-import FileUpload from '../forms/FileUpload';
+// import FileUpload from '../forms/FileUpload';
 import { updateUser as updateUserEndpoint } from 'libs/ui/src/api';
 import { UpdateUser } from '@couragames/shared-types';
 import { UserContext } from '../context/auth';
+import { FileUpload } from '../forms/FileUpload';
 
 interface SettingsModelProps {
   open: boolean;
