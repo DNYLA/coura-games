@@ -1,34 +1,8 @@
-import { TicTacToeInfo } from '@couragames/shared-types';
-import { setLobby } from 'libs/game-logic/src/lib/redisManager';
-import { Game } from 'libs/game-logic/src/lib/utils/game';
-import { Lobby } from 'libs/game-logic/src/lib/utils/types';
-import { Socket } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-
-// export function main(lobby: Lobby, host: Socket) {
-//   const d = new Date();
-//   d.setSeconds(d.getSeconds() + MAX_ROUND_TIME);
-
-//   //Call Timeout
-//   setTimeout(
-//     () => roundEndedCallback(host, lobby.id, 0),
-//     MAX_ROUND_TIME * 1000
-//   );
-
-//   //Send Current Info
-//   lobby.data = { round: 0, timer: d };
-//   const roundInfo: RPSRoundInfo = {
-//     p1Score: lobby.players[0].points,
-//     p2Score: lobby.players[1].points,
-//     totalRounds: 0,
-//     currentRound: 0,
-//     timer: d.getTime(),
-//   };
-
-//   host.to(lobby.id).emit('rps_round_started', roundInfo);
-//   host.emit('rps_round_started', roundInfo);
-//   lobby.started = true; //Game is now live
-// }
+import { SocketIO } from '@couragames/api/services';
+import { TicTacToeInfo, Socket } from '@couragames/shared-types';
+import { setLobby } from './redisManager';
+import { Game } from './utils/game';
+import { Lobby } from './utils/types';
 
 export class TicTacToe extends Game {
   isPlayerOneTurn = true;
@@ -113,7 +87,7 @@ export class TicTacToe extends Game {
     setLobby(this.lobby.id, this.lobby);
   }
 
-  handleTurn(socket: Socket, data: { x: number; y: number }): void {
+  handleTurn(socket: Socket, data: { x: number; y: number }) {
     if (this.gameEnded) return;
     const { x, y } = data;
 
@@ -153,8 +127,10 @@ export class TicTacToe extends Game {
         this.data.draws++;
       } else if (this.host.id === socket.id) {
         this.data.p1Score++;
+        this.updatePoints(socket.id, 50);
       } else {
         this.data.p2Score++;
+        this.updatePoints(socket.id, 50);
       }
 
       this.broadcast('tictac_gameended', {

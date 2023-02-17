@@ -1,6 +1,7 @@
 import { getLobby } from '../redisManager';
 import { Lobby } from './types';
-import { Socket } from 'socket.io';
+import { Socket } from '@couragames/shared-types';
+import { SocketIO, UserService } from '@couragames/api/services';
 
 export abstract class Game {
   /**
@@ -47,9 +48,17 @@ export abstract class Game {
     return true;
   }
 
-  // async updatePoints(): Promise<number> {
+  async updatePoints(socketId: string, amount: number): Promise<number> {
+    const socket = SocketIO.server.sockets.sockets.get(socketId);
+    if (!socket) return -1;
+    if (!socket.data.user) return -1;
 
-  // }
+    const { points } = await UserService.updateUser(socket.data.user.id, {
+      points: { increment: amount },
+    });
+
+    return points;
+  }
 
   broadcast(event: string, message: unknown): void {
     this.host.to(this.lobby.id).emit(event, message);
