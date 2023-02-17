@@ -1,10 +1,8 @@
-import { ClientLobby, Games, Player } from '@couragames/shared-types';
+import { ClientLobby, Games, Player, Socket } from '@couragames/shared-types';
 import { getLobby, setLobby } from './redisManager';
 import { RPS } from './rps';
 import { TicTacToe } from './tictactoe';
 import { Game } from './utils/game';
-import { redis } from './utils/redis';
-import { Socket } from 'socket.io';
 import { Lobby } from './utils/types';
 
 export const currentGames = new Map<string, Lobby>();
@@ -13,11 +11,10 @@ export const RPSGames = new Map<string, RPS>();
 
 export async function createLobby(socket: Socket, type: Games) {
   const code = await generateCode();
-  const randomNumber = await generateCode();
   const players: Player[] = [
     {
       id: socket.id,
-      username: `Guest-${randomNumber}`,
+      username: socket.data.username,
       points: 0,
       lastActivity: new Date(),
     },
@@ -65,10 +62,9 @@ export async function joinLobby(socket: Socket, type: Games, id: string) {
   }
 
   //Add player to playersList
-  const randomNumber = await generateCode();
   const newPlayer: Player = {
     id: socket.id,
-    username: `Guest-${randomNumber}`,
+    username: socket.data.username,
     points: 0,
     lastActivity: new Date(),
   };

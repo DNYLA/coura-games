@@ -1,7 +1,7 @@
 import { User } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
-import prisma from './prisma.service';
+import { prisma } from '@couragames/api/services';
 
 export const signup = async (
   req: Request,

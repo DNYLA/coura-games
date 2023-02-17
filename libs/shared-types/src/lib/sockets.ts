@@ -1,3 +1,6 @@
+import { PublicUser } from './user';
+import { Socket as Sock } from 'socket.io';
+
 export enum Games {
   RPS,
   TicTacToe,
@@ -75,3 +78,13 @@ export type TicTacToeInfo = {
   board: number[][];
   timer: number;
 };
+
+export interface SocketData {
+  username: string;
+  gameId?: string;
+  user?: PublicUser;
+}
+
+export interface Socket extends Sock {
+  data: SocketData;
+}

@@ -14,6 +14,9 @@ import { redis as redisClent } from '@couragames/game-logic';
 import * as connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 import * as fileupload from 'express-fileupload';
+import { SocketIO, UserService } from '@couragames/api/services';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { SocketData } from '@couragames/shared-types';
 
 require('./config/passport-local');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -57,23 +60,10 @@ const RedisStore = connectRedis(session);
 
 const sessionMiddleware = session({
   store: new RedisStore({ client: redisClient }),
-  // store: new RedisStore({
-  //   host: process.env.REDIS_HOST,
-  //   port: Number(process.env.REDIS_PORT),
-  //   pass: process.env.REDIS_PASSWORD,
-  //   client: createClient(),
-  //   ttl: 260,
-  // }),
   name: 'session-id',
   secret: '123-456-789',
   resave: false,
   saveUninitialized: false,
-  // cookie: {
-  //   httpOnly: true,
-  //   secure: process.env.ENVIRONMENT === 'production' ? true : false,
-  //   sameSite: process.env.ENVIRONMENT === 'production' ? 'none' : 'lax',
-  //   maxAge: 24 * 60 * 60 * 7 * 1000,
-  // },
   cookie: {
     secure: false, // if true only transmit cookie over https
     httpOnly: false, // if true prevent client side JS from reading the cookie
@@ -85,10 +75,35 @@ app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
-const io = new Server(httpServer, {
-  cors: { origin: [getFrontendURL()], credentials: true },
-});
-socketEventHandler(io);
+// const io = new Server<
+//   DefaultEventsMap,
+//   DefaultEventsMap,
+//   DefaultEventsMap,
+//   SocketData
+// >(httpServer, {
+//   cors: { origin: [getFrontendURL()], credentials: true },
+// });
+
+SocketIO.initialiseServer(httpServer, getFrontendURL());
+
+socketEventHandler(SocketIO.server)
+  .use((socket: any, next: any) => {
+    sessionMiddleware(socket.request, {} as any, next);
+  })
+  .use(async (socket, next) => {
+    // console.log(socket.request.session);
+    const userInfo = (socket.request as any).session.passport;
+    if (!userInfo) {
+      const randomId = String(Math.floor(Math.random() * 90000) + 10000);
+      socket.data = { ...socket.data, username: `Guest-${randomId}` };
+      next();
+      return;
+    }
+    const user = await UserService.getUser(userInfo.user);
+    socket.data = { ...socket.data, username: user.username, user };
+
+    next();
+  });
 
 app.use(express.json()); //Parses All incoming data into JSON
 app.use(express.urlencoded({ extended: false })); //Allows us to retreive data from Form Submissions

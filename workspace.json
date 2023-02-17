@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "api-services": "libs/api/services",
     "game-logic": "libs/game-logic",
     "next-couragames": "apps/next-couragames",
     "next-couragames-e2e": "apps/next-couragames-e2e",
