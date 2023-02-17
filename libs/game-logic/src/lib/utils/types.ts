@@ -1,6 +1,5 @@
 import { ClientLobby, Games, Player, RPSMove } from '@couragames/shared-types';
 import { Socket } from 'socket.io';
-import { getLobby, setLobby } from 'libs/game-logic/src/lib/redisManager';
 
 //isHost is not needed on the server-side
 export type Lobby = Omit<ClientLobby, 'isHost'> & {

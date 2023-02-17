@@ -12,10 +12,10 @@ import {
   RPSGames,
   startGame,
   ticTacToeGames,
-} from 'libs/game-logic/src/lib/game-logic';
-import { TicTacToe } from 'libs/game-logic/src/lib/tictactoe';
-import { Game } from 'libs/game-logic/src/lib/utils/game';
-import { redis } from 'libs/game-logic/src/lib/utils/redis';
+} from './lib/game-logic';
+import { TicTacToe } from './lib/tictactoe';
+import { Game } from './lib/utils/game';
+import { redis } from './lib/utils/redis';
 import { Socket } from 'socket.io';
 export { createLobby } from './lib/game-logic';
 
@@ -36,8 +36,10 @@ export function handleLobbyEvent(socket: Socket, event: LobbyEvent) {
       break;
     case LobbyEvents.Restart:
       restartGame(socket, event.game, event.id);
+      break;
     case LobbyEvents.PlayerMove:
       makeMove(socket, event.game, event.id, event.payload);
+      break;
     case LobbyEvents.PlayerLeave:
       throw new Error('Not Implemented');
     case LobbyEvents.Ended:
