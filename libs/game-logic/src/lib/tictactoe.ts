@@ -105,6 +105,7 @@ export class TicTacToe extends Game {
       this.lobby.players.findIndex((player) => player.id === socket.id) === 0
         ? true
         : false;
+
     if (isPlayerOne && this.isPlayerOneTurn) {
       const newValue = this.isPlayerOneCrosses ? 1 : 2;
       if (!setMove(newValue)) return;
@@ -120,31 +121,33 @@ export class TicTacToe extends Game {
     this.isPlayerOneTurn = !this.isPlayerOneTurn;
     const curResult = this.checkWinner();
 
-    if (curResult >= 1) {
-      this.gameEnded = true;
-      const winner = curResult === 2 ? socket.id : 'draw';
-      if (curResult === 1) {
-        this.data.draws++;
-      } else if (this.host.id === socket.id) {
-        this.data.p1Score++;
-        this.updatePoints(socket.id, 50);
-      } else {
-        this.data.p2Score++;
-        this.updatePoints(socket.id, 50);
-      }
-
-      this.broadcast('tictac_gameended', {
-        board: this.data.board,
-        winner,
-        p1Score: this.data.p1Score,
-        p2Score: this.data.p2Score,
-        draws: this.data.draws,
-      });
-    } else {
+    if (curResult === 0) {
       const d = new Date();
       d.setSeconds(d.getSeconds() + this.MAX_ROUND_TIME);
       this.emitNewRoundData(d);
+      return;
     }
+
+    this.gameEnded = true;
+    const winner = curResult === 2 ? socket.id : 'draw';
+
+    if (curResult === 1) {
+      this.data.draws++;
+    } else if (this.host.id === socket.id) {
+      this.data.p1Score++;
+      this.updatePoints(socket.id, 50);
+    } else {
+      this.data.p2Score++;
+      this.updatePoints(socket.id, 50);
+    }
+
+    this.broadcast('tictac_gameended', {
+      board: this.data.board,
+      winner,
+      p1Score: this.data.p1Score,
+      p2Score: this.data.p2Score,
+      draws: this.data.draws,
+    });
   }
 
   // Returns 0 -> False No Winner
