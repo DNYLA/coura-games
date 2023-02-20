@@ -3,7 +3,10 @@ import {
   LobbyEvent,
   LobbyEvents,
   RPSMove,
+  Socket,
 } from '@couragames/shared-types';
+import { Server } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import {
   createLobby,
   joinLobby,
@@ -16,7 +19,6 @@ import {
 import { TicTacToe } from './lib/tictactoe';
 import { Game } from './lib/utils/game';
 import { redis } from './lib/utils/redis';
-import { Socket } from 'socket.io';
 export { createLobby } from './lib/game-logic';
 
 interface SocketData {

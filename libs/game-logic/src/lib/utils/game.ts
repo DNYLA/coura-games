@@ -1,14 +1,16 @@
 import { getLobby } from '../redisManager';
 import { Lobby } from './types';
 import { Socket } from '@couragames/shared-types';
-import { SocketIO, UserService } from '@couragames/api/services';
-
+import { SocketIO, UserService, MatchService } from '@couragames/api/services';
+import { Prisma } from '@prisma/client';
+import { Games } from '@couragames/shared-types';
 export abstract class Game {
   /**
    * Game Class
    */
   lobby: Lobby;
   host: Socket;
+  playback: object; //This will be set inside child classes data type not needed on this level.
   readonly MAX_ROUND_TIME = 60;
 
   constructor(lobby: Lobby, host: Socket) {
@@ -58,6 +60,10 @@ export abstract class Game {
     });
 
     return points;
+  }
+
+  async submitMatch(players: Prisma.MatchPlayerCreateManyInput, type: Games) {
+    await MatchService.createMatch(players, this.playback, type);
   }
 
   broadcast(event: string, message: unknown): void {
