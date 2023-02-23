@@ -1,8 +1,17 @@
-import { ClientLobby, Games, Player, Socket } from '@couragames/shared-types';
+import { SocketIO } from '@couragames/api/services';
+import {
+  ClientLobby,
+  Games,
+  Player,
+  Socket,
+  SocketData,
+} from '@couragames/shared-types';
+import { RemoteSocket } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { getLobby, setLobby } from './redisManager';
 import { RPS } from './rps';
 import { TicTacToe } from './tictactoe';
-import { Game } from './utils/game';
+import { Game, GamePlayer } from './utils/game';
 import { Lobby } from './utils/types';
 
 export const currentGames = new Map<string, Lobby>();
@@ -87,7 +96,7 @@ export async function startGame(socket: Socket, type: Games, id: string) {
 
   socket.to(lobby.id).emit('game_started');
   socket.emit('game_started');
-
+  const players = validatePlayers(lobby.id);
   switch (type) {
     case Games.RPS: {
       const rps = new RPS(lobby, socket);
@@ -95,13 +104,31 @@ export async function startGame(socket: Socket, type: Games, id: string) {
       break;
     }
     case Games.TicTacToe: {
-      const ticTacToe = new TicTacToe(lobby, socket);
+      const ticTacToe = new TicTacToe(lobby, socket, players);
       ticTacToeGames.set(lobby.id, ticTacToe);
       break;
     }
     default:
       console.log('Unknown Game');
   }
+}
+
+async function validatePlayers(id: string) {
+  const sockets = await SocketIO.server.in(id).fetchSockets();
+
+  console.log(sockets);
+  const players: Socket[] = [];
+  sockets.map((sock: RemoteSocket<DefaultEventsMap, SocketData>) => {
+    const validSocket = SocketIO.server.sockets.sockets.get(sock.id) as Socket;
+    if (!validSocket) {
+      //Handle Disconnection
+      return;
+    }
+
+    players.push(validSocket);
+  });
+
+  return players;
 }
 
 export async function restartGame(socket: Socket, type: Games, id: string) {

@@ -1,7 +1,8 @@
 import { SocketIO } from '@couragames/api/services';
 import { TicTacToeInfo, Socket } from '@couragames/shared-types';
+import { GameType, Result } from '@prisma/client';
 import { setLobby } from './redisManager';
-import { Game } from './utils/game';
+import { Game, GamePlayer } from './utils/game';
 import { Lobby } from './utils/types';
 
 export class TicTacToe extends Game {
@@ -17,8 +18,8 @@ export class TicTacToe extends Game {
   // 2 == Naughts
   // board = Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => 0));
 
-  constructor(lobby: Lobby, host: Socket) {
-    super(lobby, host);
+  constructor(lobby: Lobby, host: Socket, players: Socket[]) {
+    super(lobby, host, players);
     this.isPlayerOneCrosses = !!Math.floor(Math.random() * 2); //We Want The users type to stay the same through out every round
 
     //Once Initialisation is done we can change other varialbes
@@ -87,7 +88,7 @@ export class TicTacToe extends Game {
     setLobby(this.lobby.id, this.lobby);
   }
 
-  handleTurn(socket: Socket, data: { x: number; y: number }) {
+  async handleTurn(socket: Socket, data: { x: number; y: number }) {
     if (this.gameEnded) return;
     const { x, y } = data;
 
@@ -140,6 +141,14 @@ export class TicTacToe extends Game {
       this.data.p2Score++;
       this.updatePoints(socket.id, 50);
     }
+
+    const getPoints = (sockId: string): Result => {
+      if (winner === 'draw') return Result.Draw;
+      else if (winner === sockId) return Result.Win;
+      else return Result.Loss;
+    };
+
+    await this.submitMatch(getPoints, GameType.TicTacToe);
 
     this.broadcast('tictac_gameended', {
       board: this.data.board,

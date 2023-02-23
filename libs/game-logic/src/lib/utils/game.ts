@@ -2,24 +2,30 @@ import { getLobby } from '../redisManager';
 import { Lobby } from './types';
 import { Socket } from '@couragames/shared-types';
 import { SocketIO, UserService, MatchService } from '@couragames/api/services';
-import { Prisma } from '@prisma/client';
-import { Games } from '@couragames/shared-types';
+import { Prisma, GameType, Result } from '@prisma/client';
+
+export type GamePlayer = {
+  id: string;
+};
+
 export abstract class Game {
   /**
    * Game Class
    */
   lobby: Lobby;
   host: Socket;
+  players: Socket[];
   playback: object; //This will be set inside child classes data type not needed on this level.
   readonly MAX_ROUND_TIME = 60;
 
-  constructor(lobby: Lobby, host: Socket) {
+  constructor(lobby: Lobby, host: Socket, players: Socket[]) {
     this.lobby = lobby;
     this.host = host;
+    this.players = players;
     this.setupGame();
   }
 
-  setupGame() {
+  async setupGame() {
     const d = new Date();
     d.setSeconds(d.getSeconds() + this.MAX_ROUND_TIME);
     this.init(d);
@@ -62,8 +68,21 @@ export abstract class Game {
     return points;
   }
 
-  async submitMatch(players: Prisma.MatchPlayerCreateManyInput, type: Games) {
-    await MatchService.createMatch(players, this.playback, type);
+  async submitMatch(getPoints: (socketId: string) => Result, type: GameType) {
+    const data: Prisma.MatchPlayerCreateManyMatchInput[] = [];
+
+    this.players.forEach((player) => {
+      if (!player.data.user) return;
+
+      data.push({
+        userId: player.data.user.id,
+        result: getPoints(player.id),
+      });
+    });
+
+    if (data.length !== this.players.length) return; //Playing Against a guest dont store info
+
+    await MatchService.createMatch(data, this.playback, type);
   }
 
   broadcast(event: string, message: unknown): void {
