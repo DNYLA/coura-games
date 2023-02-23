@@ -39,9 +39,7 @@ model Comment {
 model MatchPlayer {
   matchId    Int
   userId     Int
-  winner     Boolean
-  points     Int
-  prevPoints Int
+  result     Result
   user       User    @relation(fields: [userId], references: [id])
   Match      Match?  @relation(fields: [matchId], references: [id])
 
@@ -52,7 +50,7 @@ model Match {
   id       Int           @id @default(autoincrement())
   players  MatchPlayer[]
   playback Json?
-  type     Game
+  type     GameType
 }
 
 // model Friend {
@@ -86,7 +84,13 @@ enum NotificationType {
   FriendComment
 }
 
-enum Game {
+enum GameType {
   RPS
   TicTacToe
+}
+
+enum Result {
+  Win
+  Loss
+  Draw
 }

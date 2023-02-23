@@ -1,11 +1,11 @@
-import { Game, Prisma } from '@prisma/client';
+import { GameType, Prisma } from '@prisma/client';
 import { prisma } from './prisma.service';
 
 export class MatchService {
   static async createMatch(
-    players: Prisma.MatchPlayerCreateManyInput,
+    players: Prisma.MatchPlayerCreateManyMatchInput[],
     playback: object,
-    type: Game
+    type: GameType
   ) {
     //Generate UUID?
 
