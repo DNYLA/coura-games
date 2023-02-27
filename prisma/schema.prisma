@@ -20,6 +20,7 @@ model User {
   profileBanner String?
   points        Int           @default(0)
   joined        DateTime      @default(now())
+  stats         Json? //Global Stats for user Weekly, Daily etc calculated via service
   Comments      Comment[]
   MatchPlayer   MatchPlayer[]
 }
@@ -37,11 +38,11 @@ model Comment {
 }
 
 model MatchPlayer {
-  matchId    Int
-  userId     Int
-  result     Result
-  user       User    @relation(fields: [userId], references: [id])
-  Match      Match?  @relation(fields: [matchId], references: [id])
+  matchId Int
+  userId  Int
+  result  Result
+  user    User   @relation(fields: [userId], references: [id])
+  Match   Match? @relation(fields: [matchId], references: [id])
 
   @@id([matchId, userId])
 }
