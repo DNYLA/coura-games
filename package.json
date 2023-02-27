@@ -20,7 +20,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@nrwl/next": "14.5.2",
-    "@prisma/client": "^4.1.1",
+    "@prisma/client": "^4.10.1",
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.33.0",

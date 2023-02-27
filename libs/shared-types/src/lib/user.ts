@@ -1,3 +1,5 @@
+import { Prisma } from '@prisma/client';
+
 export type PublicUser = {
   id: number;
   username: string;
@@ -6,6 +8,12 @@ export type PublicUser = {
   profileBanner: string;
   points: number;
   joined: number; //Timestamp
+  stats?: Prisma.JsonValue;
+};
+
+export type UserStats = {
+  tictactoe?: number;
+  rps?: number;
 };
 
 export type User = {
