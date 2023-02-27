@@ -10,7 +10,7 @@ export class MatchService {
     //Generate UUID?
 
     // Create Match Object
-
+    console.log(players);
     //Await Post to Database
     const match = await prisma.match.create({
       data: { playback, type, players: { createMany: { data: players } } },
