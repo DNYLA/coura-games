@@ -1,5 +1,5 @@
 import { PublicUser } from '@couragames/shared-types';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { BlockBlobClient } from '@azure/storage-blob';
 import fileUpload = require('express-fileupload');
 import { prisma } from './prisma.service';
@@ -41,6 +41,7 @@ export class UserService {
         profileBanner: true,
         points: true,
         joined: true,
+        stats: true,
       },
     });
 
