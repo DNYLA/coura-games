@@ -9,8 +9,8 @@ export class RPS extends Game {
   /**
    *
    */
-  constructor(lobby: Lobby, host: Socket) {
-    super(lobby, host);
+  constructor(lobby: Lobby, host: Socket, players: Socket[]) {
+    super(lobby, host, players);
   }
 
   async init(timer: Date): Promise<void> {

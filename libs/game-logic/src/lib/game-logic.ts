@@ -96,10 +96,10 @@ export async function startGame(socket: Socket, type: Games, id: string) {
 
   socket.to(lobby.id).emit('game_started');
   socket.emit('game_started');
-  const players = validatePlayers(lobby.id);
+  const players = await validatePlayers(lobby.id);
   switch (type) {
     case Games.RPS: {
-      const rps = new RPS(lobby, socket);
+      const rps = new RPS(lobby, socket, players);
       RPSGames.set(lobby.id, rps);
       break;
     }
