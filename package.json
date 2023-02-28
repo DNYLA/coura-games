@@ -7,6 +7,9 @@
     "build": "nx build",
     "test": "nx test"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "private": true,
   "dependencies": {
     "@azure/storage-blob": "^12.12.0",
@@ -49,6 +52,7 @@
   },
   "devDependencies": {
     "@emotion/babel-plugin": "11.10.5",
+    "@faker-js/faker": "^7.6.0",
     "@nrwl/cli": "15.5.1",
     "@nrwl/cypress": "15.5.1",
     "@nrwl/eslint-plugin-nx": "15.5.1",

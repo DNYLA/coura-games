@@ -1,3 +1,4 @@
+import { LeaderboardService } from '@couragames/api/services';
 import { Router } from 'express';
 
 const router = Router();
@@ -48,6 +49,12 @@ router.get('/', async (req, res) => {
     { ...baseTemplate, title: 'Memory Game' },
   ];
   res.send(templateLeaderboard);
+});
+
+router.get('/test', async (req, res) => {
+  const data = await LeaderboardService.fetchLeaderboards();
+  console.log(data);
+  res.send({ data: Object.fromEntries(data) });
 });
 
 export { router };
