@@ -1,5 +1,5 @@
-import { Lobby } from 'libs/game-logic/src/lib/utils/types';
-import { redis } from './utils/redis';
+import { Lobby } from '@couragames/api/services';
+import { redis } from '@couragames/api/services';
 
 class RedisManager {
   /**

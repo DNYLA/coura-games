@@ -3,7 +3,7 @@ import { TicTacToeInfo, Socket } from '@couragames/shared-types';
 import { GameType, Result } from '@prisma/client';
 import { setLobby } from './redisManager';
 import { Game, GamePlayer } from './utils/game';
-import { Lobby } from './utils/types';
+import { Lobby } from '@couragames/api/services';
 
 export class TicTacToe extends Game {
   isPlayerOneTurn = true;

@@ -12,7 +12,7 @@ import { getLobby, setLobby } from './redisManager';
 import { RPS } from './rps';
 import { TicTacToe } from './tictactoe';
 import { Game, GamePlayer } from './utils/game';
-import { Lobby } from './utils/types';
+import { Lobby } from '@couragames/api/services';
 
 export const currentGames = new Map<string, Lobby>();
 export const ticTacToeGames = new Map<string, TicTacToe>();

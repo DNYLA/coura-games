@@ -1,15 +1,20 @@
-import { Leaderboard, LeaderboardType } from '@couragames/shared-types';
+import {
+  Leaderboard,
+  LeaderboardType,
+  LeagueTable,
+} from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import LeaderboardItem from './Leaderboard';
 import React, { useEffect, useState } from 'react';
 import { fetchLeaderboards } from '@couragames/ui';
 
 export default function League() {
-  const [data, setData] = useState<Leaderboard[]>(new Array<Leaderboard>());
+  const [league, setLeague] = useState<LeagueTable>();
   const [type, setType] = useState<LeaderboardType>(LeaderboardType.Global);
+
   useEffect(() => {
     fetchLeaderboards().then((res) => {
-      setData(res.data);
+      setLeague(res.data);
     });
   }, []);
 
@@ -30,9 +35,15 @@ export default function League() {
     <Container>
       <SwitchButton onClick={changeType}>{capitaliseWord(type)}</SwitchButton>
       <Leaderboards>
-        {data.map((item, i) => (
-          <LeaderboardItem title={item.title} data={item[type]} key={i} />
-        ))}
+        {league &&
+          Object.keys(league.data).map((key, i) => (
+            <LeaderboardItem
+              title={league.data[key].title}
+              data={league.data[key][type]}
+              users={league.users}
+              key={i}
+            />
+          ))}
       </Leaderboards>
     </Container>
   );

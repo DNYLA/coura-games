@@ -3,7 +3,7 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/test', async (req, res) => {
   const baseTemplate = {
     title: 'Tic Tac Toe',
     period: 'Weekly',
@@ -51,10 +51,10 @@ router.get('/', async (req, res) => {
   res.send(templateLeaderboard);
 });
 
-router.get('/test', async (req, res) => {
-  const data = await LeaderboardService.fetchLeaderboards();
-  console.log(data);
-  res.send({ data: Object.fromEntries(data) });
+router.get('/', async (req, res) => {
+  const league = await LeaderboardService.fetchLeaderboards();
+  // res.send(Object.fromEntries(data));
+  res.send({ users: league.users, data: Object.fromEntries(league.data) });
 });
 
 export { router };
