@@ -14,12 +14,14 @@ prisma.$use(async (params, next) => {
     params.action === 'update'
   ) {
     if (!result || !result.avatarUrl) return result;
+    if (isValidUrl(result.avatarUrl)) return result;
     result.avatarUrl = `${process.env.FILE_HOST}/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${result.avatarUrl}`;
 
     return result;
   } else if (params.action === 'findMany') {
     const parsed = result.map((res) => {
       if (!res.avatarUrl) return res;
+      if (isValidUrl(res.avatarUrl)) return res;
       return {
         ...res,
         avatarUrl: `${process.env.FILE_HOST}/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${res.avatarUrl}`,
@@ -33,3 +35,14 @@ prisma.$use(async (params, next) => {
 });
 
 export { prisma };
+
+//https://www.freecodecamp.org/news/check-if-a-javascript-string-is-a-url/#:~:text=checkValidity()%20method%20is%20used,is%20not%20a%20proper%20URL.
+function isValidUrl(urlString: string) {
+  let url;
+  try {
+    url = new URL(urlString);
+  } catch (e) {
+    return false;
+  }
+  return url.protocol === 'http:' || url.protocol === 'https:';
+}

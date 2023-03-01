@@ -18,7 +18,7 @@ import {
 } from './lib/game-logic';
 import { TicTacToe } from './lib/tictactoe';
 import { Game } from './lib/utils/game';
-import { redis } from './lib/utils/redis';
+import { redis } from '@couragames/api/services';
 export { createLobby } from './lib/game-logic';
 
 interface SocketData {

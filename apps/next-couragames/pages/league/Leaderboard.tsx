@@ -7,14 +7,18 @@ import { GiLaurelsTrophy } from 'react-icons/gi';
 import {
   Leaderboard as LeaderboardType,
   LeaderboardStat,
+  User,
 } from '@couragames/shared-types';
 interface LeaderboardProps {
   title: string;
   data: LeaderboardStat[];
+  users: User[];
 }
 
-export default function Leaderboard({ title, data }: LeaderboardProps) {
-  const renderItem = (name: string, points: number, index: number) => {
+export default function Leaderboard({ title, data, users }: LeaderboardProps) {
+  const renderItem = (player: LeaderboardStat, index: number) => {
+    const { username, points } = player;
+    const user = users.find((user) => user.username === player.username);
     let icon: ReactElement;
 
     if (index === 0) {
@@ -37,15 +41,10 @@ export default function Leaderboard({ title, data }: LeaderboardProps) {
         {/* <p>Player {name}</p> */}
         {icon}
 
-        <Link href="/member/dan" className="link">
-          <Avatar
-            name="Dan Abrahmov"
-            src="https://bit.ly/dan-abramov"
-            width={10}
-            h={10}
-          />
-          <Text noOfLines={1} title={name}>
-            {name}
+        <Link href={`/member/${username}`} className="link">
+          <Avatar name={username} src={user.avatarUrl} width={10} h={10} />
+          <Text noOfLines={1} title={username}>
+            {username}
           </Text>
         </Link>
 
@@ -54,13 +53,16 @@ export default function Leaderboard({ title, data }: LeaderboardProps) {
     );
   };
 
+  console.log(data);
+
   return (
     <Container>
       <Header>
         <h3>{title}</h3>
       </Header>
       <Stats>
-        {data.map((player, i) => renderItem(player.username, player.points, i))}
+        {data.length === 0 && <span>No Data To Available</span>}
+        {data.map((player, i) => renderItem(player, i))}
       </Stats>
     </Container>
   );

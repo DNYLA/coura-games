@@ -99,11 +99,15 @@ export class UserService {
     return user.id;
   }
 
-  static async getManyUsers(userIds: number[]) {
+  static async getManyUsers(userIds: number[], usernames?: string[]) {
     //Make sure Input array is unique
+    if (!userIds) userIds = [];
+    if (!usernames) usernames = [];
+
     userIds = [...new Set(userIds)];
+    usernames = [...new Set(usernames)];
     const users = await prisma.user.findMany({
-      where: { id: { in: userIds } },
+      where: { OR: [{ id: { in: userIds } }, { username: { in: usernames } }] },
       select: { id: true, username: true, avatarUrl: true },
     });
 
