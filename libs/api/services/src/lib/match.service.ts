@@ -1,7 +1,8 @@
 import { GameType, Prisma, Result, User } from '@prisma/client';
 import { stat } from 'fs';
-import { UserService } from 'libs/api/services/src/lib/user.service';
+import { UserService } from './user.service';
 import { prisma } from './prisma.service';
+import { RedisService } from './redis.service';
 
 export class MatchService {
   static async createMatch(
@@ -9,6 +10,7 @@ export class MatchService {
     playback: object,
     type: GameType
   ) {
+    console.log(players);
     //Generate UUID?
 
     // Create Match Object
@@ -33,7 +35,7 @@ export class MatchService {
           ? 1
           : 0;
 
-      if (intValue === 0) return; //no Need to update Database if player scored 0 points
+      if (intValue === 0) continue; //no Need to update Database if player scored 0 points
 
       if (statsObject[type]) {
         statsObject[type] = statsObject[type] + intValue;
@@ -45,6 +47,10 @@ export class MatchService {
         where: { id: user.id },
         data: { stats: statsObject },
       });
+
+      //Update Weekly & Daily Set
+
+      await RedisService.increaseUserScore(user.username, intValue, type);
 
       // const whereClause = Prisma.validator<Prisma.UserWhereInput>()({
       //   id: user.id,
