@@ -7,5 +7,9 @@
     "types": ["node"]
   },
   "exclude": ["jest.config.ts", "**/*.spec.ts", "**/*.test.ts"],
-  "include": ["**/*.ts"]
+  "include": [
+    "**/*.ts",
+    "../api/services/src/lib/redis.service.ts",
+    "../api/services/src/lib/utils/redis.ts"
+  ]
 }

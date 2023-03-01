@@ -6,7 +6,7 @@ import * as passport from 'passport';
 import { router as authRouter } from './routes/auth';
 import { router as memberRouter } from './routes/user.controller';
 import { router as leaderboardRouter } from './routes/leaderboard.controller';
-import { User as PrismaUser } from '@prisma/client';
+import { GameType, User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
 import { Server } from 'socket.io';
 import { getFrontendURL } from './utils';
@@ -14,10 +14,10 @@ import { redis as redisClent } from '@couragames/game-logic';
 import * as connectRedis from 'connect-redis';
 import { createClient } from 'redis';
 import * as fileupload from 'express-fileupload';
-import { SocketIO, UserService } from '@couragames/api/services';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { SocketData } from '@couragames/shared-types';
-
+import { redis, SocketIO, UserService } from '@couragames/api/services';
+import { LeaderboardType, SocketData } from '@couragames/shared-types';
+import * as cron from 'node-cron';
+import { RedisService } from '@couragames/api/services';
 require('./config/passport-local');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -112,6 +112,22 @@ app.use(fileupload());
 app.use('/api/auth', authRouter);
 app.use('/api/member', memberRouter);
 app.use('/api/leaderboard', leaderboardRouter);
+
+cron.schedule('0 0 * * *', () => {
+  const keys = Object.keys(GameType);
+  for (let i = 0; i < keys.length; i++) {
+    const type = keys[i];
+    RedisService.Delete(`${type}-${LeaderboardType.Daily}`);
+  }
+});
+
+cron.schedule('0 0 * * MON', () => {
+  const keys = Object.keys(GameType);
+  for (let i = 0; i < keys.length; i++) {
+    const type = keys[i];
+    RedisService.Delete(`${type}-${LeaderboardType.Weekly}`);
+  }
+});
 
 (async () => {
   await redisClent.connect();

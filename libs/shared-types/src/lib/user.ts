@@ -19,7 +19,7 @@ export type UserStats = {
 export type User = {
   id: number;
   username: string;
-  status: string;
+  status?: string;
   avatarUrl?: string;
 };
 

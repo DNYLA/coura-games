@@ -1,25 +1,30 @@
-import { GameType, PrismaClient } from '@prisma/client';
+import { GameType, Prisma, PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
-import { UserStats } from '../libs/ui/src';
+
 const prisma = new PrismaClient();
 async function main() {
+  const userQueries: string | any[] = [];
   for (let i = 0; i < 500; i++) {
-    const statObject = {};
+    const statObject: Prisma.JsonValue = {};
 
     Object.keys(GameType).map((type) => {
-      statObject[type] = Math.floor(Math.random() * 650);
+      statObject[type] = Math.floor(Math.random() * 1500);
     });
 
-    prisma.user.create({
-      data: {
-        username: faker.internet.userName(),
-        password: faker.internet.password(),
-        avatarUrl: faker.internet.avatar(),
-        status: faker.company.catchPhrase(),
-        stats: statObject,
-      },
-    });
+    userQueries.push(
+      prisma.user.create({
+        data: {
+          username: faker.internet.userName(),
+          password: faker.internet.password(),
+          avatarUrl: faker.internet.avatar(),
+          status: faker.company.catchPhrase(),
+          stats: statObject,
+        },
+      })
+    );
   }
+
+  await prisma.$transaction(userQueries);
 }
 main()
   .then(async () => {

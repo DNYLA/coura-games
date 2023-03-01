@@ -1,5 +1,5 @@
 import { getLobby } from '../redisManager';
-import { Lobby } from './types';
+import { Lobby } from '@couragames/api/services';
 import { Socket } from '@couragames/shared-types';
 import { SocketIO, UserService, MatchService } from '@couragames/api/services';
 import { Prisma, GameType, Result } from '@prisma/client';
