@@ -2,12 +2,25 @@ import { Box } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
 import React, { useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faClose } from '@fortawesome/free-solid-svg-icons';
-import { Collapse, useDisclosure } from '@chakra-ui/react';
-import FriendsList from './friends-list';
-import DirectMessage from './DirectMessage';
+import {
+  faChevronLeft,
+  faClose,
+  faMessage,
+} from '@fortawesome/free-solid-svg-icons';
+import { BsChatFill, BsFillChatLeftFill } from 'react-icons/bs';
+import {
+  Collapse,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useDisclosure,
+} from '@chakra-ui/react';
+import FriendsList from '../Chat/friends-list';
+import DirectMessage from '../Chat/DirectMessage';
 
-export default function Chat() {
+export default function Chat2() {
   // const [isOpen, setIsOpen] = useState(false);
   // const [isOpen, setIsOpen] = useState(true);
   const { isOpen, onToggle } = useDisclosure();
@@ -29,47 +42,76 @@ export default function Chat() {
       {/* <SlideFade in={isOpen} offsetY={'0px'} offsetX={'0px'}> */}
       <Collapse in={isOpen} animateOpacity>
         <Container ref={elementRef} style={isOpen ? show : hide}>
-          <Header onClick={onToggle}>
-            {chatId ? (
+          <Tabs isFitted={true}>
+            <TabContainer>
+              <TabList width={'100%'}>
+                <Tab>Chat</Tab>
+                <Tab>Notification</Tab>
+              </TabList>
               <FontAwesomeIcon
-                icon={faChevronLeft}
+                icon={faClose}
                 style={{ cursor: 'pointer' }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setChatId(null);
-                }}
+                onClick={onToggle}
               />
-            ) : (
-              <FontAwesomeIcon icon={faChevronLeft} style={{ opacity: '0%' }} />
-            )}
-            {/* <Icon as={faChevronLeft} /> */}
-            <h1 style={{ fontWeight: '600' }}>{chatId ?? 'Chat'}</h1>
-            <FontAwesomeIcon icon={faClose} style={{ cursor: 'pointer' }} />
-            {/* <FontAwesomeIcon icon={faCircleXmark} style={{}} /> */}
-          </Header>
-          <Box h={'calc(100% - 35px)'}>
-            {chatId ? (
-              <DirectMessage id={chatId} lastMessage={'Invite me to a lobby'} />
-            ) : (
-              <FriendsList setId={setChatId} />
-            )}
-          </Box>
-          <Box></Box>
+            </TabContainer>
+
+            <TabPanels>
+              <TabPanel padding={1}>
+                {/* <FontAwesomeIcon
+                  icon={faClose}
+                  style={{ cursor: 'pointer' }}
+                  onClick={onToggle}
+                /> */}
+                {/* <FontAwesomeIcon icon={faCircleXmark} style={{}} /> */}
+                <Box h={'calc(100% - 35px)'}>
+                  {chatId ? (
+                    <DirectMessage
+                      id={chatId}
+                      lastMessage={'Invite me to a lobby'}
+                    />
+                  ) : (
+                    <FriendsList setId={setChatId} />
+                  )}
+                </Box>
+                <Box></Box>
+              </TabPanel>
+              <TabPanel>
+                <p>Notificaitions</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+
+          {/* <Icon as={faChevronLeft} /> */}
         </Container>
       </Collapse>
       {/* </SlideFade> */}
       <Popup onClick={onToggle} style={isOpen ? hide : {}}>
-        <span>Chat</span>
-        <FontAwesomeIcon icon={faClose} style={{ cursor: 'pointer' }} />
+        <FontAwesomeIcon
+          icon={faMessage}
+          style={{ cursor: 'pointer' }}
+          size={'2x'}
+          onClick={onToggle}
+        />
       </Popup>
     </ChatBox>
   );
 }
 
+const TabContainer = styled.div`
+  display: flex;
+  width: 100%;
+
+  svg {
+    padding: 5px 8px;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const ChatBox = styled.div`
   /* display: none; */
   position: fixed;
-  bottom: 0;
+  bottom: 150px;
   right: 15px;
   /* border: 3px solid #f1f1f1; */
   z-index: 9;
@@ -77,18 +119,23 @@ const ChatBox = styled.div`
 
 const Popup = styled.div`
   background-color: #555;
-  width: 250px;
+  width: 60px;
+  height: 60px;
   border-radius: 5px;
   cursor: pointer;
   opacity: 0.75;
   position: fixed;
   bottom: 15px;
-  right: 10px;
+  right: 60px;
   padding: 10px 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 500;
+
+  svg {
+    width: 100%;
+  }
 `;
 
 const Container = styled.div`
@@ -100,7 +147,7 @@ const Container = styled.div`
   opacity: 0.75;
   position: fixed;
   bottom: 15px;
-  right: 10px;
+  right: 50px;
   /* padding: 10px 15px; */
   display: flex;
   justify-content: space-between;
