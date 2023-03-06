@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { AppProps } from 'next/app';
 import AppProviders from '../components/app-providers';
 import Chat from '../components/Chat';
+import Chat2 from '../components/Chat2';
 import Sidebar from '../components/sidebar';
 
 const colors = {
@@ -34,7 +35,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
           {/* <Navbar /> */}
           <Sidebar />
           <Component {...pageProps} />
-          <Chat />
+          {/* <Chat /> */}
+          <Chat2 />
         </Container>
       </ChakraProvider>
     </AppProviders>
