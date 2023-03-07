@@ -68,9 +68,12 @@ model Notification {
   targetId   Int
   targetUser User               @relation(fields: [targetId], references: [id])
   fromId     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // fromUser User?
   type       NotificationType
   status     NotificationStatus
+
 }
 
 enum FriendStatus {
