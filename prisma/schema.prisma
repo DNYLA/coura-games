@@ -11,18 +11,19 @@ datasource db {
 }
 
 model User {
-  id            Int           @id @default(autoincrement())
-  username      String        @unique()
+  id            Int            @id @default(autoincrement())
+  username      String         @unique()
   status        String?
   // email     String
   password      String
-  avatarUrl     String        @default("default.png")
+  avatarUrl     String         @default("default.png")
   profileBanner String?
-  points        Int           @default(0)
-  joined        DateTime      @default(now())
+  points        Int            @default(0)
+  joined        DateTime       @default(now())
   stats         Json? //Global Stats for user Weekly, Daily etc calculated via service
   Comments      Comment[]
   MatchPlayer   MatchPlayer[]
+  Notification  Notification[]
 }
 
 model Comment {
@@ -62,15 +63,15 @@ model Match {
 //   @@id([userOneId, userTwoId])
 // }
 
-// model Notification {
-//   id Int @id @default(autoincrement())
-//   targetId Int
-//   // targetUser User
-//   fromId Int? 
-//   // fromUser User?
-//   type NotificationType
-
-// }
+model Notification {
+  id         Int                @id @default(autoincrement())
+  targetId   Int
+  targetUser User               @relation(fields: [targetId], references: [id])
+  fromId     Int?
+  // fromUser User?
+  type       NotificationType
+  status     NotificationStatus
+}
 
 enum FriendStatus {
   Accepted
@@ -83,6 +84,14 @@ enum NotificationType {
   FriendRequest
   SelfComment
   FriendComment
+}
+
+enum NotificationStatus {
+  Unread
+  Read
+  FriendRequest
+  GameInvite
+  Cancelled //e.g Friend request retracted we dont want to classify
 }
 
 enum GameType {
