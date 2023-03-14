@@ -66,3 +66,6 @@ export const deleteComment = (username: string, id: number) =>
   AXIOS.delete<void>(`/member/${username}/comment?id=${id}`);
 
 export const fetchLeaderboards = () => AXIOS.get<LeagueTable>(`/leaderboard/`);
+
+export const addFriend = (id: number) =>
+  AXIOS.post<void>(`/friends/add?id=${id}`);

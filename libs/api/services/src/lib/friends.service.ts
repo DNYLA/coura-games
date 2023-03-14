@@ -4,23 +4,26 @@ import { UserService } from './user.service';
 import { prisma } from './prisma.service';
 import { RedisService } from './redis.service';
 
-export class FriendsService {
+export class FriendService {
   static async addFriend(fromId: number, toId: number) {
     try {
-      await prisma.friend.create({
-        data: { userOneId: fromId, userTwoId: toId },
+      await prisma.user.update({
+        where: { id: fromId },
+        data: { friends: { connect: { id: toId } } },
       });
     } catch {
-      //Most likely already friends no need to do anything else
+      // Problem Can occur due to id provided not existing || possibl already friends
       //This error will only occcur when a user manually tries to send the request
+      //so theres no need to handle error
     }
   }
 
-  static async updateFriend(
-    requesterId: number,
-    request: FriendStatus,
-    targetId: number
-  ) {
-    const friendReq = await prisma.friend.findUnique({where: {}}) 
+  static async friendTest() {
+    await prisma.user.update({
+      where: { id: 1 },
+      data: { friends: { connect: { id: 2 } } },
+    });
+
+    return true;
   }
 }
