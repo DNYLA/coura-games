@@ -1,4 +1,4 @@
-import { UserService } from '@couragames/api/services';
+import { FriendService, UserService } from '@couragames/api/services';
 import { Router } from 'express';
 import { CommentsService } from '@couragames/api/services';
 

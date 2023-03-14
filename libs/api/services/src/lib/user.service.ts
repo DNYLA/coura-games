@@ -42,6 +42,14 @@ export class UserService {
         points: true,
         joined: true,
         stats: true,
+        friends: {
+          select: {
+            id: true,
+            username: true,
+            points: true,
+            avatarUrl: true,
+          },
+        },
       },
     });
 

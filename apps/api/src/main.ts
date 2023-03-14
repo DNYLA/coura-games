@@ -5,6 +5,7 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { router as authRouter } from './routes/auth';
 import { router as memberRouter } from './routes/user.controller';
+import { router as friendsRouter } from './routes/friends.controller';
 import { router as leaderboardRouter } from './routes/leaderboard.controller';
 import { GameType, User as PrismaUser } from '@prisma/client';
 import { socketEventHandler } from './socket';
@@ -111,6 +112,7 @@ app.use(fileupload());
 //Routes
 app.use('/api/auth', authRouter);
 app.use('/api/member', memberRouter);
+app.use('/api/friends', friendsRouter);
 app.use('/api/leaderboard', leaderboardRouter);
 
 cron.schedule('0 0 * * *', () => {
