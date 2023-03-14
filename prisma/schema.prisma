@@ -21,6 +21,8 @@ model User {
   points        Int            @default(0)
   joined        DateTime       @default(now())
   stats         Json? //Global Stats for user Weekly, Daily etc calculated via service
+  friends       User[]  @relation("friends")
+  friendsRelation User[]  @relation("friends")
   Comments      Comment[]
   MatchPlayer   MatchPlayer[]
   Notification  Notification[]
@@ -55,13 +57,12 @@ model Match {
   type     GameType
 }
 
-// model Friend {
-//   id Int
-//   userOneId Int
-//   userTwoId Int
-//   status Boolean @default(false)
-//   @@id([userOneId, userTwoId])
-// }
+model FriendRequests {
+  userOneId Int
+  userTwoId Int
+  status FriendStatus @default(Pending)
+  @@id([userOneId, userTwoId])
+}
 
 model Notification {
   id         Int                @id @default(autoincrement())
