@@ -7,6 +7,7 @@ import { useContext, useState } from 'react';
 import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai';
 import { ImBlocked } from 'react-icons/im';
 import { useDisclosure } from '@chakra-ui/react';
+import { addFriend } from '../../api';
 interface HeaderProps {
   member: PublicUser;
   selfName: string;
@@ -60,6 +61,12 @@ export function ProfileHeader({ member, selfName }: HeaderProps) {
 
   const isUser = selfName.toLowerCase() === member.username.toLowerCase();
 
+  const handleAddFriend = async () => {
+    // if (!user) return;
+
+    await addFriend(member.id);
+  };
+
   return (
     <>
       <SettingsModal
@@ -79,7 +86,10 @@ export function ProfileHeader({ member, selfName }: HeaderProps) {
               <ActionButton action={ButtonType.Negative}>
                 <ImBlocked />
               </ActionButton>
-              <ActionButton action={ButtonType.Success}>
+              <ActionButton
+                action={ButtonType.Success}
+                onClick={handleAddFriend}
+              >
                 <AiOutlineUserAdd />
               </ActionButton>
             </>

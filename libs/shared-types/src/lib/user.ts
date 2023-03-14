@@ -9,6 +9,7 @@ export type PublicUser = {
   points: number;
   joined: number; //Timestamp
   stats?: Prisma.JsonValue;
+  friends: User[];
 };
 
 export type UserStats = {

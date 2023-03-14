@@ -7,10 +7,11 @@ import {
   fetchComments,
   fetchUserProfile,
   ProfileHeader,
-  Sidebar,
   UserStats,
 } from '@couragames/ui';
 import { Comments, Comment, PublicUser } from '@couragames/shared-types';
+import { Avatar } from '@chakra-ui/react';
+import Link from 'next/link';
 export default function MemberProfile() {
   const router = useRouter();
   const { username } = router.query;
@@ -75,11 +76,45 @@ export default function MemberProfile() {
             deleteComment={handleDelete}
           />
         </Main>
-        <Sidebar>Sidebar</Sidebar>
+        <Sidebar>
+          <h1>Friends</h1>
+          {member.friends.map((user) => (
+            <Link href={`/member/${user.username}`}>
+              <FriendContainer>
+                <Avatar src={user.avatarUrl}></Avatar>
+                <span>{user.username}</span>
+              </FriendContainer>
+            </Link>
+          ))}
+        </Sidebar>
       </Container>
     </Profile>
   );
 }
+
+const Sidebar = styled.div`
+  background: #282f27c2;
+
+  height: fit-content;
+  padding: 5px;
+
+  h1 {
+    font-size: 25px;
+    text-align: center;
+  }
+`;
+
+const FriendContainer = styled.div`
+  display: flex;
+  cursor: pointer;
+  /* background-color: red; */
+  padding: 5px;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 15px;
+  /* border-bottom: 2px solid gray; */
+`;
+
 const Profile = styled.div`
   display: flex;
   flex-direction: column;
