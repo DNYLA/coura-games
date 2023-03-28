@@ -11,21 +11,21 @@ datasource db {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  username      String         @unique()
-  status        String?
+  id              Int            @id @default(autoincrement())
+  username        String         @unique()
+  status          String?
   // email     String
-  password      String
-  avatarUrl     String         @default("default.png")
-  profileBanner String?
-  points        Int            @default(0)
-  joined        DateTime       @default(now())
-  stats         Json? //Global Stats for user Weekly, Daily etc calculated via service
-  friends       User[]  @relation("friends")
-  friendsRelation User[]  @relation("friends")
-  Comments      Comment[]
-  MatchPlayer   MatchPlayer[]
-  Notification  Notification[]
+  password        String
+  avatarUrl       String         @default("default.png")
+  profileBanner   String?
+  points          Int            @default(0)
+  joined          DateTime       @default(now())
+  stats           Json? //Global Stats for user Weekly, Daily etc calculated via service
+  friends         User[]         @relation("friends")
+  friendsRelation User[]         @relation("friends")
+  Comments        Comment[]
+  MatchPlayer     MatchPlayer[]
+  Notification    Notification[]
 }
 
 model Comment {
@@ -60,7 +60,8 @@ model Match {
 model FriendRequests {
   userOneId Int
   userTwoId Int
-  status FriendStatus @default(Pending)
+  status    FriendStatus @default(Pending)
+
   @@id([userOneId, userTwoId])
 }
 
@@ -69,12 +70,36 @@ model Notification {
   targetId   Int
   targetUser User               @relation(fields: [targetId], references: [id])
   fromId     Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
   // fromUser User?
   type       NotificationType
   status     NotificationStatus
+}
 
+model Inbox {
+  id           Int                 @id @default(autoincrement())
+  lastMessage  String
+  lastSenderId Int
+  messages     Message[]
+  participants InboxParticipants[]
+}
+
+model InboxParticipants {
+  inboxId Int
+  userId  Int
+  Inbox   Inbox @relation(fields: [inboxId], references: [id])
+
+  @@id([inboxId, userId])
+}
+
+model Message {
+  id      Int   @id @default(autoincrement())
+  inboxId Int
+  userId  Int
+  read Boolean @default(false)
+  createdAt DateTime @default(now())
+  Inbox   Inbox @relation(fields: [inboxId], references: [id])
 }
 
 enum FriendStatus {
