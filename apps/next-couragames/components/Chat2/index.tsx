@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { BsChatFill, BsFillChatLeftFill } from 'react-icons/bs';
 import {
+  Button,
   Collapse,
   Tab,
   TabList,
@@ -17,7 +18,7 @@ import {
   Tabs,
   useDisclosure,
 } from '@chakra-ui/react';
-import FriendsList from '../Chat/friends-list';
+import ChatMenu from '../Chat/chat-menu';
 import DirectMessage from '../Chat/DirectMessage';
 
 export default function Chat2() {
@@ -65,12 +66,19 @@ export default function Chat2() {
                 {/* <FontAwesomeIcon icon={faCircleXmark} style={{}} /> */}
                 <Box h={'calc(100% - 35px)'}>
                   {chatId ? (
-                    <DirectMessage
-                      id={chatId}
-                      lastMessage={'Invite me to a lobby'}
-                    />
+                    <>
+                      <div style={{ display: 'flex' }}>
+                        <Button onClick={() => setChatId(null)}>Back</Button>
+                        <p>Dave</p>
+                      </div>
+                      <DirectMessage
+                        id={chatId}
+                        lastMessage={'Invite me to a lobby'}
+                      />
+                    </>
                   ) : (
-                    <FriendsList setId={setChatId} />
+                    // <ChatMessages setId={setChatId} />
+                    <ChatMenu setId={setChatId} />
                   )}
                 </Box>
                 <Box></Box>

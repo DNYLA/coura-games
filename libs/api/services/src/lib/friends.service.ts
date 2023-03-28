@@ -11,6 +11,11 @@ export class FriendService {
         where: { id: fromId },
         data: { friends: { connect: { id: toId } } },
       });
+
+      await prisma.user.update({
+        where: { id: toId },
+        data: { friends: { connect: { id: fromId } } },
+      });
     } catch {
       // Problem Can occur due to id provided not existing || possibl already friends
       //This error will only occcur when a user manually tries to send the request
