@@ -1,10 +1,14 @@
 import { WrapItem, Avatar, AvatarBadge, Box } from '@chakra-ui/react';
 
-interface FriendsListProps {
+export interface FriendsListProps {
   setId: any;
 }
 
-export default function FriendsList({ setId }: FriendsListProps) {
+function FriendsList() {
+  return <div>Friends List</div>;
+}
+
+export default function ChatMessages({ setId }: FriendsListProps) {
   const friendsList = [
     {
       name: 'John',
