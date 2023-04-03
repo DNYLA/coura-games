@@ -1,128 +1,92 @@
 import { Box } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
-import React, { useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faClose } from '@fortawesome/free-solid-svg-icons';
-import { Collapse, useDisclosure } from '@chakra-ui/react';
-import FriendsList from './friends-list';
-import DirectMessage from './DirectMessage';
+import {
+  faChevronLeft,
+  faClose,
+  faMessage,
+} from '@fortawesome/free-solid-svg-icons';
+import { FaChevronLeft } from 'react-icons/fa';
+import { IoIosArrowBack } from 'react-icons/io';
+import {
+  Button,
+  Collapse,
+  IconButton,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useDisclosure,
+} from '@chakra-ui/react';
+import ChatMenu from './chat-menu';
+import DirectMessage from './direct-message';
+import SocketContext from '../../context/socket';
+import { ChatData, PartialInbox, User } from '@couragames/shared-types';
 
 export default function Chat() {
-  // const [isOpen, setIsOpen] = useState(false);
-  // const [isOpen, setIsOpen] = useState(true);
-  const { isOpen, onToggle } = useDisclosure();
   const [chatId, setChatId] = useState(null);
+  const [friendsList, setFriendsList] = useState(null);
+  const [inboxes, setInboxes] = useState<PartialInbox[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [eventsHandled, setEventsHandled] = useState(false);
+  const socket = useContext(SocketContext).socket;
 
-  const hide = {
-    display: 'none',
+  useEffect(() => {
+    if (!friendsList) socket.emit('request_friend_data');
+    if (eventsHandled) return;
+
+    socket?.on('friends_list', (data: ChatData) => {
+      console.log(data);
+      setFriendsList(data.friends);
+      setInboxes(data.inbox);
+      setLoading(false);
+    });
+
+    socket?.on('update_inbox', (data: PartialInbox[]) => {
+      setInboxes(data);
+    });
+
+    setEventsHandled(true);
+  }, [socket, friendsList, inboxes, eventsHandled]);
+
+  const getInbox = (username: string) => {
+    const inbox = inboxes.find((inbox) => inbox.user.username === username);
+    console.log(`found: `);
+    console.log(inboxes);
+    console.log(inbox);
+
+    return inbox;
   };
 
-  const show = {
-    display: 'block',
-  };
+  if (loading) return <div>Loading...</div>;
 
-  // const toggle = () => setIsOpen(!isOpen);
-  const elementRef = useRef();
+  if (!chatId)
+    return (
+      <ChatMenu setId={setChatId} friends={friendsList} inboxes={inboxes} />
+    );
 
   return (
-    <ChatBox>
-      {/* <SlideFade in={isOpen} offsetY={'0px'} offsetX={'0px'}> */}
-      <Collapse in={isOpen} animateOpacity>
-        <Container ref={elementRef} style={isOpen ? show : hide}>
-          <Header onClick={onToggle}>
-            {chatId ? (
-              <FontAwesomeIcon
-                icon={faChevronLeft}
-                style={{ cursor: 'pointer' }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setChatId(null);
-                }}
-              />
-            ) : (
-              <FontAwesomeIcon icon={faChevronLeft} style={{ opacity: '0%' }} />
-            )}
-            {/* <Icon as={faChevronLeft} /> */}
-            <h1 style={{ fontWeight: '600' }}>{chatId ?? 'Chat'}</h1>
-            <FontAwesomeIcon icon={faClose} style={{ cursor: 'pointer' }} />
-            {/* <FontAwesomeIcon icon={faCircleXmark} style={{}} /> */}
-          </Header>
-          <Box h={'calc(100% - 35px)'}>
-            {chatId ? (
-              <DirectMessage id={chatId} lastMessage={'Invite me to a lobby'} />
-            ) : (
-              <FriendsList setId={setChatId} />
-            )}
-          </Box>
-          <Box></Box>
-        </Container>
-      </Collapse>
-      {/* </SlideFade> */}
-      <Popup onClick={onToggle} style={isOpen ? hide : {}}>
-        <span>Chat</span>
-        <FontAwesomeIcon icon={faClose} style={{ cursor: 'pointer' }} />
-      </Popup>
-    </ChatBox>
+    <>
+      <TitleContainer>
+        <IconButton
+          onClick={() => setChatId(null)}
+          size={'sm'}
+          aria-label="Search.."
+          icon={<FaChevronLeft />}
+        />
+        <p>{chatId}</p>
+      </TitleContainer>
+      <DirectMessage id={chatId} inbox={getInbox(chatId)} />
+    </>
   );
 }
 
-const ChatBox = styled.div`
-  /* display: none; */
-  position: fixed;
-  bottom: 0;
-  right: 15px;
-  /* border: 3px solid #f1f1f1; */
-  z-index: 9;
-`;
-
-const Popup = styled.div`
-  background-color: #555;
-  width: 250px;
-  border-radius: 5px;
-  cursor: pointer;
-  opacity: 0.75;
-  position: fixed;
-  bottom: 15px;
-  right: 10px;
-  padding: 10px 15px;
+const TitleContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 500;
-`;
-
-const Container = styled.div`
-  background-color: #555;
-  width: 250px;
-  height: 300px;
-  border-radius: 5px;
-  /* cursor: pointer; */
-  opacity: 0.75;
-  position: fixed;
-  bottom: 15px;
-  right: 10px;
-  /* padding: 10px 15px; */
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Header = styled.div`
-  width: 100%;
-  /* background-color: red; */
-  display: flex;
-  flex-flow: row;
-  /* display: inline-block; */
-  justify-content: space-between;
-  padding: 3px 10px;
-  /* flex-direction: row; */
-  height: 35px;
-  align-items: center;
-  border-bottom: 1px solid;
-  box-shadow: 1px;
-  h1 {
-    padding: 0;
-    margin: 0;
-    line-height: '50px';
-    vertical-align: middle;
+  text-align: center;
+  p {
+    margin-left: 60px;
   }
 `;

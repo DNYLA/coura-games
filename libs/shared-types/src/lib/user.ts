@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Message, Prisma } from '@prisma/client';
 
 export type PublicUser = {
   id: number;
@@ -22,6 +22,7 @@ export type User = {
   username: string;
   status?: string;
   avatarUrl?: string;
+  online?: boolean;
 };
 
 export type UpdateUser = {
@@ -42,4 +43,17 @@ export type Comment = {
 export type Comments = {
   users: User[];
   comments: Comment[];
+};
+
+export type ChatData = {
+  friends: User[];
+  inbox: PartialInbox[];
+};
+
+export type PartialInbox = {
+  id: number;
+  lastMessage: string;
+  read: boolean;
+  user: User;
+  messages: Message[];
 };

@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/layout';
 import styled from '@emotion/styled';
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronLeft,
@@ -18,14 +18,15 @@ import {
   Tabs,
   useDisclosure,
 } from '@chakra-ui/react';
-import ChatMenu from '../Chat/chat-menu';
-import DirectMessage from '../Chat/DirectMessage';
+import { UserContext } from '@couragames/ui';
+import Chat from './Chat';
 
-export default function Chat2() {
+export function MessageCentre() {
   // const [isOpen, setIsOpen] = useState(false);
   // const [isOpen, setIsOpen] = useState(true);
   const { isOpen, onToggle } = useDisclosure();
   const [chatId, setChatId] = useState(null);
+  const { user } = useContext(UserContext);
 
   const hide = {
     display: 'none',
@@ -37,6 +38,8 @@ export default function Chat2() {
 
   // const toggle = () => setIsOpen(!isOpen);
   const elementRef = useRef();
+
+  if (!user) return;
 
   return (
     <ChatBox>
@@ -65,21 +68,7 @@ export default function Chat2() {
                 /> */}
                 {/* <FontAwesomeIcon icon={faCircleXmark} style={{}} /> */}
                 <Box h={'calc(100% - 35px)'}>
-                  {chatId ? (
-                    <>
-                      <div style={{ display: 'flex' }}>
-                        <Button onClick={() => setChatId(null)}>Back</Button>
-                        <p>Dave</p>
-                      </div>
-                      <DirectMessage
-                        id={chatId}
-                        lastMessage={'Invite me to a lobby'}
-                      />
-                    </>
-                  ) : (
-                    // <ChatMessages setId={setChatId} />
-                    <ChatMenu setId={setChatId} />
-                  )}
+                  <Chat />
                 </Box>
                 <Box></Box>
               </TabPanel>
