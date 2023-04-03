@@ -1,8 +1,12 @@
+import { PartialInbox } from '@couragames/shared-types';
+import { UserContext } from '@couragames/ui';
 import styled from '@emotion/styled';
+import SocketContext from '../../context/socket';
+import { useContext, useState } from 'react';
 
 interface DirectMessageProps {
   id: string;
-  lastMessage: string;
+  inbox?: PartialInbox;
 }
 
 type Message = {
@@ -10,51 +14,46 @@ type Message = {
   sender: boolean; //Indicates if the current user is the sender or receipient
 };
 
-export default function DirectMessage({ id, lastMessage }: DirectMessageProps) {
-  const user = {
-    name: id,
-    lastMessage: lastMessage,
-    online: true,
-    avatar: 'https://i.scdn.co/image/ab6761610000e5eb9c30c6b69a55d48decd71600',
-  };
+export default function DirectMessage({ id, inbox }: DirectMessageProps) {
+  const [newMessageContent, setNewMessageContent] = useState('');
+  const { user } = useContext(UserContext);
+  const socket = useContext(SocketContext).socket;
 
-  const user2 = {
-    name: 'Barbara',
-    lastMessage: 'want to play a game?',
-    online: false,
-    avatar:
-      'https://i1.sndcdn.com/artworks-QEVOnOm6VJ04F5Rp-1fEbAA-t500x500.jpg',
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      console.log('emitting');
+      socket?.emit('submit_chat_message', {
+        targetUser: id,
+        content: newMessageContent,
+      });
+      setNewMessageContent('');
+    }
   };
-
-  const messages: Message[] = [
-    {
-      content: 'Hello!',
-      sender: false,
-    },
-    {
-      content: 'hi',
-      sender: true,
-    },
-    {
-      content: 'Invite Me  a ',
-      sender: true,
-    },
-  ];
 
   return (
     <Container>
       <MessageLog>
-        {messages.map((msg, i) => (
-          <IndividualMessage
-            content={msg.content}
-            name={msg.sender ? user.name : user2.name}
-            avatar={msg.sender ? user.avatar : user2.avatar}
-            sender={msg.sender}
-            key={i}
-          />
-        ))}
+        {inbox &&
+          inbox.messages.map((msg, i) => (
+            <IndividualMessage
+              content={msg.content}
+              name={msg.userId === user.id ? user.username : id}
+              avatar={
+                msg.userId === user.id ? user.avatarUrl : inbox.user.avatarUrl
+              }
+              sender={msg.userId === user.id}
+              key={msg.id}
+            />
+          ))}
       </MessageLog>
-      <InputBox type="text" name="name" placeholder="Enter message..." />
+      <InputBox
+        type="text"
+        name="name"
+        placeholder="Enter message..."
+        value={newMessageContent}
+        onChange={(e) => setNewMessageContent(e.target.value)}
+        onKeyUp={handleKeyPress}
+      />
     </Container>
   );
 }

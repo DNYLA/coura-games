@@ -1,9 +1,11 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { UserContext } from '@couragames/ui';
 import styled from '@emotion/styled';
+import { MessageCentre } from '../components/message-centre';
 import { AppProps } from 'next/app';
+import { useContext, useEffect } from 'react';
 import AppProviders from '../components/app-providers';
 import Chat from '../components/Chat';
-import Chat2 from '../components/Chat2';
 import Sidebar from '../components/sidebar';
 
 const colors = {
@@ -35,8 +37,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
           {/* <Navbar /> */}
           <Sidebar />
           <Component {...pageProps} />
-          {/* <Chat /> */}
-          <Chat2 />
+          <MessageCentre />
         </Container>
       </ChakraProvider>
     </AppProviders>

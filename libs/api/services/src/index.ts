@@ -6,5 +6,6 @@ export * from './lib/friends.service';
 export * from './lib/leaderboard.service';
 export * from './lib/redis.service';
 export * from './lib/socket.server';
+export * from './lib/socket.service';
 export * from './lib/utils/types';
 export * from './lib/utils/redis';
