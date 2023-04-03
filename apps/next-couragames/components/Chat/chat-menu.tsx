@@ -2,12 +2,19 @@ import { AddIcon } from '@chakra-ui/icons';
 import { BsFillPersonPlusFill } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
 import { Box, IconButton } from '@chakra-ui/react';
-import ChatMessages, { FriendsListProps } from './friends-list';
+import ChatMessages from './message-list';
 import { useState } from 'react';
+import { PartialInbox, User } from '@couragames/shared-types';
+import FriendsList from './friend-list';
 
-export default function ChatMenu({ setId }: FriendsListProps) {
-  const [messageListActive, setMessageListActive] = useState(false);
+export interface ChatMenuProps {
+  setId: any;
+  friends: User[];
+  inboxes: PartialInbox[];
+}
 
+export default function ChatMenu({ setId, friends, inboxes }: ChatMenuProps) {
+  const [messageListActive, setMessageListActive] = useState(true);
   const getIcon = () => {
     if (messageListActive) return <BsFillPersonPlusFill />;
     return <IoIosArrowBack />;
@@ -19,12 +26,16 @@ export default function ChatMenu({ setId }: FriendsListProps) {
         <IconButton
           onClick={() => setMessageListActive(!messageListActive)}
           size={'sm'}
-          aria-label="Search database"
+          aria-label="Search.."
           icon={getIcon()}
         />
       </Box>
 
-      {messageListActive ? <ChatMessages setId={setId} /> : <div>Here</div>}
+      {messageListActive ? (
+        <ChatMessages setId={setId} inboxes={inboxes} />
+      ) : (
+        <FriendsList friends={friends} setId={setId} />
+      )}
     </div>
   );
 }

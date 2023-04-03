@@ -1,3 +1,4 @@
+import { SocketService } from '@couragames/api/services';
 import {
   handleGameMove,
   handleLobbyEvent,
@@ -7,6 +8,7 @@ import {
   Games,
   LobbyEvent,
   RPSMove,
+  Socket,
   SocketData,
 } from '@couragames/shared-types';
 import { Server } from 'socket.io';
@@ -15,7 +17,7 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 export const socketEventHandler = (
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>
 ) => {
-  return io.on('connection', (socket) => {
+  return io.on('connection', (socket: Socket) => {
     socket.on('lobby', (data: LobbyEvent) => {
       handleLobbyEvent(socket, data);
     });
@@ -37,5 +39,16 @@ export const socketEventHandler = (
     socket.on('tictactoe_playagain', (data: { id: string }) => {
       handlePlayAgain(socket, data.id);
     });
+
+    socket.on('request_friend_data', () => {
+      SocketService.getFriendsList(socket);
+    });
+
+    socket.on(
+      'submit_chat_message',
+      (data: { targetUser: string; content: string }) => {
+        SocketService.processMessage(socket, data.targetUser, data.content);
+      }
+    );
   });
 };

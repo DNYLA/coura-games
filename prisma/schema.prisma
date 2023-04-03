@@ -11,21 +11,22 @@ datasource db {
 }
 
 model User {
-  id              Int            @id @default(autoincrement())
-  username        String         @unique()
-  status          String?
+  id                Int                 @id @default(autoincrement())
+  username          String              @unique()
+  status            String?
   // email     String
-  password        String
-  avatarUrl       String         @default("default.png")
-  profileBanner   String?
-  points          Int            @default(0)
-  joined          DateTime       @default(now())
-  stats           Json? //Global Stats for user Weekly, Daily etc calculated via service
-  friends         User[]         @relation("friends")
-  friendsRelation User[]         @relation("friends")
-  Comments        Comment[]
-  MatchPlayer     MatchPlayer[]
-  Notification    Notification[]
+  password          String
+  avatarUrl         String              @default("default.png")
+  profileBanner     String?
+  points            Int                 @default(0)
+  joined            DateTime            @default(now())
+  stats             Json? //Global Stats for user Weekly, Daily etc calculated via service
+  friends           User[]              @relation("friends")
+  friendsRelation   User[]              @relation("friends")
+  Comments          Comment[]
+  MatchPlayer       MatchPlayer[]
+  Notification      Notification[]
+  InboxParticipants InboxParticipants[]
 }
 
 model Comment {
@@ -81,25 +82,29 @@ model Inbox {
   id           Int                 @id @default(autoincrement())
   lastMessage  String
   lastSenderId Int
+  read         Boolean             @default(false)
   messages     Message[]
   participants InboxParticipants[]
+  updatedAt    DateTime            @updatedAt
 }
 
 model InboxParticipants {
   inboxId Int
   userId  Int
+  user    User  @relation(fields: [userId], references: [id])
   Inbox   Inbox @relation(fields: [inboxId], references: [id])
 
   @@id([inboxId, userId])
 }
 
 model Message {
-  id      Int   @id @default(autoincrement())
-  inboxId Int
-  userId  Int
-  read Boolean @default(false)
+  id        Int      @id @default(autoincrement())
+  inboxId   Int
+  userId    Int
+  content   String
+  read      Boolean  @default(false)
   createdAt DateTime @default(now())
-  Inbox   Inbox @relation(fields: [inboxId], references: [id])
+  Inbox     Inbox    @relation(fields: [inboxId], references: [id])
 }
 
 enum FriendStatus {
