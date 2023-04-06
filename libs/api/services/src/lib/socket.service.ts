@@ -5,7 +5,7 @@ import {
   SocketData,
 } from '@couragames/shared-types';
 import { Comment, Inbox, Message, Prisma } from '@prisma/client';
-import { SocketIO } from 'libs/api/services/src/lib/socket.server';
+import { SocketIO } from './socket.server';
 import { RemoteSocket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { prisma } from './prisma.service';
@@ -45,6 +45,7 @@ export class SocketService {
       filteredInboxes.push({
         id: inbox.id,
         lastMessage: inbox.lastMessage,
+        lastSenderId: inbox.lastSenderId,
         read: inbox.read,
         user: {
           id: participant.userId,
@@ -70,7 +71,7 @@ export class SocketService {
     if (!socket.data.user || !socket.data.user.id) return; //Guest/Unauthorized user trying to access data.
     const id = socket.data.user.id;
     const targetUser = await UserService.getUser(username);
-
+    if (!targetUser) return;
     //Should only return one
     const inbox = await prisma.inbox.findFirst({
       where: {
@@ -81,10 +82,7 @@ export class SocketService {
       },
     });
 
-    let inboxId: number;
     if (!inbox) {
-      if (!targetUser) return;
-      //create new Inbox
       await prisma.inbox.create({
         data: {
           participants: {
@@ -145,6 +143,7 @@ export class SocketService {
       filteredInboxes.push({
         id: inbox.id,
         lastMessage: inbox.lastMessage,
+        lastSenderId: inbox.lastSenderId,
         read: inbox.read,
         user: {
           id: participant.userId,
