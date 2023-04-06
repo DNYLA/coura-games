@@ -79,9 +79,11 @@ router.post('/:username/comment', async (req, res) => {
       targetId: newComment.toUserId,
       fromId: user.id,
       action: `/member/${userName}`,
+      message: `${user.username} commented on your profile.`,
       type: NotificationType.ProfileComment,
     });
-  } catch {
+  } catch (err) {
+    console.log(err);
     res.sendStatus(500);
   }
 

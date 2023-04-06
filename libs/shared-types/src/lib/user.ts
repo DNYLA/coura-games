@@ -1,4 +1,9 @@
-import { Message, Prisma } from '@prisma/client';
+import {
+  Message,
+  NotificationStatus,
+  NotificationType,
+  Prisma,
+} from '@prisma/client';
 
 export type PublicUser = {
   id: number;
@@ -57,4 +62,14 @@ export type PartialInbox = {
   read: boolean;
   user: User;
   messages: Message[];
+};
+
+export type ReceivedNotification = {
+  id: number;
+  fromUser: User;
+  action?: string;
+  message: string;
+  createdAt: Date;
+  type: NotificationType;
+  status: NotificationStatus;
 };
