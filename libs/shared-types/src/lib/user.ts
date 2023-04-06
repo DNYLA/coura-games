@@ -53,6 +53,7 @@ export type ChatData = {
 export type PartialInbox = {
   id: number;
   lastMessage: string;
+  lastSenderId: number;
   read: boolean;
   user: User;
   messages: Message[];

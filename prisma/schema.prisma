@@ -66,18 +66,6 @@ model FriendRequests {
   @@id([userOneId, userTwoId])
 }
 
-model Notification {
-  id         Int                @id @default(autoincrement())
-  targetId   Int
-  targetUser User               @relation(fields: [targetId], references: [id])
-  fromId     Int?
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
-  // fromUser User?
-  type       NotificationType
-  status     NotificationStatus
-}
-
 model Inbox {
   id           Int                 @id @default(autoincrement())
   lastMessage  String
@@ -107,24 +95,35 @@ model Message {
   Inbox     Inbox    @relation(fields: [inboxId], references: [id])
 }
 
+model Notification {
+  id         Int                @id @default(autoincrement())
+  targetId   Int
+  targetUser User               @relation(fields: [targetId], references: [id])
+  fromId     Int?
+  action     String?
+  message    String
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  // fromUser User?
+  type       NotificationType
+  status     NotificationStatus @default(Unread)
+}
+
 enum FriendStatus {
   Accepted
   Rejected
   Pending
-  Blocked //Easier to handle block list here instead of creating a new relation
 }
 
 enum NotificationType {
   FriendRequest
-  SelfComment
-  FriendComment
+  ProfileComment
+  Invite
 }
 
 enum NotificationStatus {
   Unread
   Read
-  FriendRequest
-  GameInvite
   Cancelled //e.g Friend request retracted we dont want to classify
 }
 
