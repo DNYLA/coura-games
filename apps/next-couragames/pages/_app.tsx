@@ -7,6 +7,8 @@ import { useContext, useEffect } from 'react';
 import AppProviders from '../components/app-providers';
 import Chat from '../components/Chat';
 import Sidebar from '../components/sidebar';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const colors = {
   brand: {
@@ -33,6 +35,18 @@ function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <AppProviders>
       <ChakraProvider theme={config}>
+        <ToastContainer
+          theme="dark"
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <Container>
           {/* <Navbar /> */}
           <Sidebar />

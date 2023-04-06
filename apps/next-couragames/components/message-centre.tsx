@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { UserContext } from '@couragames/ui';
 import Chat from './Chat';
+import Notifications from './Notification';
 
 export function MessageCentre() {
   // const [isOpen, setIsOpen] = useState(false);
@@ -73,7 +74,7 @@ export function MessageCentre() {
                 <Box></Box>
               </TabPanel>
               <TabPanel>
-                <p>Notificaitions</p>
+                <Notifications />
               </TabPanel>
             </TabPanels>
           </Tabs>
