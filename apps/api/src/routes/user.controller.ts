@@ -1,6 +1,11 @@
-import { FriendService, UserService } from '@couragames/api/services';
+import {
+  FriendService,
+  NotificationService,
+  UserService,
+} from '@couragames/api/services';
 import { Router } from 'express';
 import { CommentsService } from '@couragames/api/services';
+import { NotificationType } from '@prisma/client';
 
 // import * as getStream from 'into-stream';
 
@@ -69,6 +74,13 @@ router.post('/:username/comment', async (req, res) => {
       data.message
     );
     res.send(newComment);
+
+    NotificationService.createNotification({
+      targetId: newComment.toUserId,
+      fromId: user.id,
+      action: `/member/${userName}`,
+      type: NotificationType.ProfileComment,
+    });
   } catch {
     res.sendStatus(500);
   }
