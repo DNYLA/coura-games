@@ -1,4 +1,9 @@
-import { FriendService } from '@couragames/api/services';
+import {
+  FriendService,
+  NotificationService,
+  UserService,
+} from '@couragames/api/services';
+import { NotificationType } from '@prisma/client';
 import { Router } from 'express';
 
 const router = Router();
@@ -12,9 +17,15 @@ router.post('/add/', async (req, res) => {
   if (!user) return res.send(403);
 
   await FriendService.addFriend(user.id, id);
-
+  const username = await UserService.getUser(id);
   res.sendStatus(200);
-
+  NotificationService.createNotification({
+    targetId: id,
+    fromId: user.id,
+    action: `/member/${username}`,
+    message: `${user.username} added you as a friend.`,
+    type: NotificationType.FriendRequest,
+  });
   // res.send('Test');
 });
 
