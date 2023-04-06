@@ -1,5 +1,7 @@
 import { WrapItem, Avatar, AvatarBadge, Box } from '@chakra-ui/react';
 import { PartialInbox, User } from '@couragames/shared-types';
+import { UserContext } from '@couragames/ui';
+import { useContext } from 'react';
 
 export interface MessageListProps {
   setId: any;
@@ -7,6 +9,32 @@ export interface MessageListProps {
 }
 
 export default function ChatMessages({ setId, inboxes }: MessageListProps) {
+  const { user } = useContext(UserContext);
+
+  const getMessageStyle = (
+    read: boolean,
+    lastSender: number,
+    inboxId?: number
+  ) => {
+    const defaultStyle = {
+      fontSize: '13px',
+      color: 'rgba(255,255,255,0.75)',
+      fontWeight: '400',
+    };
+    console.log(`${inboxId} -> ${user.id}:${lastSender}`);
+
+    if (read) return defaultStyle;
+    if (lastSender === user.id) {
+      return defaultStyle;
+    }
+
+    defaultStyle.fontSize = '15px';
+    defaultStyle.fontWeight = '800';
+    // defaultStyle.color = 'rgba(243, 230, 230, 0.75)';
+
+    return defaultStyle;
+  };
+
   return (
     <Box maxH={'100%'} overflow={'auto'}>
       {inboxes.map((inbox, i) => (
@@ -35,7 +63,9 @@ export default function ChatMessages({ setId, inboxes }: MessageListProps) {
             onClick={() => setId(inbox.user.username)}
           >
             <span style={{ fontWeight: '500' }}>{inbox.user.username}</span>
-            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.75)' }}>
+            <span
+              style={getMessageStyle(inbox.read, inbox.lastSenderId, inbox.id)}
+            >
               {inbox.lastMessage}
             </span>
           </Box>
