@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
+
 interface UserStatsProps {
-  name: string;
+  userStats: object;
+  rating: number;
 }
 
 type StatInfo = {
@@ -10,58 +12,36 @@ type StatInfo = {
   value: string | number;
   previous: string | number;
 };
-export function UserStats() {
-  const [prevTitle, setPrevTitle] = useState('Last Week -');
-  const stats: StatInfo[] = [
-    {
-      title: 'Rating',
-      value: '386',
-      previous: 286,
-    },
-    {
-      title: 'Time',
-      value: '32 hrs',
-      previous: '36 hrs',
-    },
-    {
-      title: 'Total Games',
-      value: 815,
-      previous: 32,
-    },
-    {
-      title: 'Tic Tac Toe',
-      value: '46 wins',
-      previous: '18 wins',
-    },
-    {
-      title: 'Memory Game',
-      value: '15 wins',
-      previous: '25 wins',
-    },
-    {
-      title: 'Connect Four',
-      value: '12 wins',
-      previous: '50 wins',
-    },
-  ];
+export function UserStats({ userStats, rating }: UserStatsProps) {
+  const generateStats = () => {
+    return Object.keys(userStats).map((stat, i) => (
+      <GridItem key={stat}>
+        <div className="grid_title">
+          <p>{stat}</p>
+          {/* <BsThreeDots /> */}
+        </div>
+        <div className="stat_info">
+          <h3>{userStats[stat as keyof typeof userStats] as string}</h3>
+          {/* <span>{prevTitle}</span> */}
+        </div>
+      </GridItem>
+    ));
+  };
 
   return (
     <Container>
-      <TitleItem>Title Container</TitleItem>
-      {stats.map((stat) => (
-        <GridItem key={stat.title}>
-          <div className="grid_title">
-            <p>{stat.title}</p>
-            {/* <BsThreeDots /> */}
-          </div>
-          <div className="stat_info">
-            <h3>{stat.value}</h3>
-            <span>
-              {prevTitle} {stat.previous}
-            </span>
-          </div>
-        </GridItem>
-      ))}
+      {/* <TitleItem>Title Container</TitleItem> */}
+      <GridItem>
+        <div className="grid_title">
+          <p>Rating</p>
+          {/* <BsThreeDots /> */}
+        </div>
+        <div className="stat_info">
+          <h3>{rating}</h3>
+        </div>
+      </GridItem>
+
+      {generateStats()}
     </Container>
   );
 }
@@ -70,10 +50,13 @@ const Container = styled.div`
   display: grid;
   padding: 15px;
   font-family: 'Rubik', sans-serif;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   background-color: hsl(226, 43%, 10%);
   margin-top: 30px;
   border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
   /* padding-top: 0px; */
 `;
 
@@ -81,12 +64,13 @@ const GridItem = styled.div`
   display: flex;
   flex-direction: column;
   padding: 15px 25px;
-  min-height: 155px;
+  min-height: 125px;
   margin: 10px 15px;
   background-color: hsl(235, 46%, 20%);
   color: white;
   border-radius: 20px;
   justify-content: space-between;
+  /* gap: 25px; */
 
   svg {
     cursor: pointer;
