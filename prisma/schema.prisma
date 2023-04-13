@@ -41,6 +41,13 @@ model Comment {
   updatedAt DateTime? @updatedAt
 }
 
+model Match {
+  id       Int           @id @default(autoincrement())
+  players  MatchPlayer[]
+  playback Json?
+  type     GameType
+}
+
 model MatchPlayer {
   matchId Int
   userId  Int
@@ -49,13 +56,6 @@ model MatchPlayer {
   Match   Match? @relation(fields: [matchId], references: [id])
 
   @@id([matchId, userId])
-}
-
-model Match {
-  id       Int           @id @default(autoincrement())
-  players  MatchPlayer[]
-  playback Json?
-  type     GameType
 }
 
 model FriendRequests {
