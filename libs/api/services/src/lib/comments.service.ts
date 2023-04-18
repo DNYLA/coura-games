@@ -8,6 +8,8 @@ export class CommentsService {
     page?: number
   ): Promise<Comment[]> {
     const userId = await UserService.userIdFromName(username);
+    if (!userId) return null;
+
     const comments = await prisma.comment.findMany({
       where: { toUserId: userId },
       orderBy: { createdAt: 'desc' },

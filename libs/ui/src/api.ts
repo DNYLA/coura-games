@@ -69,3 +69,6 @@ export const fetchLeaderboards = () => AXIOS.get<LeagueTable>(`/leaderboard/`);
 
 export const addFriend = (id: number) =>
   AXIOS.post<void>(`/friends/add?id=${id}`);
+
+export const searchUsers = (name: string) =>
+  AXIOS.get<User[]>(`/member?search=${name}`);

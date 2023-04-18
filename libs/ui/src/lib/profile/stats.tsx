@@ -14,6 +14,7 @@ type StatInfo = {
 };
 export function UserStats({ userStats, rating }: UserStatsProps) {
   const generateStats = () => {
+    if (!userStats) return <></>;
     return Object.keys(userStats).map((stat, i) => (
       <GridItem key={stat}>
         <div className="grid_title">

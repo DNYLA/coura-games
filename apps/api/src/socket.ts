@@ -1,4 +1,4 @@
-import { SocketService } from '@couragames/api/services';
+import { NotificationService, SocketService } from '@couragames/api/services';
 import {
   handleGameMove,
   handleLobbyEvent,
@@ -6,6 +6,7 @@ import {
 } from '@couragames/game-logic';
 import {
   Games,
+  InviteInfo,
   LobbyEvent,
   RPSMove,
   Socket,
@@ -42,6 +43,10 @@ export const socketEventHandler = (
 
     socket.on('request_friend_data', () => {
       SocketService.getFriendsList(socket);
+    });
+
+    socket.on('invite_player', (data: InviteInfo) => {
+      NotificationService.createInvite(socket, data);
     });
 
     socket.on(

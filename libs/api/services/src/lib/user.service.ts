@@ -4,15 +4,6 @@ import { BlockBlobClient } from '@azure/storage-blob';
 import fileUpload = require('express-fileupload');
 import { prisma } from './prisma.service';
 
-class Foo {
-  static async myMethod(b: string): Promise<number>;
-  static async myMethod(a: number): Promise<number>;
-  static async myMethod(a: number, b: string): Promise<number>;
-  static async myMethod(a: string | number, b?: string): Promise<number> {
-    return 15;
-  }
-}
-
 export class UserService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
@@ -54,7 +45,7 @@ export class UserService {
     });
 
     // user.avatarUrl = `${process.env.FILE_HOST}/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${user.avatarUrl}`;
-
+    if (!user) return null;
     return { ...user, joined: user.joined.getTime() };
   }
 
@@ -103,8 +94,23 @@ export class UserService {
         id: true,
       },
     });
-
+    if (!user) return null;
     return user.id;
+  }
+
+  static async searchUsersFromName(name: string) {
+    const users = await prisma.user.findMany({
+      where: { username: { startsWith: name, mode: 'insensitive' } },
+      take: 5,
+      select: {
+        id: true,
+        username: true,
+        status: true,
+        avatarUrl: true,
+      },
+    });
+
+    return users;
   }
 
   static async getManyUsers(userIds: number[], usernames?: string[]) {
