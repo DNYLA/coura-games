@@ -1,9 +1,10 @@
 import { Container, Flex, Stack } from '@chakra-ui/layout';
-import { Collapse, Heading } from '@chakra-ui/react';
+import { Box, Collapse, Heading } from '@chakra-ui/react';
 import { Game } from '../utils/types';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { GameCard } from '../components/Cards/GameCard';
+import Search from '../components/Search';
 
 // import HomeSkeletonCards from './card-skeleton';
 
@@ -40,6 +41,14 @@ export function Index() {
 
   return (
     <Flex direction="column" mt={25}>
+      <Flex
+        width={'1000px'}
+        display={'flex'}
+        justifyContent={'center'}
+        margin={'0 auto'}
+      >
+        <Search />
+      </Flex>
       <Container mb={5} minW={'90vw'}>
         <Heading mb={2}>Popular</Heading>
         <Stack direction="row" alignItems="center" overflowX="auto">
@@ -58,7 +67,7 @@ export function Index() {
         </Stack>
       </Container>
       <Container mt={10} mb={5} minW={'90vw'}>
-        <Heading mb={2}>Recently Created</Heading>
+        <Heading mb={2}>Your Favourites</Heading>
         <Stack direction="row" alignItems="center" overflowX="auto">
           {!isLoading &&
             games

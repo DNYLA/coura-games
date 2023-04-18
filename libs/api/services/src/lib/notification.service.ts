@@ -4,6 +4,8 @@ import {
   PartialInbox,
   SocketData,
   ReceivedNotification,
+  InviteInfo,
+  getGameInfoFromType,
 } from '@couragames/shared-types';
 import {
   Comment,
@@ -61,5 +63,20 @@ export class NotificationService {
 
     // const sockets = await SocketService.getUserConnectedSockets(notif.targetId);
     SocketService.emitAll(notif.targetId, 'notification', notification);
+  }
+
+  static async createInvite(socket, data: InviteInfo) {
+    const fromUser = await UserService.getUser(data.fromId);
+    const { name, redirect } = getGameInfoFromType(data.type);
+
+    const notifInfo: CreateNotification = {
+      targetId: data.targetId,
+      fromId: fromUser.id,
+      message: `You have been invited to a game of ${name} from ${fromUser.username}`,
+      type: 'Invite',
+      action: `/play/${redirect}?lobby=${data.lobbyId}`,
+    };
+
+    this.createNotification(notifInfo);
   }
 }

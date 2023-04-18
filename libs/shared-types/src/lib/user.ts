@@ -4,6 +4,7 @@ import {
   NotificationType,
   Prisma,
 } from '@prisma/client';
+import { Games } from './sockets';
 
 export type PublicUser = {
   id: number;
@@ -72,4 +73,11 @@ export type ReceivedNotification = {
   createdAt: Date;
   type: NotificationType;
   status: NotificationStatus;
+};
+
+export type InviteInfo = {
+  lobbyId: number;
+  fromId: number;
+  targetId: number;
+  type: Games;
 };
