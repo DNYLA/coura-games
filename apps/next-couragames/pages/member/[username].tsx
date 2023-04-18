@@ -28,12 +28,23 @@ export default function MemberProfile() {
   useEffect(() => {
     if (Array.isArray(username) || !user) return;
     if (!username || !user.username) return;
+    console.log('On Profile');
 
     fetchUserProfile(username ?? user.username)
       .then(({ data }) => {
+        console.log('On 2');
+
+        if (!data) {
+          router.push('/test');
+          return;
+        }
         setMember(data);
+        setProfileLoading(false);
       })
-      .finally(() => setProfileLoading(false));
+      .catch(() => {
+        setTimeout(() => router.push('/'), 1000);
+      })
+      .finally(() => console.log('Done'));
 
     fetchComments(username ?? user.username)
       .then(({ data }) => {
@@ -66,7 +77,11 @@ export default function MemberProfile() {
     <Profile>
       <Container>
         <Main>
-          <ProfileHeader member={member} selfName={user.username} />
+          <ProfileHeader
+            member={member}
+            selfName={user.username}
+            friendsAmount={member.friends.length}
+          />
           <UserStats
             userStats={member.stats as object}
             rating={member.points}

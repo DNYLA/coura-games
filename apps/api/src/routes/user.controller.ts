@@ -12,7 +12,17 @@ import { NotificationType } from '@prisma/client';
 const router = Router();
 
 router.get('/', async (req, res) => {
-  res.send('Yourself');
+  const searchTerm = req.query.search as string;
+  console.log(searchTerm);
+  if (!searchTerm) {
+    res.send([]);
+    return;
+  }
+
+  const results = await UserService.searchUsersFromName(searchTerm);
+  console.log(results);
+  if (!results) res.send([]);
+  else res.send(results);
 });
 
 router.get('/:username', async (req, res) => {

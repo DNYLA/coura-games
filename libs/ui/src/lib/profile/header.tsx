@@ -11,6 +11,7 @@ import { addFriend } from '../../api';
 interface HeaderProps {
   member: PublicUser;
   selfName: string;
+  friendsAmount: number;
 }
 
 enum ButtonType {
@@ -55,7 +56,11 @@ const ActionButton = styled.button<{ action: ButtonType }>`
   }
 `;
 
-export function ProfileHeader({ member, selfName }: HeaderProps) {
+export function ProfileHeader({
+  member,
+  selfName,
+  friendsAmount,
+}: HeaderProps) {
   const { user } = useContext(UserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -117,7 +122,7 @@ export function ProfileHeader({ member, selfName }: HeaderProps) {
         </StatItem>{' '} */}
           <Item>
             <h3>Followers</h3>
-            <p>33</p>
+            <p>{friendsAmount}</p>
           </Item>
           <Item>
             <h3>Joined</h3>

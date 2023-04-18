@@ -5,6 +5,7 @@ import LobbySettings from '../../components/lobby/lobby-settings';
 import SocketContext from '../../context/socket';
 import { getDisplayName } from '../../utils/helpers';
 import React, { useContext, useEffect } from 'react';
+import InviteList from './invite-list';
 
 export interface ActiveLobbyProps {
   lobby: ClientLobby;
@@ -54,7 +55,10 @@ export default function ActiveLobby({
       <Box>{renderPlayers()}</Box>
 
       {lobby.isHost && (
-        <LobbySettings lobby={lobby} setLobby={setLobby} game={game} />
+        <>
+          <InviteList lobby={lobby} setLobby={setLobby} game={game} />
+          <LobbySettings lobby={lobby} setLobby={setLobby} game={game} />
+        </>
       )}
     </StyledHome>
   );
