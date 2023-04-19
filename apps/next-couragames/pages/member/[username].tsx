@@ -16,20 +16,12 @@ import {
   PublicUser,
   MatchPreview,
 } from '@couragames/shared-types';
-import {
-  Avatar,
-  Box,
-  Button,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-  Stack,
-  Table,
-  Td,
-  Th,
-  Tr,
-} from '@chakra-ui/react';
+import { Avatar, Skeleton } from '@chakra-ui/react';
 import Link from 'next/link';
+
+import { StatsSkeleton } from '@couragames/ui';
+import SocketContext from '../../context/socket';
+
 export default function MemberProfile() {
   const router = useRouter();
   const { username } = router.query;
@@ -44,7 +36,7 @@ export default function MemberProfile() {
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
   const [matchesLoading, setMatchesLoading] = useState(true);
-
+  const socket = useContext(SocketContext).socket;
   useEffect(() => {
     if (Array.isArray(username) || !user) return;
     if (!username || !user.username) return;
@@ -80,6 +72,14 @@ export default function MemberProfile() {
         setMatches(data);
       })
       .finally(() => setTimeout(() => setMatchesLoading(false), 3000));
+
+    socket?.on(`new_comment_${username}`, (comments: Comments) => {
+      setComments(comments);
+    });
+
+    return () => {
+      socket?.off(`new_comment_${username}`);
+    };
   }, [username, user, router]);
 
   const handleNewComment = (comment: Comment) => {
@@ -106,6 +106,7 @@ export default function MemberProfile() {
             <ProfileHeader member={member} selfName={user.username} />
           </Skeleton>
 
+          <StatsSkeleton isLoading={profileLoading} />
           <UserStats
             userStats={member?.stats as object}
             rating={member?.points}

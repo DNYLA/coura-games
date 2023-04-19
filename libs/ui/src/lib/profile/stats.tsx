@@ -1,8 +1,23 @@
-import { Skeleton, SkeletonText } from '@chakra-ui/react';
+import {
+  Box,
+  SimpleGrid,
+  Skeleton,
+  SkeletonText,
+  Container as ChakraContainer,
+} from '@chakra-ui/react';
 import { ConvertStats } from '@couragames/shared-types';
 import styled from '@emotion/styled';
+import StatsCard from './stat-card';
+import {
+  FcGlobe,
+  FcPhone,
+  FcPhoneAndroid,
+  FcRating,
+  FcSelfServiceKiosk,
+} from 'react-icons/fc';
 import React, { useState } from 'react';
-import { BsThreeDots } from 'react-icons/bs';
+import { BsPerson, BsStar, BsThreeDots } from 'react-icons/bs';
+import { MdMusicNote } from 'react-icons/md';
 
 interface UserStatsProps {
   userStats: object;
@@ -14,47 +29,31 @@ export function UserStats({ userStats, rating, isLoading }: UserStatsProps) {
   const generateStats = () => {
     if (!userStats) return <></>;
     const stats = ConvertStats(userStats);
+
     return stats.map((stat, i) => (
-      <GridItem key={stat.displayText}>
-        <div className="grid_title">
-          <p>{stat.displayText}</p>
-          {/* <BsThreeDots /> */}
-        </div>
-        <div className="stat_info">
-          <h3>{stat.value}</h3>
-          {/* <span>{prevTitle}</span> */}
-        </div>
-      </GridItem>
+      <StatsCard
+        title={stat.displayText}
+        stat={stat.value.toString()}
+        icon={<FcSelfServiceKiosk size={'3em'} />}
+      />
     ));
   };
 
-  return (
-    <Container>
-      {/* <TitleItem>Title Container</TitleItem> */}
-      {!isLoading && (
-        <GridItem>
-          <div className="grid_title">
-            <p>Rating</p>
-            {/* <BsThreeDots /> */}
-          </div>
-          <div className="stat_info">
-            <h3>{rating}</h3>
-          </div>
-        </GridItem>
-      )}
-
-      {!isLoading && generateStats()}
-      {isLoading &&
-        new Array(6).fill(0).map((key) => (
-          <GridItem key={key}>
-            <Skeleton height="20px" width={'50%'} />
-            <div className="stat_info">
-              <Skeleton height="20px" />
-              {/* <span>{prevTitle}</span> */}
-            </div>
-          </GridItem>
-        ))}
-    </Container>
+  return !isLoading ? (
+    <ChakraContainer maxWidth={'7xl'} mt={5} mb={10}>
+      <Box maxW="7xl" mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
+          <StatsCard
+            title={'Rating'}
+            stat={rating?.toString()}
+            icon={<FcRating size={'3em'} />}
+          />
+          {generateStats()}
+        </SimpleGrid>
+      </Box>
+    </ChakraContainer>
+  ) : (
+    <></>
   );
 }
 
