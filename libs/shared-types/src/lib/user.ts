@@ -29,6 +29,7 @@ export type User = {
   status?: string;
   avatarUrl?: string;
   online?: boolean;
+  stats?: object;
 };
 
 export type UpdateUser = {
