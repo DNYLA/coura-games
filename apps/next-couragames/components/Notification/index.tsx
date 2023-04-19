@@ -53,10 +53,7 @@ export default function Notifications() {
   const handleNotification = useCallback(
     (notification: ReceivedNotification) => {
       const tempNotifs = [...notifications];
-      console.log(tempNotifs);
       tempNotifs.unshift(notification);
-      console.log(tempNotifs);
-      console.log('Done');
       setNotifications(tempNotifs);
 
       toast.info(notification.message, {
@@ -88,8 +85,6 @@ export default function Notifications() {
   }, [socket, eventsHandled, notifications, handleNotification]);
 
   const handleClick = (notif: ReceivedNotification) => {
-    console.log('handling');
-    console.log(notif.action);
     if (notif.action) router.push(notif.action);
   };
 

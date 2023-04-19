@@ -21,7 +21,6 @@ export default function ChatMessages({ setId, inboxes }: MessageListProps) {
       color: 'rgba(255,255,255,0.75)',
       fontWeight: '400',
     };
-    console.log(`${inboxId} -> ${user.id}:${lastSender}`);
 
     if (read) return defaultStyle;
     if (lastSender === user.id) {

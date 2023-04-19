@@ -41,9 +41,6 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
   //runs out
   useEffect(() => {
     //Check if lobby is valid
-    console.log('here');
-    console.log(lobby);
-
     socket?.on('player_joined', (player) => {
       const curPlayers = [...lobby.players];
       curPlayers.push(player);
@@ -53,8 +50,6 @@ export function RPSGame({ lobby, setLobby }: HomeProps) {
     socket?.on('rps_round_started', (info) => {
       setScore(info);
       setResults(null);
-      console.log(info);
-      console.log('Started Game');
     });
 
     socket?.on('rps_round_ended', (data) => {

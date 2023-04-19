@@ -27,7 +27,7 @@ export default function League() {
     let index = obj.indexOf(type) + 1;
     if (index === obj.length) index = 0;
     const value = obj.find((_, i) => i === index);
-    console.log(value);
+    // console.log(value);
     setType(value);
   };
 

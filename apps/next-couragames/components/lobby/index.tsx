@@ -36,13 +36,11 @@ export function Lobby({ redirect, game, children }: HomeProps) {
     //Called when someone hosts a game
     socket?.on('lobby_info', (data) => {
       router.push(`?lobby=${data.id}`);
-      console.log(data);
       setLobbyInfo({ ...data, isHost: true });
     });
 
     //Called when client attempts to connect
     socket?.on('join_lobby', (data) => {
-      console.log(data);
       if (data.invalid) {
         setErrMessage(data.reason);
         // setTimeout(() => setErrMessage(null), 5000);

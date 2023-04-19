@@ -30,9 +30,6 @@ export default function TicTacToe() {
   const { lobby } = router.query;
   useEffect(() => {
     socket?.on('tictac_nextround', (info: TicTacToeInfo) => {
-      console.log('Started Game');
-      console.log(info);
-      console.log(info.board);
       const { p1Score, p2Score, draws, isCrosses, timer } = info;
       setBoard(info.board);
       setGameInfo({ p1Score, p2Score, draws, isCrosses, timer });
@@ -67,7 +64,6 @@ export default function TicTacToe() {
     socket?.on('tictactoe_replay', (amount: number) => {
       const message =
         amount !== 2 ? `Play Again (${amount ?? 0}/2)` : 'Restarting...';
-      console.log(amount);
       if (amount == 0) {
         setRestartInfo({ ...restartInfo, ended: false });
         return;
@@ -107,7 +103,6 @@ export default function TicTacToe() {
   // };
 
   const handlePlayAgain = () => {
-    console.log('yes');
     socket.emit('tictactoe_playagain', { id: lobby });
   };
 

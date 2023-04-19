@@ -24,7 +24,6 @@ const useAuth = () => {
       .catch((err) => {
         const res = err.response;
         if (res.status === 401) {
-          console.log('Invalid Credentails');
         }
       });
   }, []);
@@ -44,8 +43,6 @@ const useAuth = () => {
       })
       .catch((err) => {
         const res = err.response;
-        console.log(res);
-        console.log('Error');
         setError({ show: true, message: res.data.message });
       });
   }, []);
@@ -59,7 +56,6 @@ const useAuth = () => {
         .catch((err) => {
           const res = err.response;
           if (res.status === 403 || res.stats === 500) {
-            console.log('Invalid Credentails');
             //Set Error Message
           }
         });
@@ -77,7 +73,6 @@ const useAuth = () => {
       })
       .catch((err) => {
         setLoading(false);
-        console.log(err);
       });
   }, [login, signup]); //Login & Logout only change on mount so this is only called once.
 
