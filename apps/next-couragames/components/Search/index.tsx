@@ -39,7 +39,6 @@ export default function Search() {
 
     gameData.forEach((game) => {
       const split = searchText.split(' ');
-      console.log(split);
       for (let i = 0; i < split.length; i++) {
         const word = split[i];
         if (word === '' || word === ' ') continue;
