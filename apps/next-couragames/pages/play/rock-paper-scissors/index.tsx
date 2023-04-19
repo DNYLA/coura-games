@@ -49,13 +49,11 @@ export function RPSLobby(props: HomeProps) {
     //Called when someone hosts a game
     socket?.on('lobby_info', (data) => {
       router.push(`?lobby=${data.id}`);
-      console.log(data);
       setLobbyInfo({ ...data, isHost: true });
     });
 
     //Called when client attempts to connect
     socket?.on('join_lobby', (data) => {
-      console.log(data);
       if (data.invalid) {
         setErrMessage(data.reason);
         // setTimeout(() => setErrMessage(null), 5000);
@@ -86,11 +84,9 @@ export function RPSLobby(props: HomeProps) {
 
   const showJoin = () => {
     // socket.emit('lobby', { game: Games.RPS, type: LobbyEvents.Join, id: 5 });
-    console.log('Joining Game');
     setShowInput(!showInput);
   };
 
-  console.log(lobby);
   if (lobby) {
     if (typeof lobby !== 'string') {
       router.push('/play/rock-paper-scissors/');

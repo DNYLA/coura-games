@@ -4,6 +4,7 @@ import {
   Comments,
   Leaderboard,
   LeagueTable,
+  MatchPreview,
   PublicUser,
   UpdateUser,
   User,
@@ -55,6 +56,9 @@ export const updateUser = (
     }
   );
 };
+
+export const fetchMatches = (username: string) =>
+  AXIOS.get<MatchPreview[]>(`/member/${username}/matches`);
 
 export const fetchComments = (username: string, page?: number) =>
   AXIOS.get<Comments>(`/member/${username}/comment?page=${page ?? 0}`);

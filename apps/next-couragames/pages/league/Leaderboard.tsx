@@ -53,7 +53,7 @@ export default function Leaderboard({ title, data, users }: LeaderboardProps) {
     );
   };
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <Container>

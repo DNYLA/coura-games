@@ -46,6 +46,7 @@ model Match {
   players  MatchPlayer[]
   playback Json?
   type     GameType
+  createdAt DateTime @default(now())
 }
 
 model MatchPlayer {

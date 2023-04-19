@@ -32,8 +32,6 @@ export default function LobbySettings({
       type: LobbyEvents.Start,
       id: lobby.id,
     });
-
-    console.log('Starting Game');
   };
 
   return (

@@ -3,6 +3,7 @@ import { stat } from 'fs';
 import { UserService } from './user.service';
 import { prisma } from './prisma.service';
 import { RedisService } from './redis.service';
+import { MatchPreview } from '@couragames/shared-types';
 
 export class MatchService {
   static async createMatch(
@@ -75,5 +76,48 @@ export class MatchService {
     }
     //Return Match?
     return match;
+  }
+
+  static async getPreviousMatches(userId: number, limit?: number) {
+    const matches = await prisma.match.findMany({
+      where: { players: { some: { userId } } },
+      include: {
+        players: {
+          select: {
+            result: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: limit ?? 15,
+    });
+
+    const formattedMatches: MatchPreview[] = [];
+
+    matches.forEach((match) => {
+      const opponent = match.players.find((p) => p.user.id !== userId);
+      const result: Result =
+        opponent.result === Result.Win
+          ? Result.Loss
+          : opponent.result === Result.Loss
+          ? Result.Win
+          : Result.Draw;
+      formattedMatches.push({
+        id: match.id,
+        result: result,
+        playback: undefined,
+        opponent: opponent.user,
+        timestamp: match.createdAt.getTime(),
+      });
+    });
+
+    return formattedMatches;
   }
 }
