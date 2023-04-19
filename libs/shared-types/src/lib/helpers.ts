@@ -29,6 +29,8 @@ export function getGameInfoFromType(type: Games): GameInfo {
 }
 
 export function ConvertStats(stats: object): StatInfo[] {
+  if (!stats) return [];
+
   const statArray: StatInfo[] = [];
   Object.keys(stats).map((stat) =>
     statArray.push({
