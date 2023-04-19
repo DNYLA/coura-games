@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { prisma } from './prisma.service';
 import { RedisService } from './redis.service';
 import { MatchPreview } from '@couragames/shared-types';
+import { isValidUrl } from './utils/helpers';
 
 export class MatchService {
   static async createMatch(
@@ -109,11 +110,15 @@ export class MatchService {
           : opponent.result === Result.Loss
           ? Result.Win
           : Result.Draw;
+      let newAvatarUrl: string = undefined;
+      if (!isValidUrl(opponent.user.avatarUrl))
+        newAvatarUrl = `${process.env.FILE_HOST}/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${opponent.user.avatarUrl}`;
+
       formattedMatches.push({
         id: match.id,
         result: result,
         playback: undefined,
-        opponent: opponent.user,
+        opponent: { ...opponent.user, avatarUrl: newAvatarUrl },
         timestamp: match.createdAt.getTime(),
       });
     });

@@ -35,8 +35,9 @@ export function Index() {
   ]);
 
   const getFavouriteGames = () => {
-    const stats = ConvertStats(user.stats);
+    const stats = ConvertStats(user?.stats);
     const favouriteGames: Game[] = [];
+    if (!stats) return [];
     stats.forEach((stat) => {
       if (stat.displayText === 'TicTacToe')
         favouriteGames.push(getGameByName('Tic Tac Toe'));
@@ -81,22 +82,24 @@ export function Index() {
           </Collapse>
         </Stack>
       </Container>
-      <Container mt={10} mb={5} minW={'90vw'}>
-        <Heading mb={2}>Your Favourites</Heading>
-        <Stack direction="row" alignItems="center" overflowX="auto">
-          {!isLoading &&
-            getFavouriteGames().map((game, i) => (
-              <GameCard
-                key={i}
-                handleClick={() => router.push(`/${game.name}`)}
-                game={game}
-              />
-            ))}
-          <Collapse in={isLoading} animateOpacity>
-            <HomeSkeleton isLoading={true} amount={4} />
-          </Collapse>
-        </Stack>
-      </Container>
+      {user && (
+        <Container mt={10} mb={5} minW={'90vw'}>
+          <Heading mb={2}>Your Favourites</Heading>
+          <Stack direction="row" alignItems="center" overflowX="auto">
+            {!isLoading &&
+              getFavouriteGames().map((game, i) => (
+                <GameCard
+                  key={i}
+                  handleClick={() => router.push(`/${game.name}`)}
+                  game={game}
+                />
+              ))}
+            <Collapse in={isLoading} animateOpacity>
+              <HomeSkeleton isLoading={true} amount={4} />
+            </Collapse>
+          </Stack>
+        </Container>
+      )}
     </Flex>
   );
 }

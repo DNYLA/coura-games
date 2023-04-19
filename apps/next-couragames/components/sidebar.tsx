@@ -98,15 +98,15 @@ export default function Sidebar() {
 
       {user && (
         <BottomNav>
-          <Link href={'/'}>
+          {/* <Link href={'/'}>
             <BsArrowBarLeft />
             <span>Collapse</span>
-          </Link>
+          </Link> */}
 
-          <Link href={'/settings'}>
+          {/* <Link href={'/settings'}>
             <FaCog />
             <span>Settings</span>
-          </Link>
+          </Link> */}
 
           <Link href={'/'}>
             <AltButton onClick={logout}>

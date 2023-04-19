@@ -3,6 +3,7 @@ import { Prisma, User } from '@prisma/client';
 import { BlockBlobClient } from '@azure/storage-blob';
 import fileUpload = require('express-fileupload');
 import { prisma } from './prisma.service';
+import { isValidUrl } from './utils/helpers';
 
 export class UserService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -42,6 +43,11 @@ export class UserService {
           },
         },
       },
+    });
+
+    user.friends.forEach((friend) => {
+      if (!isValidUrl(friend.avatarUrl))
+        friend.avatarUrl = `${process.env.FILE_HOST}/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${friend.avatarUrl}`;
     });
 
     // user.avatarUrl = `${process.env.FILE_HOST}/${process.env.AZURE_STORAGE_CONTAINER_NAME}/${user.avatarUrl}`;

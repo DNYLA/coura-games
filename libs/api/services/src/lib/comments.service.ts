@@ -1,4 +1,5 @@
 import { Comment, Prisma } from '@prisma/client';
+import { SocketService } from 'libs/api/services/src/lib/socket.service';
 import { prisma } from './prisma.service';
 import { UserService } from './user.service';
 
