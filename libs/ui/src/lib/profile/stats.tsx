@@ -1,4 +1,5 @@
 import { Skeleton, SkeletonText } from '@chakra-ui/react';
+import { ConvertStats } from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
@@ -9,22 +10,18 @@ interface UserStatsProps {
   isLoading: boolean;
 }
 
-type StatInfo = {
-  title: string;
-  value: string | number;
-  previous: string | number;
-};
 export function UserStats({ userStats, rating, isLoading }: UserStatsProps) {
   const generateStats = () => {
     if (!userStats) return <></>;
-    return Object.keys(userStats).map((stat, i) => (
-      <GridItem key={stat}>
+    const stats = ConvertStats(userStats);
+    return stats.map((stat, i) => (
+      <GridItem key={stat.displayText}>
         <div className="grid_title">
-          <p>{stat}</p>
+          <p>{stat.displayText}</p>
           {/* <BsThreeDots /> */}
         </div>
         <div className="stat_info">
-          <h3>{userStats[stat as keyof typeof userStats] as string}</h3>
+          <h3>{stat.value}</h3>
           {/* <span>{prevTitle}</span> */}
         </div>
       </GridItem>

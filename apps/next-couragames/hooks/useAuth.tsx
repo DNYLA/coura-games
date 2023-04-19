@@ -24,6 +24,7 @@ const useAuth = () => {
       .catch((err) => {
         const res = err.response;
         if (res.status === 401) {
+          console.log('error');
         }
       });
   }, []);

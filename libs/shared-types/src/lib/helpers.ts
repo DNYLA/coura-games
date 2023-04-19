@@ -6,6 +6,11 @@ export type GameInfo = {
   redirect: string;
 };
 
+export type StatInfo = {
+  displayText: string;
+  value: number;
+};
+
 export function getGameInfoFromType(type: Games): GameInfo {
   switch (type) {
     case Games.TicTacToe:
@@ -21,4 +26,18 @@ export function getGameInfoFromType(type: Games): GameInfo {
         redirect: 'rock-paper-scissors',
       };
   }
+}
+
+export function ConvertStats(stats: object): StatInfo[] {
+  const statArray: StatInfo[] = [];
+  Object.keys(stats).map((stat) =>
+    statArray.push({
+      displayText: stat,
+      value: stats[stat as keyof typeof stats] as number,
+    })
+  );
+
+  statArray.sort((a, b) => b.value - a.value);
+
+  return statArray;
 }
