@@ -49,6 +49,9 @@ export default function MemberProfile() {
     if (Array.isArray(username) || !user) return;
     if (!username || !user.username) return;
     console.log('On Profile');
+    setMatchesLoading(true);
+    setProfileLoading(true);
+    setCommentsLoading(true);
 
     fetchUserProfile(username ?? user.username)
       .then(({ data }) => {
@@ -59,7 +62,7 @@ export default function MemberProfile() {
           return;
         }
         setMember(data);
-        setTimeout(() => setProfileLoading(false), 1500);
+        setTimeout(() => setProfileLoading(false), 1000);
       })
       .catch(() => {
         setTimeout(() => router.push('/'), 1000);
@@ -70,14 +73,14 @@ export default function MemberProfile() {
       .then(({ data }) => {
         setComments(data);
       })
-      .finally(() => setTimeout(() => setCommentsLoading(false), 3000));
+      .finally(() => setTimeout(() => setCommentsLoading(false), 2500));
 
     fetchMatches(username ?? user.username)
       .then(({ data }) => {
         setMatches(data);
       })
-      .finally(() => setTimeout(() => setMatchesLoading(false), 4500));
-  }, [username, user]);
+      .finally(() => setTimeout(() => setMatchesLoading(false), 3000));
+  }, [username, user, router]);
 
   const handleNewComment = (comment: Comment) => {
     const curComments = [...comments.comments];

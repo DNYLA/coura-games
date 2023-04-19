@@ -2,16 +2,19 @@ import { Container, Flex, Stack } from '@chakra-ui/layout';
 import { Box, Collapse, Heading } from '@chakra-ui/react';
 import { Game } from '../utils/types';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { GameCard } from '../components/Cards/GameCard';
 import Search from '../components/Search';
+import HomeSkeleton from '../components/home-skeleton';
+import { ConvertStats } from '@couragames/shared-types';
+import { UserContext } from '@couragames/ui';
 
 // import HomeSkeletonCards from './card-skeleton';
 
 export function Index() {
   const router = useRouter();
-  // const { user, login } = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const { user, login } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [games, setGames] = useState<Game[]>([
     {
@@ -31,13 +34,26 @@ export function Index() {
     },
   ]);
 
-  // useEffect(() => {
-  //   getClashes(true, true).then(({ data }) => {
-  //     console.log(data);
-  //     setLists(data);
-  //     setTimeout(() => setIsLoading(false), 1500);
-  //   });
-  // }, []);
+  const getFavouriteGames = () => {
+    const stats = ConvertStats(user.stats);
+    const favouriteGames: Game[] = [];
+    stats.forEach((stat) => {
+      if (stat.displayText === 'TicTacToe')
+        favouriteGames.push(getGameByName('Tic Tac Toe'));
+      else if (stat.displayText === 'RPS')
+        favouriteGames.push(getGameByName('Rock, Paper, Scissors'));
+    });
+
+    return favouriteGames;
+  };
+
+  const getGameByName = (name: string) => {
+    return games.find((game) => game.name === name);
+  };
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 1500);
+  }, []);
 
   return (
     <Flex direction="column" mt={25}>
@@ -61,8 +77,7 @@ export function Index() {
               />
             ))}
           <Collapse in={isLoading} animateOpacity>
-            <div>Loading...</div>
-            {/* <HomeSkeletonCards isLoading={true} amount={6} /> */}
+            <HomeSkeleton isLoading={true} amount={6} />
           </Collapse>
         </Stack>
       </Container>
@@ -70,18 +85,16 @@ export function Index() {
         <Heading mb={2}>Your Favourites</Heading>
         <Stack direction="row" alignItems="center" overflowX="auto">
           {!isLoading &&
-            games
-              .filter((g) => g.new === true)
-              .map((game, i) => (
-                <GameCard
-                  key={i}
-                  handleClick={() => router.push(`/${game.name}`)}
-                  game={game}
-                />
-              ))}
-          {/* <Collapse in={isLoading} animateOpacity>
-            <HomeSkeletonCards isLoading={true} amount={6} />
-          </Collapse> */}
+            getFavouriteGames().map((game, i) => (
+              <GameCard
+                key={i}
+                handleClick={() => router.push(`/${game.name}`)}
+                game={game}
+              />
+            ))}
+          <Collapse in={isLoading} animateOpacity>
+            <HomeSkeleton isLoading={true} amount={4} />
+          </Collapse>
         </Stack>
       </Container>
     </Flex>
