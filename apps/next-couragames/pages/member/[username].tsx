@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { UserContext } from '@couragames/ui';
+import { fetchMatches, UserContext } from '@couragames/ui';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import {
@@ -8,8 +8,14 @@ import {
   fetchUserProfile,
   ProfileHeader,
   UserStats,
+  MatchHistory,
 } from '@couragames/ui';
-import { Comments, Comment, PublicUser } from '@couragames/shared-types';
+import {
+  Comments,
+  Comment,
+  PublicUser,
+  MatchPreview,
+} from '@couragames/shared-types';
 import { Avatar } from '@chakra-ui/react';
 import Link from 'next/link';
 export default function MemberProfile() {
@@ -17,6 +23,7 @@ export default function MemberProfile() {
   const { username } = router.query;
   const { user } = useContext(UserContext);
   const [member, setMember] = useState<PublicUser>(null);
+  const [matches, setMatches] = useState<MatchPreview[]>([]);
   const [comments, setComments] = useState<Comments>({
     comments: [],
     users: [],
@@ -24,6 +31,7 @@ export default function MemberProfile() {
 
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [matchesLoading, setMatchesLoading] = useState(true);
 
   useEffect(() => {
     if (Array.isArray(username) || !user) return;
@@ -51,6 +59,12 @@ export default function MemberProfile() {
         setComments(data);
       })
       .finally(() => setCommentsLoading(false));
+
+    fetchMatches(username ?? user.username)
+      .then(({ data }) => {
+        setMatches(data);
+      })
+      .finally(() => setMatchesLoading(false));
   }, [username, user]);
 
   if (commentsLoading || profileLoading) {
@@ -86,6 +100,7 @@ export default function MemberProfile() {
             userStats={member.stats as object}
             rating={member.points}
           />
+          <MatchHistory matches={matches} member={member} />
           <CommentsSection
             username={username}
             user={user}
@@ -97,7 +112,7 @@ export default function MemberProfile() {
         <Sidebar>
           <h1>Friends</h1>
           {member.friends.map((user) => (
-            <Link href={`/member/${user.username}`}>
+            <Link href={`/member/${user.username}`} key={user.username}>
               <FriendContainer>
                 <Avatar src={user.avatarUrl}></Avatar>
                 <span>{user.username}</span>

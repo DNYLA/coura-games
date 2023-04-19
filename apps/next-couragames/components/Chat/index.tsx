@@ -38,7 +38,6 @@ export default function Chat() {
     if (eventsHandled) return;
 
     socket?.on('friends_list', (data: ChatData) => {
-      console.log(data);
       setFriendsList(data.friends);
       setInboxes(data.inbox);
       setLoading(false);
@@ -53,9 +52,6 @@ export default function Chat() {
 
   const getInbox = (username: string) => {
     const inbox = inboxes.find((inbox) => inbox.user.username === username);
-    console.log(`found: `);
-    console.log(inboxes);
-    console.log(inbox);
 
     return inbox;
   };

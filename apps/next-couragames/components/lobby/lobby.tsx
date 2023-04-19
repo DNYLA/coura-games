@@ -44,8 +44,6 @@ export default function ActiveLobby({
       );
   };
 
-  console.log(`is Host ${lobby.isHost}`);
-
   return (
     <StyledHome>
       <Title>{getDisplayName(game)}</Title>

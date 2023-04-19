@@ -1,5 +1,6 @@
 import {
   FriendService,
+  MatchService,
   NotificationService,
   UserService,
 } from '@couragames/api/services';
@@ -29,7 +30,7 @@ router.get('/:username', async (req, res) => {
   console.log(req.user);
   const userName = req.params.username;
 
-  if (!userName) return res.sendStatus(400).send('No Username Provided');
+  if (!userName) return res.sendStatus(400);
   const user = await UserService.getUser(userName);
 
   if (!user) {
@@ -47,7 +48,7 @@ router.patch('/:username', async (req, res) => {
 
   if (!user || user.username.toLowerCase() !== userName)
     return res.sendStatus(403);
-  if (!userName) return res.sendStatus(400).send('No Username Provided');
+  if (!userName) return res.sendStatus(400);
   res.send(await UserService.updateUser(user.id, req.body, req.files));
   // res.send(user);
 });
@@ -55,7 +56,7 @@ router.patch('/:username', async (req, res) => {
 router.get('/:username/comment', async (req, res) => {
   const userName = req.params.username;
 
-  if (!userName) return res.sendStatus(400).send('No Username Provided');
+  if (!userName) return res.sendStatus(400);
   const comments = await CommentsService.getComments(userName);
 
   if (!comments || comments.length === 0) {
@@ -75,7 +76,7 @@ router.post('/:username/comment', async (req, res) => {
   const data = req.body;
   if (!user) return res.sendStatus(401);
   const userName = req.params.username;
-  if (!userName) return res.sendStatus(400).send('No Username Provided');
+  if (!userName) return res.sendStatus(400);
 
   try {
     const newComment = await CommentsService.createComment(
@@ -108,7 +109,7 @@ router.delete('/:username/comment', async (req, res) => {
   if (!user) return res.sendStatus(401);
 
   const userName = req.params.username;
-  if (!userName) return res.sendStatus(400).send('No Username Provided');
+  if (!userName) return res.sendStatus(400);
 
   try {
     const valid = await CommentsService.deleteComment(id, user.id);
@@ -119,6 +120,17 @@ router.delete('/:username/comment', async (req, res) => {
   }
 
   // res.send({ comments, users: userInfos });
+});
+
+router.get('/:username/matches', async (req, res) => {
+  const userName = req.params.username;
+
+  if (!userName) return res.sendStatus(400);
+  const user = await UserService.getUser(userName);
+  if (!user) return res.sendStatus(404);
+
+  const matches = await MatchService.getPreviousMatches(user.id, 15);
+  res.send(matches);
 });
 
 export { router };

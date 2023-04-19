@@ -1,3 +1,4 @@
+import { Result } from '@prisma/client';
 import { User } from './user';
 
 export type LeaderboardStat = {
@@ -23,3 +24,11 @@ export enum LeaderboardType {
   Weekly = 'weekly',
   Global = 'global',
 }
+
+export type MatchPreview = {
+  id: number;
+  playback: object;
+  opponent: User;
+  result: Result;
+  timestamp: number;
+};
