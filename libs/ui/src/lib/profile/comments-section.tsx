@@ -7,11 +7,13 @@ import styled from '@emotion/styled';
 import { UserComment } from './comment';
 import { useState } from 'react';
 import { postComment, deleteComment as deleteCommentAPI } from '@couragames/ui';
+import { Box, SkeletonCircle, SkeletonText } from '@chakra-ui/react';
 
 interface CommentsProps {
   username: string;
   user?: User;
   comments: CommentsType;
+  isLoading: boolean;
   addComment: (comment: Comment) => void;
   deleteComment: (id: number) => void;
 }
@@ -22,6 +24,7 @@ export function Comments({
   comments,
   addComment,
   deleteComment,
+  isLoading,
 }: CommentsProps) {
   const [message, setMessage] = useState('');
   const handlePost = async () => {
@@ -58,23 +61,31 @@ export function Comments({
           <button onClick={handlePost}>POST</button>
         </PostComment>
       )}
-      {comments.comments.map((comment) => {
-        const author = comments.users.find(
-          (user) => user.id === comment.authorId
-        );
+      {isLoading &&
+        new Array(5).fill(0).map((key) => (
+          <Box padding="6" boxShadow="lg" bg="white" key={key}>
+            <SkeletonCircle size="10" />
+            <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
+          </Box>
+        ))}
+      {!isLoading &&
+        comments.comments.map((comment) => {
+          const author = comments.users.find(
+            (user) => user.id === comment.authorId
+          );
 
-        if (!author) return <div key={comment.id}></div>;
+          if (!author) return <div key={comment.id}></div>;
 
-        return (
-          <UserComment
-            key={comment.id}
-            comment={comment}
-            handleDelete={handleDelete}
-            isOwner={user?.id === comment.authorId}
-            author={author}
-          />
-        );
-      })}
+          return (
+            <UserComment
+              key={comment.id}
+              comment={comment}
+              handleDelete={handleDelete}
+              isOwner={user?.id === comment.authorId}
+              author={author}
+            />
+          );
+        })}
     </Container>
   );
 }
