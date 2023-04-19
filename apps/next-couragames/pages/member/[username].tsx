@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { fetchMatches, UserContext } from '@couragames/ui';
+import { fetchMatches, SkeletonTable, UserContext } from '@couragames/ui';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import {
@@ -16,7 +16,19 @@ import {
   PublicUser,
   MatchPreview,
 } from '@couragames/shared-types';
-import { Avatar } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  Button,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+  Table,
+  Td,
+  Th,
+  Tr,
+} from '@chakra-ui/react';
 import Link from 'next/link';
 export default function MemberProfile() {
   const router = useRouter();
@@ -47,7 +59,7 @@ export default function MemberProfile() {
           return;
         }
         setMember(data);
-        setProfileLoading(false);
+        setTimeout(() => setProfileLoading(false), 1500);
       })
       .catch(() => {
         setTimeout(() => router.push('/'), 1000);
@@ -58,18 +70,14 @@ export default function MemberProfile() {
       .then(({ data }) => {
         setComments(data);
       })
-      .finally(() => setCommentsLoading(false));
+      .finally(() => setTimeout(() => setCommentsLoading(false), 3000));
 
     fetchMatches(username ?? user.username)
       .then(({ data }) => {
         setMatches(data);
       })
-      .finally(() => setMatchesLoading(false));
+      .finally(() => setTimeout(() => setMatchesLoading(false), 4500));
   }, [username, user]);
-
-  if (commentsLoading || profileLoading) {
-    return <div>Loading...</div>;
-  }
 
   const handleNewComment = (comment: Comment) => {
     const curComments = [...comments.comments];
@@ -91,35 +99,43 @@ export default function MemberProfile() {
     <Profile>
       <Container>
         <Main>
-          <ProfileHeader
-            member={member}
-            selfName={user.username}
-            friendsAmount={member.friends.length}
-          />
+          <Skeleton isLoaded={!profileLoading}>
+            <ProfileHeader member={member} selfName={user.username} />
+          </Skeleton>
+
           <UserStats
-            userStats={member.stats as object}
-            rating={member.points}
+            userStats={member?.stats as object}
+            rating={member?.points}
+            isLoading={profileLoading}
           />
-          <MatchHistory matches={matches} member={member} />
+          {matchesLoading && <SkeletonTable />}
+          {!matchesLoading && (
+            <MatchHistory matches={matches} member={member} />
+          )}
           <CommentsSection
             username={username}
             user={user}
             comments={comments}
             addComment={handleNewComment}
             deleteComment={handleDelete}
+            isLoading={commentsLoading}
           />
         </Main>
-        <Sidebar>
-          <h1>Friends</h1>
-          {member.friends.map((user) => (
-            <Link href={`/member/${user.username}`} key={user.username}>
-              <FriendContainer>
-                <Avatar src={user.avatarUrl}></Avatar>
-                <span>{user.username}</span>
-              </FriendContainer>
-            </Link>
-          ))}
-        </Sidebar>
+
+        <Skeleton isLoaded={!profileLoading}>
+          <Sidebar>
+            <h1>Friends</h1>
+            {!profileLoading &&
+              member.friends.map((user) => (
+                <Link href={`/member/${user.username}`} key={user.username}>
+                  <FriendContainer>
+                    <Avatar src={user.avatarUrl}></Avatar>
+                    <span>{user.username}</span>
+                  </FriendContainer>
+                </Link>
+              ))}
+          </Sidebar>
+        </Skeleton>
       </Container>
     </Profile>
   );

@@ -1,3 +1,4 @@
+import { Skeleton, SkeletonText } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
@@ -5,6 +6,7 @@ import { BsThreeDots } from 'react-icons/bs';
 interface UserStatsProps {
   userStats: object;
   rating: number;
+  isLoading: boolean;
 }
 
 type StatInfo = {
@@ -12,7 +14,7 @@ type StatInfo = {
   value: string | number;
   previous: string | number;
 };
-export function UserStats({ userStats, rating }: UserStatsProps) {
+export function UserStats({ userStats, rating, isLoading }: UserStatsProps) {
   const generateStats = () => {
     if (!userStats) return <></>;
     return Object.keys(userStats).map((stat, i) => (
@@ -32,17 +34,29 @@ export function UserStats({ userStats, rating }: UserStatsProps) {
   return (
     <Container>
       {/* <TitleItem>Title Container</TitleItem> */}
-      <GridItem>
-        <div className="grid_title">
-          <p>Rating</p>
-          {/* <BsThreeDots /> */}
-        </div>
-        <div className="stat_info">
-          <h3>{rating}</h3>
-        </div>
-      </GridItem>
+      {!isLoading && (
+        <GridItem>
+          <div className="grid_title">
+            <p>Rating</p>
+            {/* <BsThreeDots /> */}
+          </div>
+          <div className="stat_info">
+            <h3>{rating}</h3>
+          </div>
+        </GridItem>
+      )}
 
-      {generateStats()}
+      {!isLoading && generateStats()}
+      {isLoading &&
+        new Array(6).fill(0).map((key) => (
+          <GridItem key={key}>
+            <Skeleton height="20px" width={'50%'} />
+            <div className="stat_info">
+              <Skeleton height="20px" />
+              {/* <span>{prevTitle}</span> */}
+            </div>
+          </GridItem>
+        ))}
     </Container>
   );
 }

@@ -129,7 +129,7 @@ router.get('/:username/matches', async (req, res) => {
   const user = await UserService.getUser(userName);
   if (!user) return res.sendStatus(404);
 
-  const matches = await MatchService.getPreviousMatches(user.id, 15);
+  const matches = await MatchService.getPreviousMatches(user.id, 10);
   res.send(matches);
 });
 

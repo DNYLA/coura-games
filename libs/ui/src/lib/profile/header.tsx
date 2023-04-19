@@ -11,7 +11,6 @@ import { addFriend } from '../../api';
 interface HeaderProps {
   member: PublicUser;
   selfName: string;
-  friendsAmount: number;
 }
 
 enum ButtonType {
@@ -56,15 +55,11 @@ const ActionButton = styled.button<{ action: ButtonType }>`
   }
 `;
 
-export function ProfileHeader({
-  member,
-  selfName,
-  friendsAmount,
-}: HeaderProps) {
+export function ProfileHeader({ member, selfName }: HeaderProps) {
   const { user } = useContext(UserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const isUser = selfName.toLowerCase() === member.username.toLowerCase();
+  const isUser = selfName.toLowerCase() === member?.username.toLowerCase();
 
   const handleAddFriend = async () => {
     // if (!user) return;
@@ -77,12 +72,12 @@ export function ProfileHeader({
       <SettingsModal
         open={isOpen}
         onClose={onClose}
-        avatarURL={member.avatarUrl}
-        username={member.username}
+        avatarURL={member?.avatarUrl}
+        username={member?.username}
       />
       <Container>
         <Avatar>
-          <img src={member.avatarUrl} alt="Member's Avatar" />
+          <img src={member?.avatarUrl} alt="Member's Avatar" />
         </Avatar>
 
         <ActionSettings>
@@ -107,14 +102,14 @@ export function ProfileHeader({
         </ActionSettings>
 
         <Content>
-          <h2>{member.username}</h2>
-          <p>{member.status}</p>
+          <h2>{member?.username}</h2>
+          <p>{member?.status}</p>
         </Content>
 
         <Info>
           <Item>
             <h3>Points</h3>
-            <p>{member.points}</p>
+            <p>{member?.points}</p>
           </Item>
           {/* <StatItem>
           <h3>Leagues</h3>
@@ -122,11 +117,11 @@ export function ProfileHeader({
         </StatItem>{' '} */}
           <Item>
             <h3>Followers</h3>
-            <p>{friendsAmount}</p>
+            <p>{member?.friends.length}</p>
           </Item>
           <Item>
             <h3>Joined</h3>
-            <p>{moment(member.joined).format('MMM Do, YYYY')}</p>
+            <p>{moment(member?.joined).format('MMM Do, YYYY')}</p>
           </Item>
         </Info>
       </Container>
