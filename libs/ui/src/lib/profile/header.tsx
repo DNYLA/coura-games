@@ -1,16 +1,22 @@
-import { PublicUser } from '@couragames/shared-types';
+import { ChatData, PublicUser, User } from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import { UserContext } from '../context/auth';
 import SettingsModal from './SettingsModal';
 import moment from 'moment';
-import { useContext, useState } from 'react';
-import { AiFillEdit, AiOutlineUserAdd } from 'react-icons/ai';
+import { useContext, useEffect, useState } from 'react';
+import {
+  AiFillEdit,
+  AiOutlineUserAdd,
+  AiOutlineUserDelete,
+  AiOutlineUsergroupDelete,
+} from 'react-icons/ai';
 import { ImBlocked } from 'react-icons/im';
 import { useDisclosure } from '@chakra-ui/react';
 import { addFriend } from '../../api';
 interface HeaderProps {
   member: PublicUser;
   selfName: string;
+  friends: User[];
 }
 
 enum ButtonType {
@@ -55,16 +61,28 @@ const ActionButton = styled.button<{ action: ButtonType }>`
   }
 `;
 
-export function ProfileHeader({ member, selfName }: HeaderProps) {
+export function ProfileHeader({ member, selfName, friends }: HeaderProps) {
   const { user } = useContext(UserContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [icon, setIcon] = useState(<AiOutlineUserAdd />);
 
   const isUser = selfName.toLowerCase() === member?.username.toLowerCase();
 
   const handleAddFriend = async () => {
-    // if (!user) return;
-
     await addFriend(member.id);
+    setIcon(<AiOutlineUsergroupDelete />);
+  };
+
+  const isFriend = () => {
+    if (!friends) return false;
+    if (!member) return false;
+    const found = friends.find((f) => f.id === member.id);
+
+    if (found) {
+      return;
+      setIcon(<AiOutlineUsergroupDelete />);
+    }
+    setIcon(<AiOutlineUserAdd />);
   };
 
   return (
@@ -83,14 +101,14 @@ export function ProfileHeader({ member, selfName }: HeaderProps) {
         <ActionSettings>
           {!isUser && (
             <>
-              <ActionButton action={ButtonType.Negative}>
+              {/* <ActionButton action={ButtonType.Negative}>
                 <ImBlocked />
-              </ActionButton>
+              </ActionButton> */}
               <ActionButton
                 action={ButtonType.Success}
                 onClick={handleAddFriend}
               >
-                <AiOutlineUserAdd />
+                {icon}
               </ActionButton>
             </>
           )}

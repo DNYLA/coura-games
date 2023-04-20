@@ -97,6 +97,8 @@ export class RedisService {
     data.forEach((stat) => {
       parsedList.push({ username: stat.value, points: stat.score });
     });
+
+    parsedList.sort((a, b) => b.points - a.points);
     return parsedList;
     // return parsedList.sort((a, b) => b.points - a.points);
   }

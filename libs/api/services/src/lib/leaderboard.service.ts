@@ -14,7 +14,6 @@ export class LeaderboardService {
     //Check Cache
 
     const leaderboardmap = new Map<string, Leaderboard>();
-
     const keys = Object.keys(GameType);
 
     let globalLeaderboard: Map<string, { values: LeaderboardStat[] }> =
@@ -48,7 +47,7 @@ export class LeaderboardService {
       });
       weeklyData.map((stat) => usernames.push(stat.username));
       dailyData.map((stat) => usernames.push(stat.username));
-      globalLeaderboard[type.toString()].values.map((stat) =>
+      globalLeaderboard[type.toString()]?.values.map((stat) =>
         usernames.push(stat.username)
       );
     }

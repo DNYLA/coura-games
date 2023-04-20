@@ -24,7 +24,9 @@ const useAuth = () => {
       .catch((err) => {
         const res = err.response;
         if (res.status === 401) {
-          console.log('error');
+          console.log('error login');
+          setError({ show: true, message: res.data.message });
+          resetError();
         }
       });
   }, []);
@@ -45,8 +47,13 @@ const useAuth = () => {
       .catch((err) => {
         const res = err.response;
         setError({ show: true, message: res.data.message });
+        resetError();
       });
   }, []);
+
+  const resetError = () => {
+    setTimeout(() => setError({ show: false, message: '' }), 3000);
+  };
 
   const updateUser = useCallback(
     (username: string, data: UpdateUser, image?: File) => {
