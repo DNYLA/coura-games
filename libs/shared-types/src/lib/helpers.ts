@@ -1,3 +1,4 @@
+import { GameType } from '@prisma/client';
 import { Games } from './sockets';
 
 export type GameInfo = {
@@ -20,6 +21,23 @@ export function getGameInfoFromType(type: Games): GameInfo {
         redirect: 'tic-tac-toe',
       };
     case Games.RPS:
+      return {
+        name: 'Rock, Paper, Scissors',
+        shortName: 'RPS',
+        redirect: 'rock-paper-scissors',
+      };
+  }
+}
+
+export function getGameNameFromType(type: GameType): GameInfo {
+  switch (type) {
+    case GameType.TicTacToe:
+      return {
+        name: 'Tic-Tac-Toe',
+        shortName: 'TicTacToe',
+        redirect: 'tic-tac-toe',
+      };
+    case GameType.RPS:
       return {
         name: 'Rock, Paper, Scissors',
         shortName: 'RPS',

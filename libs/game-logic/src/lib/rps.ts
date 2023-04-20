@@ -4,6 +4,7 @@ import { Game } from './utils/game';
 import { Lobby } from '@couragames/api/services';
 import { Socket } from '@couragames/shared-types';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { GameType, Result } from '@prisma/client';
 
 export class RPS extends Game {
   /**
@@ -46,8 +47,22 @@ export class RPS extends Game {
     } else {
       winner = this.computeWinner(p1Move, p2Move);
     }
+    winner = winner === null ? null : winner === true ? false : true;
 
-    this.broadcast('rps_round_ended', { p1Move, p2Move, winner });
+    const getPoints = (sockId: string): Result => {
+      if (winner === null) return Result.Draw;
+      else if (winner && lobby.players[0].id === sockId) return Result.Win;
+      else if (!winner && lobby.players[1].id === sockId) return Result.Win;
+      else return Result.Loss;
+    };
+
+    await this.submitMatch(getPoints, GameType.RPS);
+
+    this.broadcast('rps_round_ended', {
+      p1: { move: p1Move, name: lobby.players[0].username },
+      p2: { move: p2Move, name: lobby.players[1].username },
+      winner,
+    });
 
     //Update Winner
     if (winner) {
@@ -77,8 +92,14 @@ export class RPS extends Game {
 
   emitNewRoundData(timer: Date) {
     const roundInfo: RPSRoundInfo = {
-      p1Score: this.lobby.players[0].points,
-      p2Score: this.lobby.players[1].points,
+      p1: {
+        score: this.lobby.players[0].points,
+        name: this.lobby.players[0].username,
+      },
+      p2: {
+        score: this.lobby.players[1].points,
+        name: this.lobby.players[1].username,
+      },
       totalRounds: 0,
       currentRound: 0,
       timer: timer.getTime(),

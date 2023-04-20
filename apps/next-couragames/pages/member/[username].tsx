@@ -15,6 +15,8 @@ import {
   Comment,
   PublicUser,
   MatchPreview,
+  User,
+  ChatData,
 } from '@couragames/shared-types';
 import { Avatar, Skeleton } from '@chakra-ui/react';
 import Link from 'next/link';
@@ -32,7 +34,7 @@ export default function MemberProfile() {
     comments: [],
     users: [],
   });
-
+  const [friendsList, setFriendsList] = useState<User[]>(null);
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
   const [matchesLoading, setMatchesLoading] = useState(true);
@@ -40,6 +42,7 @@ export default function MemberProfile() {
   useEffect(() => {
     if (Array.isArray(username) || !user) return;
     if (!username || !user.username) return;
+    if (!friendsList) socket.emit('request_friend_data');
     console.log('On Profile');
     setMatchesLoading(true);
     setProfileLoading(true);
@@ -77,6 +80,10 @@ export default function MemberProfile() {
       setComments(comments);
     });
 
+    socket?.on('friends_list', (data: ChatData) => {
+      setFriendsList(data.friends);
+    });
+
     return () => {
       socket?.off(`new_comment_${username}`);
     };
@@ -103,7 +110,11 @@ export default function MemberProfile() {
       <Container>
         <Main>
           <Skeleton isLoaded={!profileLoading}>
-            <ProfileHeader member={member} selfName={user.username} />
+            <ProfileHeader
+              member={member}
+              selfName={user.username}
+              friends={friendsList}
+            />
           </Skeleton>
 
           <StatsSkeleton isLoading={profileLoading} />
