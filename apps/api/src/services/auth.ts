@@ -82,5 +82,5 @@ export const user = async (req: Request, res: Response) => {
 };
 
 export const failed = async (req: Request, res: Response) => {
-  res.status(401).send('Invalid Credentials');
+  res.status(401).send({ message: 'Invalid Credentials' });
 };

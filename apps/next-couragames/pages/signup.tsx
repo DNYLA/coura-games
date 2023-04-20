@@ -42,14 +42,14 @@ export function SignUp(props: SignUpProps) {
   );
 
   return (
-    <>
+    <Flex minW={'93%'} flexDir={'column'}>
       {alertMsg.show && (
         <Alert status="error" justifyContent="center">
           <AlertIcon />
           {alertMsg.message}
         </Alert>
       )}
-      <Flex minH={'100vh'} align={'center'} justify={'center'} bg={'gray.800'}>
+      <Flex minH={'95vh'} align={'center'} justify={'center'} bg={'gray.800'}>
         <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
           <Stack align={'center'}>
             <Heading fontSize={'4xl'} textAlign={'center'}>
@@ -136,7 +136,7 @@ export function SignUp(props: SignUpProps) {
           </Box>
         </Stack>
       </Flex>
-    </>
+    </Flex>
   );
 }
 

@@ -1,4 +1,9 @@
-import { MatchPreview, PublicUser } from '@couragames/shared-types';
+import {
+  getGameInfoFromType,
+  getGameNameFromType,
+  MatchPreview,
+  PublicUser,
+} from '@couragames/shared-types';
 import styled from '@emotion/styled';
 import React from 'react';
 import moment from 'moment';
@@ -66,6 +71,7 @@ export function MatchHistory({ matches, member }: MatchHistoryProps) {
               <Th>Player</Th>
               <Th>Result</Th>
               <Th>Opponent</Th>
+              <Th>Game Type</Th>
               <Th>Date</Th>
             </Tr>
           </Thead>
@@ -91,6 +97,9 @@ export function MatchHistory({ matches, member }: MatchHistoryProps) {
                       'https://www.pngitem.com/pimgs/m/421-4212341_default-avatar-svg-hd-png-download.png'
                     }
                   />
+                </Td>
+                <Td>
+                  <span>{getGameNameFromType(match.type).shortName}</span>
                 </Td>
                 <Td>
                   <span>{moment(match.timestamp).fromNow()}</span>

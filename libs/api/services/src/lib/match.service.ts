@@ -82,7 +82,10 @@ export class MatchService {
   static async getPreviousMatches(userId: number, limit?: number) {
     const matches = await prisma.match.findMany({
       where: { players: { some: { userId } } },
-      include: {
+      select: {
+        id: true,
+        createdAt: true,
+        type: true,
         players: {
           select: {
             result: true,
@@ -120,6 +123,7 @@ export class MatchService {
         playback: undefined,
         opponent: { ...opponent.user, avatarUrl: newAvatarUrl },
         timestamp: match.createdAt.getTime(),
+        type: match.type,
       });
     });
 
