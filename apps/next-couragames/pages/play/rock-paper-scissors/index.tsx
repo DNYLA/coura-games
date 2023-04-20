@@ -1,137 +1,180 @@
 import {
-  Alert,
-  AlertIcon,
-  Button,
-  Flex,
-  Input,
-  InputGroup,
-  InputRightElement,
-} from '@chakra-ui/react';
+  Games,
+  RPSMove,
+  RPSRoundInfo,
+  RPSWinner,
+  TicTacToeInfo,
+} from '@couragames/shared-types';
 import styled from '@emotion/styled';
+import Lobby from '../../../components/lobby';
 import SocketContext from '../../../context/socket';
-import { ClientLobby, Games, LobbyEvents } from '@couragames/shared-types';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
 import { MenuButton } from '../../../utils/styles';
-import RPSGame from './game';
-/* eslint-disable-next-line */
-export interface HomeProps {}
+import { Box } from '@chakra-ui/react';
+import Timer from '../../../components/Timer';
 
-const StyledHome = styled.div`
-  max-width: 500px;
-  margin: auto;
-  padding: 10px;
-`;
-
-const Title = styled.h1`
-  font-size: 25px;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 20px;
-`;
-
-export function RPSLobby(props: HomeProps) {
+export default function TicTacToe() {
   const router = useRouter();
-  const { lobby } = router.query;
-  const [lobbyInfo, setLobbyInfo] = useState<ClientLobby>(null);
-  const [showInput, setShowInput] = useState(false);
-  const [code, setCode] = useState('');
-  const [errorMessage, setErrMessage] = useState(null);
-  // const {
-  //   isOpen: isVisible,
-  //   onClose,
-  //   onOpen,
-  // } = useDisclosure({ defaultIsOpen: false });
-
   const socket = useContext(SocketContext).socket;
-
+  const [score, setScore] = useState<RPSRoundInfo>();
+  const [results, setResults] = useState<RPSWinner>();
+  //Indicates weather round is currently active
+  //Cant really use timer because both players could have alreadt made there moves before timer
+  //runs out
   useEffect(() => {
-    //Called when someone hosts a game
-    socket?.on('lobby_info', (data) => {
-      router.push(`?lobby=${data.id}`);
-      setLobbyInfo({ ...data, isHost: true });
+    socket?.on('rps_round_started', (info) => {
+      setScore(info);
+      setResults(null);
     });
 
-    //Called when client attempts to connect
-    socket?.on('join_lobby', (data) => {
-      if (data.invalid) {
-        setErrMessage(data.reason);
-        // setTimeout(() => setErrMessage(null), 5000);
-        setTimeout(() => {
-          setErrMessage(null);
-        }, 5000);
-        router.push('');
-      } else {
-        setLobbyInfo({ ...data, isHost: false });
-        router.push(`?lobby=${data.id}`);
-      }
+    socket?.on('rps_round_ended', (data) => {
+      setResults(data);
     });
 
     return () => {
-      socket?.off('lobby_info');
-      socket?.off('join_lobby');
+      socket.off('player_joined');
     };
-  }, [socket, router]);
+  }, [socket, router, router.query.lobby]);
 
-  const handleCreate = () => {
-    socket.emit('lobby', { game: Games.RPS, type: LobbyEvents.Create });
-    // router.push('?lobby=5');
+  const submitMove = (move: RPSMove) => {
+    socket.emit('rps_move', { id: router.query.lobby, move: move });
   };
 
-  const handleJoin = (code: string) => {
-    socket.emit('lobby', { game: Games.RPS, type: LobbyEvents.Join, id: code });
-  };
-
-  const showJoin = () => {
-    // socket.emit('lobby', { game: Games.RPS, type: LobbyEvents.Join, id: 5 });
-    setShowInput(!showInput);
-  };
-
-  if (lobby) {
-    if (typeof lobby !== 'string') {
-      router.push('/play/rock-paper-scissors/');
-    } else {
-      if (lobbyInfo) {
-        return <RPSGame lobby={lobbyInfo} setLobby={setLobbyInfo} />;
-      } else {
-        handleJoin(lobby);
-      }
+  const getMoveText = (move: RPSMove) => {
+    switch (move) {
+      case RPSMove.Rock:
+        return 'Rock';
+      case RPSMove.Paper:
+        return 'Paper';
+      case RPSMove.Scissors:
+        return 'Scissors';
     }
-  }
+  };
 
-  //If !Lobby Render Create || Join Game.
+  // const checkWin = () => {};
   return (
-    <StyledHome>
-      <Title>Rock, Paper, Scissors</Title>
-      {errorMessage && (
-        <Alert status="error" mb={5}>
-          <AlertIcon />
-          {errorMessage}
-        </Alert>
-      )}
-      <Flex display={'flex'} flexDir={'column'}>
-        <MenuButton onClick={handleCreate}>Create</MenuButton>
-        <MenuButton onClick={showJoin}>
-          {showInput ? 'Cancel' : 'Join'}
-        </MenuButton>
-        {showInput && (
-          <InputGroup size="md">
-            <Input
-              pr="4.5rem"
-              placeholder="Enter code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-            />
-            <InputRightElement width="5.5rem">
-              <Button h="1.75rem" size="sm" onClick={() => handleJoin(code)}>
-                Connect
-              </Button>
-            </InputRightElement>
-          </InputGroup>
+    <Lobby game={Games.RPS} redirect="rps">
+      <Container>
+        {results ? (
+          <div>
+            <p>
+              {results.p1.name} Move {getMoveText(results.p1.move)}
+            </p>
+            <p>
+              {results.p2.name} Move {getMoveText(results.p2.move)}
+            </p>
+            <p>
+              Winner{' '}
+              {results.winner
+                ? 'Player One'
+                : results.winner === null
+                ? 'Draw'
+                : 'Player Two'}
+            </p>
+          </div>
+        ) : (
+          <Box
+            justifyContent="center"
+            alignContent="center"
+            display="flex"
+            flexFlow="column"
+            flexDir="column"
+          >
+            <Box display="flex" justifyContent="center">
+              <Timer end={new Date(score?.timer ?? 0)} />
+            </Box>
+            <Box display="flex" justifyContent="center" gap="5">
+              <MenuButton onClick={() => submitMove(RPSMove.Rock)}>
+                Rock
+              </MenuButton>
+              <MenuButton onClick={() => submitMove(RPSMove.Paper)}>
+                Paper
+              </MenuButton>
+              <MenuButton onClick={() => submitMove(RPSMove.Scissors)}>
+                Scissors
+              </MenuButton>
+            </Box>
+            <Box>
+              Score:
+              <p>
+                {score?.p1.name}: {score?.p1.score}
+              </p>
+              <p>
+                {score?.p2.name}: {score?.p2.score}
+              </p>
+            </Box>
+          </Box>
         )}
-      </Flex>
-    </StyledHome>
+      </Container>
+    </Lobby>
   );
 }
 
-export default RPSLobby;
+const cols = {
+  naughts: '#feaf00',
+  crosses: '#00c7bf',
+};
+
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .stat_container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* background-color: red; */
+    min-width: 250px;
+  }
+`;
+
+const Game = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* background-color: red; */
+  min-width: 250px;
+`;
+
+const GameInfo = styled.div<{ type: number }>`
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: ${(props) =>
+    props.type === 0
+      ? cols.crosses
+      : props.type === 1
+      ? '#a3bfca'
+      : cols.naughts};
+
+  margin: 10px 15px;
+  height: 50px;
+  display: flex;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  color: black;
+
+  span {
+    font-size: 16px;
+    font-weight: 600;
+  }
+`;
+
+const GridItem = styled.div<{ value: number }>`
+  cursor: ${(props) => (props.value === 0 ? 'pointer' : 'not-allowed')};
+  margin: 10px 15px;
+  height: 50px;
+  display: flex;
+  font-size: 25px;
+  text-align: center;
+  background-color: #173641;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+
+  color: ${(props) => (props.value === 1 ? cols.crosses : cols.naughts)};
+`;

@@ -57,7 +57,8 @@ export async function createLobby(socket: Socket, type: Games) {
 
 export async function joinLobby(socket: Socket, type: Games, id: string) {
   const lobby: Lobby = await getLobby(id);
-  if (!lobby)
+
+  if (!lobby || lobby.type !== type)
     return socket.emit('join_lobby', {
       invalid: true,
       reason: 'Lobby does not exist.',

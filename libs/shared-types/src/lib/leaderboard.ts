@@ -1,4 +1,5 @@
-import { Result } from '@prisma/client';
+import { GameType, Result } from '@prisma/client';
+import { Games } from './sockets';
 import { User } from './user';
 
 export type LeaderboardStat = {
@@ -31,4 +32,5 @@ export type MatchPreview = {
   opponent: User;
   result: Result;
   timestamp: number;
+  type: GameType;
 };

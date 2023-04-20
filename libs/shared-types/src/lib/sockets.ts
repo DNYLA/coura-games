@@ -47,16 +47,16 @@ export type LobbySettings = {
 };
 
 export type RPSRoundInfo = {
-  p1Score: number;
-  p2Score: number;
+  p1: { score: number; name: string };
+  p2: { score: number; name: string };
   totalRounds: number;
   currentRound: number;
   timer: number;
 };
 
 export type RPSWinner = {
-  p1Move: RPSMove;
-  p2Move: RPSMove;
+  p1: { move: RPSMove; name: string };
+  p2: { move: RPSMove; name: string };
   winner?: boolean;
 };
 
