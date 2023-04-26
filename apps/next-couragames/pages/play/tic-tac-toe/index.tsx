@@ -148,7 +148,7 @@ export default function TicTacToe() {
         </Game>
         <div className="stat_container">
           <GameInfo type={0}>
-            <p>X ({gameInfo.isCrosses ? 'You' : 'OPP'})</p>
+            <p>{gameInfo.isCrosses ? 'You' : 'OPP'}</p>
             <span>{gameInfo.p1Score}</span>
           </GameInfo>
 
@@ -158,7 +158,7 @@ export default function TicTacToe() {
           </GameInfo>
 
           <GameInfo type={2}>
-            <p>X ({!gameInfo.isCrosses ? 'You' : 'OPP'})</p>
+            <p>{!gameInfo.isCrosses ? 'You' : 'OPP'}</p>
             <span>{gameInfo.p2Score}</span>
           </GameInfo>
         </div>
