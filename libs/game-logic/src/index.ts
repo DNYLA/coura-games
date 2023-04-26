@@ -21,10 +21,6 @@ import { Game } from './lib/utils/game';
 import { redis } from '@couragames/api/services';
 export { createLobby } from './lib/game-logic';
 
-interface SocketData {
-  event: LobbyEvent;
-}
-
 export function handleLobbyEvent(socket: Socket, event: LobbyEvent) {
   switch (event.type) {
     case LobbyEvents.Create:

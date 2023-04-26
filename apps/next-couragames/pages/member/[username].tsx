@@ -57,10 +57,10 @@ export default function MemberProfile() {
           return;
         }
         setMember(data);
-        setTimeout(() => setProfileLoading(false), 1000);
+        setTimeout(() => setProfileLoading(false), 500);
       })
       .catch(() => {
-        setTimeout(() => router.push('/'), 1000);
+        setTimeout(() => router.push('/'), 500);
       })
       .finally(() => console.log('Done'));
 
@@ -68,13 +68,13 @@ export default function MemberProfile() {
       .then(({ data }) => {
         setComments(data);
       })
-      .finally(() => setTimeout(() => setCommentsLoading(false), 2500));
+      .finally(() => setTimeout(() => setCommentsLoading(false), 1250));
 
     fetchMatches(username ?? user.username)
       .then(({ data }) => {
         setMatches(data);
       })
-      .finally(() => setTimeout(() => setMatchesLoading(false), 3000));
+      .finally(() => setTimeout(() => setMatchesLoading(false), 1500));
 
     socket?.on(`new_comment_${username}`, (comments: Comments) => {
       setComments(comments);
@@ -112,7 +112,7 @@ export default function MemberProfile() {
           <Skeleton isLoaded={!profileLoading}>
             <ProfileHeader
               member={member}
-              selfName={user.username}
+              selfName={user?.username ?? ''}
               friends={friendsList}
             />
           </Skeleton>
@@ -157,8 +157,7 @@ export default function MemberProfile() {
 }
 
 const Sidebar = styled.div`
-  background: #282f27c2;
-
+  background: #313641;
   height: fit-content;
   padding: 5px;
 

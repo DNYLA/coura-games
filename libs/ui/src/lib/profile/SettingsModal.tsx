@@ -41,7 +41,7 @@ export default function SettingsModal({
   const [newAvatar, setNewAvatar] = useState<File>();
   const [imageURL, setImageURL] = useState(avatarURL);
   const [settings, setSettings] = useState<UpdateUser>({
-    status: user!.status,
+    status: user?.status ?? '',
   });
 
   const onAvatarChange = async (file: File) => {
