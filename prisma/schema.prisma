@@ -59,14 +59,6 @@ model MatchPlayer {
   @@id([matchId, userId])
 }
 
-model FriendRequests {
-  userOneId Int
-  userTwoId Int
-  status    FriendStatus @default(Pending)
-
-  @@id([userOneId, userTwoId])
-}
-
 model Inbox {
   id           Int                 @id @default(autoincrement())
   lastMessage  String

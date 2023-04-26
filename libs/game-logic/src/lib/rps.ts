@@ -16,7 +16,6 @@ export class RPS extends Game {
 
   async init(timer: Date): Promise<void> {
     const lobby = this.lobby;
-
     //Set Current Info
     lobby.data = {
       round: 0,
