@@ -66,9 +66,9 @@ export class TicTacToe extends Game {
     this.lobby.data = { round: 0, timer };
 
     const gameInfo: TicTacToeInfo = {
-      p1Score: 0,
-      p2Score: 0,
-      draws: 0,
+      p1Score: this.data.p1Score,
+      p2Score: this.data.p2Score,
+      draws: this.data.draws,
       isCrosses: !this.isPlayerOneCrosses,
       board: this.data.board,
       timer: timer.getTime(),

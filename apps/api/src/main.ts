@@ -129,6 +129,7 @@ cron.schedule('0 0 * * MON', () => {
     const type = keys[i];
     RedisService.Delete(`${type}-${LeaderboardType.Weekly}`);
   }
+  RedisService.Delete(`global-leaderboard`);
 });
 
 (async () => {

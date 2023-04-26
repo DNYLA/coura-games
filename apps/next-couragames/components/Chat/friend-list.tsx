@@ -1,6 +1,13 @@
 import { ChatMenuProps } from './chat-menu';
 import React from 'react';
-import { Avatar, AvatarBadge, Box, WrapItem } from '@chakra-ui/react';
+import {
+  Avatar,
+  AvatarBadge,
+  Box,
+  WrapItem,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { User } from '@couragames/shared-types';
 
 export interface FriendsListProps {
@@ -9,6 +16,7 @@ export interface FriendsListProps {
 }
 
 export default function FriendsList({ setId, friends }: FriendsListProps) {
+  const value = useColorModeValue('#F9FAFB', 'gray.600');
   return (
     <div>
       {friends.map((friend, i) => (

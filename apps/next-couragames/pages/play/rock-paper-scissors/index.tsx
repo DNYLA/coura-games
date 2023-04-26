@@ -95,15 +95,23 @@ export default function TicTacToe() {
                 Scissors
               </MenuButton>
             </Box>
-            <Box>
-              Score:
-              <p>
-                {score?.p1.name}: {score?.p1.score}
-              </p>
-              <p>
-                {score?.p2.name}: {score?.p2.score}
-              </p>
-            </Box>
+
+            <div className="stat_container">
+              <GameInfo type={0}>
+                <p>{score?.p1.name}</p>
+                <span>{score?.p1.score}</span>
+              </GameInfo>
+
+              <GameInfo type={1}>
+                <p>TIES</p>
+                <span>{score?.p1.score}</span>
+              </GameInfo>
+
+              <GameInfo type={2}>
+                <p>{score?.p2.name}</p>
+                <span>{score?.p2.score}</span>
+              </GameInfo>
+            </div>
           </Box>
         )}
       </Container>
