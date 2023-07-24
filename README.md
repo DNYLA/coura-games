@@ -17,10 +17,10 @@ Online game platform which allows you to talk and compete against your friends.
 
 # Setup
 ## Environment Variables
-There are two environment variables that need to be filled in one inside apps/api and another in apps/next-couragames.
+Two environment files are required for both applications examples are found in apps/api & apps/next-couragames.
 
 ## Install
-After installing dependencies (`npm install`) you can run `nx serve api` then `nx serve next-couragames` to start the backend and frontend. The addresses with ports should be displayed in your terminal.
+After installing dependencies (`npm install`) you can run `nx serve api` followed by `nx serve next-couragames` to start the backend and frontend.
 
 # Technologies
 - NextJS 12
